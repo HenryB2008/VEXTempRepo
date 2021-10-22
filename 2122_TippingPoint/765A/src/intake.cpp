@@ -10,8 +10,16 @@ void Intake::addPosition(int pos) {
   encPositions.push_back(pos);
 }
 
-void Intake::run(double speed) {
-  m.moveVelocity(speed);
+void Intake::run(bool left, bool right, double speed) {
+  if(left) {
+    m.moveVelocity(speed);
+  }
+  if(right) {
+    m.moveVelocity(-speed);
+  }
+  else if(!left && !right) {
+    m.moveVelocity(0);
+  }
 }
 
 void Intake::stepAbsolute(int count, double speed) {

@@ -1,6 +1,6 @@
 #include "drive.h"
 
-Drive::Drive(int motor1, int motor2, int motor3, int motor4) {
+Drive::Drive() {
   chassis = ChassisControllerBuilder()
             .withMotors(TOP_LEFT_MOTOR, -TOP_RIGHT_MOTOR, -BOTTOM_RIGHT_MOTOR, BOTTOM_LEFT_MOTOR)
             .withDimensions(
@@ -28,8 +28,9 @@ Drive::Drive(int motor1, int motor2, int motor3, int motor4) {
           )
 
         .buildOdometry();
+        chassis->getModel()->setBrakeMode(AbstractMotor::brakeMode::brake);
+}
 
-};
 
 
 

@@ -24,3 +24,7 @@ void Button::handleButtons(Controller controller) {
 int Button::getCount(okapi::ControllerDigital id) {
   return buttons[id].count;
 }
+
+bool Button::getPressed(okapi::ControllerDigital id) {
+  return buttons[id].state;
+}

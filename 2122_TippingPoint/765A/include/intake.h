@@ -13,7 +13,7 @@ private:
   int prevCount = 0;
 public:
   Intake(double port);
-  void run(double speed);
+  void run(bool left, bool right, double speed);
   void setTarget(double enc);
   void stepAbsolute(int count, double speed);
   void addPosition(int pos);

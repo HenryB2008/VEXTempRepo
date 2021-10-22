@@ -10,10 +10,10 @@
 #define FRONTUP ControllerDigital::X
 #define FRONTDOWN ControllerDigital::B
 
-#define TOP_LEFT_MOTOR 3
-#define TOP_RIGHT_MOTOR 11
-#define BOTTOM_LEFT_MOTOR 1
-#define BOTTOM_RIGHT_MOTOR 14
+#define TOP_LEFT_MOTOR 14
+#define TOP_RIGHT_MOTOR 1
+#define BOTTOM_LEFT_MOTOR 4
+#define BOTTOM_RIGHT_MOTOR 3
 
 #define LEFT_TRACKING_WHEEL_TOP 'C'
 #define LEFT_TRACKING_WHEEL_BOTTOM 'D'
@@ -26,5 +26,7 @@
 
 #define GOAL_LIFT 0
 #define FOUR_BAR 1
+#define SPIKE 2
+#define INTAKE 3
 
 #endif

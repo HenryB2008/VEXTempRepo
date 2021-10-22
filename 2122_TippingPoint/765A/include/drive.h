@@ -11,7 +11,7 @@ class Drive {
 private:
   std::shared_ptr<okapi::OdomChassisController> chassis;
 public:
-  Drive(int motor1, int motor2, int motor3, int motor4);
+  Drive();
   double getX();
   double getY();
   double getHeading();

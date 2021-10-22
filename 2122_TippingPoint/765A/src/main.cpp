@@ -5,9 +5,9 @@
 #include "button.h"
 #include "intake.h"
 
-Drive *drive = new Drive(1, -3, 4, -5);
+Drive *drive = new Drive();
 Pneumatics *pneum = new Pneumatics('F');
-Intake effectors[2] = {Intake(17), Intake(16)};
+Intake effectors[4] = {Intake(17), Intake(16), Intake(7), Intake(5)};
 Button *buttons = new Button();
 
 
@@ -127,9 +127,14 @@ void moveTank(OdomState target, PIDConst constants) {
 
 void setEffectorPositions() {
 	effectors[GOAL_LIFT].addPosition(0);
-	effectors[GOAL_LIFT].addPosition(200);
-	effectors[GOAL_LIFT].addPosition(800);
+	effectors[GOAL_LIFT].addPosition(600);
+	effectors[GOAL_LIFT].addPosition(1200);
+	effectors[FOUR_BAR].addPosition(0);
+	effectors[FOUR_BAR].addPosition(-2500);
+	effectors[SPIKE].addPosition(0);
+	effectors[SPIKE].addPosition(-600);
 }
+
 
 /**
  * Runs while the robot is in the disabled state of Field Management System or
@@ -186,7 +191,6 @@ void opcontrol() {
 	int i = 0;
 
 	while(true) {
-		i = 0;
 		forward = controller.getAnalog(okapi::ControllerAnalog::rightY);
 		turn = controller.getAnalog(okapi::ControllerAnalog::leftX);
 		//strafe = controller.getAnalog(okapi::ControllerAnalog::rightX);
@@ -194,11 +198,11 @@ void opcontrol() {
 		drive->runTankArcade(forward, turn);
 		printf("%f %f %f\n", drive->getX(), drive->getY(), drive->getHeading());
 		buttons->handleButtons(controller);
-		for(okapi::ControllerDigital x : buttons->buttonList) {
+		for(int i = 0; i < 3; i++) {
 			//printf("%d\n", buttons->getCount(x));
-			effectors[i].stepAbsolute(buttons->getCount(x), 50);
-			i++;
+			effectors[i].stepAbsolute(buttons->getCount(buttons->buttonList[i]), 100);
 		}
+		effectors[INTAKE].run(buttons->getPressed(okapi::ControllerDigital::L1), buttons->getPressed(okapi::ControllerDigital::R1), 200);
 		pros::delay(10);
 
 	}
