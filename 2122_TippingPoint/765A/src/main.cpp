@@ -130,7 +130,8 @@ void setEffectorPositions() {
 	effectors[GOAL_LIFT].addPosition(600);
 	effectors[GOAL_LIFT].addPosition(1200);
 	effectors[FOUR_BAR].addPosition(0);
-	effectors[FOUR_BAR].addPosition(-2500);
+	effectors[FOUR_BAR].addPosition(-300);
+	effectors[FOUR_BAR].addPosition(-2750);
 	effectors[SPIKE].addPosition(0);
 	effectors[SPIKE].addPosition(-600);
 }

@@ -14,6 +14,12 @@ void Button::handleButtons(Controller controller) {
     if(controller.getDigital(key) && !value.state) {
       value.state = true;
       value.count++;
+      if(key == okapi::ControllerDigital::A && value.count % 3 == 2) {
+        buttons[okapi::ControllerDigital::up].count = 2;
+      }
+      if(key == okapi::ControllerDigital::X && value.count %2 ==1) {
+        buttons[okapi::ControllerDigital::up].count = 0;
+      }
     }
     else if(!controller.getDigital(key) && value.state) {
       value.state = false;
