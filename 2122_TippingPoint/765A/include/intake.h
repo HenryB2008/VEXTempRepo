@@ -20,4 +20,13 @@ public:
   void step();
 };
 
+class Effectors {
+private:
+  okapi::Motor motors[4];
+  okapi::IntegratedEncoder Encs[4];
+  std::vector<int> encPositions[4];
+public:
+  void run(bool left, bool right, double speed);
+}
+
 #endif
