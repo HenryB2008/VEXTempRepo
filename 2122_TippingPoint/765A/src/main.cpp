@@ -4,12 +4,15 @@
 #include "pneumatics.h"
 #include "button.h"
 #include "intake.h"
+#include "effectors.h"
 
 Drive *drive = new Drive();
 Pneumatics *pneum = new Pneumatics('F');
-Intake effectors[4] = {Intake(17), Intake(16), Intake(7), Intake(5)};
+Effectors *effectors;
+Intake *intake = new Intake(7);
 Button *buttons = new Button();
 
+double speeds[3] = {150, 150, 150};
 
 
 /**
@@ -126,14 +129,14 @@ void moveTank(OdomState target, PIDConst constants) {
 }
 
 void setEffectorPositions() {
-	effectors[GOAL_LIFT].addPosition(0);
-	effectors[GOAL_LIFT].addPosition(600);
-	effectors[GOAL_LIFT].addPosition(1200);
-	effectors[FOUR_BAR].addPosition(0);
-	effectors[FOUR_BAR].addPosition(-300);
-	effectors[FOUR_BAR].addPosition(-2750);
-	effectors[SPIKE].addPosition(0);
-	effectors[SPIKE].addPosition(-600);
+	effectors->addPosition(GOAL_LIFT, 0);
+	effectors->addPosition(GOAL_LIFT, 600);
+	effectors->addPosition(GOAL_LIFT, 1200);
+	effectors->addPosition(FOUR_BAR, 0);
+	effectors->addPosition(FOUR_BAR, -300);
+	effectors->addPosition(FOUR_BAR, -2750);
+	effectors->addPosition(SPIKE, 0);
+	effectors->addPosition(SPIKE, -600);
 }
 
 
@@ -199,11 +202,13 @@ void opcontrol() {
 		drive->runTankArcade(forward, turn);
 		printf("%f %f %f\n", drive->getX(), drive->getY(), drive->getHeading());
 		buttons->handleButtons(controller);
-		for(int i = 0; i < 3; i++) {
 			//printf("%d\n", buttons->getCount(x));
-			effectors[i].stepAbsolute(buttons->getCount(buttons->buttonList[i]), 100);
+		int buttonCounts[3];
+		for(int i = 0; i < 3; i++) {
+			buttonCounts[i] = buttons->getCount(buttons->buttonList[i]);
 		}
-		effectors[INTAKE].run(buttons->getPressed(okapi::ControllerDigital::L1), buttons->getPressed(okapi::ControllerDigital::R1), 200);
+		effectors->step(buttonCounts, speeds);
+		intake->run(buttons->getPressed(okapi::ControllerDigital::L1), buttons->getPressed(okapi::ControllerDigital::R1), 200);
 		pros::delay(10);
 
 	}

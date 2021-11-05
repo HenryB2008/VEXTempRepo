@@ -30,6 +30,9 @@ void Intake::stepAbsolute(int count, double speed) {
   }
   prevCount = count;
 }
+
+
+
 /*
 void Intake::step() {
   if(moving) {
