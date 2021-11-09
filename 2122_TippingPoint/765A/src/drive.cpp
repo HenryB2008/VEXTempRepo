@@ -14,8 +14,8 @@ Drive::Drive() {
               ),
               ADIEncoder( // right encoder
                   RIGHT_TRACKING_WHEEL_TOP,
-                  RIGHT_TRACKING_WHEEL_BOTTOM
-
+                  RIGHT_TRACKING_WHEEL_BOTTOM,
+                  true
               )
               // ADIEncoder( // back encoder
               //     BACK_TRACKING_WHEEL_TOP,
@@ -69,5 +69,6 @@ void Drive::runTank(double left, double right) {
 
 
 okapi::OdomState Drive::getState() {
+  printf("%f %f %f\n", chassis->getState().x.convert(inch), chassis->getState().y.convert(inch), chassis->getState().theta.convert(degree));
   return chassis->getState();
 }

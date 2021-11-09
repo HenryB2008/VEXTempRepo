@@ -61,7 +61,7 @@ OdomState transform(OdomState curr, OdomState target) {
 }
 
 double limiter(double prevOutput, double currOutput, double step) {
-	double output = std::clamp(prevOutput-step, prevOutput+step, currOutput);
+	double output = std::clamp(currOutput, prevOutput-step, prevOutput+step);
 	if(abs(output) < 0.05) {
 		return 0;
 	}
@@ -92,7 +92,7 @@ void move(OdomState target) {
 	printf("Done");
 }
 
-void moveTank(OdomState target, PIDConst constants) {
+void moveTank(OdomState target) {
 	double forward, turn, prevForward, prevTurn;
 	QLength magerr;
 	QAngle headerr;
@@ -101,15 +101,15 @@ void moveTank(OdomState target, PIDConst constants) {
 	QLength xDiff, yDiff;
 	prevForward = 0;
 	prevTurn = 0;
-	PID forwardObj = PID(0.02, 0, 0);
+	PID forwardObj = PID(0.05, 0, 0);
 	PID turnObj = PID(0.01, 0, 0);
 
 	do {
 		currState = drive->getState();
 		xDiff = target.x-currState.x;
 		yDiff = target.y-currState.y;
-		targetAngle = okapi::atan2(xDiff, yDiff);
-		headerr = targetAngle - drive->getState().theta;
+		targetAngle = 90_deg - okapi::atan2(xDiff, yDiff);
+		headerr = targetAngle-drive->getState().theta;
 		magerr = sqrt((xDiff * xDiff) + (yDiff * yDiff));
 
 		//if overshoot point, reverse direction and target heading
@@ -118,10 +118,10 @@ void moveTank(OdomState target, PIDConst constants) {
 			magerr*=-1;
 		}
 
-		//limit and set
-		forward = limiter(prevForward, forwardObj.step(magerr.convert(inch)), 0.1);
-		turn = limiter(prevTurn, turnObj.step(headerr.convert(degree)), 0.1);
-		printf("%f %f %f %f turn: %f\n", magerr.convert(inch), headerr, targetAngle.convert(degree), drive->getState().theta.convert(degree), turn);
+		//limit and set motors
+		forward = limiter(prevForward, forwardObj.step(magerr.convert(inch)), 0.08);
+		turn = limiter(prevTurn, turnObj.step(headerr.convert(degree)), 0.08);
+		printf("mag: %f forward: %f head: %f target: %f theta: %f turn: %f\n", magerr.convert(inch), forward, headerr.convert(degree), targetAngle.convert(degree), drive->getState().theta.convert(degree), turn);
 		drive->runTankArcade(forward, turn);
 		prevForward = forward;
 		prevTurn = turn;
@@ -129,6 +129,7 @@ void moveTank(OdomState target, PIDConst constants) {
 }
 
 void setEffectorPositions() {
+
 	effectors->addPosition(GOAL_LIFT, 0);
 	effectors->addPosition(GOAL_LIFT, 600);
 	effectors->addPosition(GOAL_LIFT, 1200);
@@ -224,5 +225,5 @@ void autonomous() {
 	lift->stepAbsolute(-50);
 	*/
 	printf("done\n");
-	//moveTank(x);
+	moveTank(x);
 }
