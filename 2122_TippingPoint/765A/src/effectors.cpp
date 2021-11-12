@@ -1,6 +1,6 @@
 #include "effectors.h"
 
-void Effectors::addPosition(int lift, double pos) {
+void Effectors::addPosition(int lift, int pos) {
   encPositions[lift].push_back(pos);
 }
 

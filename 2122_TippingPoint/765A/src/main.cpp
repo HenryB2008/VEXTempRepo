@@ -102,7 +102,7 @@ void moveTank(OdomState target) {
 	prevForward = 0;
 	prevTurn = 0;
 	PID forwardObj = PID(0.05, 0, 0);
-	PID turnObj = PID(0.01, 0, 0);
+	PID turnObj = PID(0.005, 0, 0);
 
 	do {
 		currState = drive->getState();
@@ -121,16 +121,18 @@ void moveTank(OdomState target) {
 		//limit and set motors
 		forward = limiter(prevForward, forwardObj.step(magerr.convert(inch)), 0.08);
 		turn = limiter(prevTurn, turnObj.step(headerr.convert(degree)), 0.08);
-		printf("mag: %f forward: %f head: %f target: %f theta: %f turn: %f\n", magerr.convert(inch), forward, headerr.convert(degree), targetAngle.convert(degree), drive->getState().theta.convert(degree), turn);
+		printf("forward: %f turn: %f\n",  forward, turn);
 		drive->runTankArcade(forward, turn);
 		prevForward = forward;
 		prevTurn = turn;
 	} while(abs(forward) > 0 || abs(turn) > 0);
+	drive->runTankArcade(0, 0);
 }
 
 void setEffectorPositions() {
 
 	effectors->addPosition(GOAL_LIFT, 0);
+	/*
 	effectors->addPosition(GOAL_LIFT, 600);
 	effectors->addPosition(GOAL_LIFT, 1200);
 	effectors->addPosition(FOUR_BAR, 0);
@@ -138,6 +140,7 @@ void setEffectorPositions() {
 	effectors->addPosition(FOUR_BAR, -2750);
 	effectors->addPosition(SPIKE, 0);
 	effectors->addPosition(SPIKE, -600);
+	*/
 }
 
 
@@ -188,7 +191,7 @@ void opcontrol() {
 
 	okapi::Controller controller (okapi::ControllerId::master);
 
-	setEffectorPositions();
+	//setEffectorPositions();
 
 	double forward;
 	double turn;
@@ -208,7 +211,7 @@ void opcontrol() {
 		for(int i = 0; i < 3; i++) {
 			buttonCounts[i] = buttons->getCount(buttons->buttonList[i]);
 		}
-		effectors->step(buttonCounts, speeds);
+		effectors->step(buttonCounts, speeds);//
 		intake->run(buttons->getPressed(okapi::ControllerDigital::L1), buttons->getPressed(okapi::ControllerDigital::R1), 200);
 		pros::delay(10);
 
@@ -217,7 +220,7 @@ void opcontrol() {
 
 
 void autonomous() {
-	OdomState x = {12_in, 0_in, 0_deg};
+	OdomState x = {24_in, 0_in, 0_deg};
 	/*
 	lift->setTarget(250);
 	lift->stepAbsolute(50);

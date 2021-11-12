@@ -11,7 +11,7 @@
 #define FRONTDOWN ControllerDigital::B
 
 #define TOP_LEFT_MOTOR 14
-#define TOP_RIGHT_MOTOR 1
+#define TOP_RIGHT_MOTOR 7
 #define BOTTOM_LEFT_MOTOR 4
 #define BOTTOM_RIGHT_MOTOR 3
 

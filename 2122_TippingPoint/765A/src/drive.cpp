@@ -69,6 +69,5 @@ void Drive::runTank(double left, double right) {
 
 
 okapi::OdomState Drive::getState() {
-  printf("%f %f %f\n", chassis->getState().x.convert(inch), chassis->getState().y.convert(inch), chassis->getState().theta.convert(degree));
   return chassis->getState();
 }
