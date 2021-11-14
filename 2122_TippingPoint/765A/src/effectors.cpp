@@ -1,7 +1,12 @@
 #include "effectors.h"
 
 void Effectors::addPosition(int lift, int pos) {
-  encPositions[lift].push_back(pos);
+  encPositions[0].push_back(0);
+  encPositions[0].push_back(600);
+  encPositions[0].push_back(1200);
+  encPositions[1].push_back(0);
+  encPositions[1].push_back(-300);
+  encPositions[1].push_back(-2750);
 }
 
 void Effectors::step(int buttons[4], double speeds[4]) {
@@ -21,7 +26,7 @@ void Effectors::step(int buttons[4], double speeds[4]) {
     }
   }
   else {
-    for(int i = 0; i < 3; i++) {
+    for(int i = 0; i < 2; i++) {
       if(buttons[i] != prevCounts[i]) {
         if(i == 0 && buttons[i] == 2) {
           goalFinal = true;

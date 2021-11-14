@@ -132,15 +132,6 @@ void moveTank(OdomState target) {
 void setEffectorPositions() {
 
 	effectors->addPosition(GOAL_LIFT, 0);
-	/*
-	effectors->addPosition(GOAL_LIFT, 600);
-	effectors->addPosition(GOAL_LIFT, 1200);
-	effectors->addPosition(FOUR_BAR, 0);
-	effectors->addPosition(FOUR_BAR, -300);
-	effectors->addPosition(FOUR_BAR, -2750);
-	effectors->addPosition(SPIKE, 0);
-	effectors->addPosition(SPIKE, -600);
-	*/
 }
 
 
