@@ -9,7 +9,7 @@
 Drive *drive = new Drive();
 Pneumatics *pneum = new Pneumatics('F');
 Effectors *effectors;
-Intake *intake = new Intake(7);
+Intake *intake = new Intake(5);
 Button *buttons = new Button();
 
 double speeds[3] = {150, 150, 150};
@@ -131,7 +131,7 @@ void moveTank(OdomState target) {
 
 void setEffectorPositions() {
 
-	//effectors->addPosition(GOAL_LIFT, 0);
+	effectors->addPosition();
 }
 
 
@@ -182,7 +182,7 @@ void opcontrol() {
 
 	okapi::Controller controller (okapi::ControllerId::master);
 
-	//setEffectorPositions();
+	setEffectorPositions();
 
 	double forward;
 	double turn;
@@ -196,16 +196,16 @@ void opcontrol() {
 		//printf("%f, %f", forward, turn);
 		drive->runTankArcade(forward, turn);
 		printf("%f %f %f\n", drive->getX(), drive->getY(), drive->getHeading());
-		/*
+		
 		buttons->handleButtons(controller);
 			//printf("%d\n", buttons->getCount(x));
 		int buttonCounts[3];
 		for(int i = 0; i < 3; i++) {
 			buttonCounts[i] = buttons->getCount(buttons->buttonList[i]);
 		}
-		effectors->step(buttonCounts, speeds);//
+		effectors->step(buttonCounts, speeds);
 		intake->run(buttons->getPressed(okapi::ControllerDigital::L1), buttons->getPressed(okapi::ControllerDigital::R1), 200);
-		*/
+		
 		pros::delay(10);
 
 	}

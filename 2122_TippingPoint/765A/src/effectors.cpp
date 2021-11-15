@@ -1,19 +1,24 @@
 #include "effectors.h"
 
-/*
-void Effectors::addPosition(int lift, int pos) {
+
+void Effectors::addPosition() {
   encPositions[0][0] = 0;
   encPositions[0][1] = 600;
   encPositions[0][2] = 1200;
   encPositions[1][0] = 0;
   encPositions[1][1] = -300;
   encPositions[1][2] = -2750;
+  prevCounts[0] = 0;
+  prevCounts[1] = 0;
+  prevCounts[2] = 0;
 }
-*/ 
-void Effectors::step(int buttons[4], double speeds[4]) {
-  for(int i = 0; i < 3; i++) {
-    buttons[i] = buttons[i] % encPositions[i][buttons[i] % 3];
+
+void Effectors::step(int buttons[3], double speeds[3]) {
+  
+  for(int i = 0; i < 2; i++) {
+  buttons[i] = buttons[i] % 3;
   }
+  /*
   if(goalFinal) {
     if(motors[1].getPosition()>0.5*encPositions[1][1]) {
       motors[0].moveAbsolute(encPositions[0][2], speeds[0]);
@@ -26,9 +31,12 @@ void Effectors::step(int buttons[4], double speeds[4]) {
       spikeUp = false;
     }
   }
-  else {
+  */
+
     for(int i = 0; i < 2; i++) {
+      printf("%d ", buttons[i]);
       if(buttons[i] != prevCounts[i]) {
+        /*
         if(i == 0 && buttons[i] == 2) {
           goalFinal = true;
           motors[1].moveAbsolute(encPositions[1][2], speeds[1]);
@@ -37,11 +45,15 @@ void Effectors::step(int buttons[4], double speeds[4]) {
           spikeUp = true;
           motors[i].moveAbsolute(encPositions[1][0], speeds[1]);
         }
+        */
         motors[i].moveAbsolute(encPositions[i][buttons[i]], speeds[i]);
     }
+    
   }
-  }
-  for(int i = 0; i < 3; i++) {
+  
+  printf("\n");
+  for(int i = 0; i < 2; i++) {
     prevCounts[i] = buttons[i];
   }
+  
 }

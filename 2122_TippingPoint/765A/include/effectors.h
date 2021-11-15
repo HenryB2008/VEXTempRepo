@@ -5,16 +5,16 @@
 
 class Effectors {
 private:
-  okapi::Motor motors[3] = {okapi::Motor(17), okapi::Motor(16), okapi::Motor(7)};
+  okapi::Motor motors[2] = {okapi::Motor(1), okapi::Motor(20)};
   int encPositions[3][3];
-  int prevCounts[3] = {0, 0, 0};
+  int prevCounts[3];
   bool goalFinal = false;
   bool spikeUp = false;
 public:
   Effectors();
   void run(bool left, bool right, double speed);
   void step(int buttons[3], double speeds[3]);
-  void addPosition(int lift, int pos);
+  void addPosition();
   void runOne(int lift, double pos);
 };
 
