@@ -8,7 +8,7 @@
 
 Drive *drive = new Drive();
 Pneumatics *pneum = new Pneumatics('F');
-Effectors *effectors = new Effectors();
+Effectors effectors;
 Intake *intake = new Intake(5);
 Button *buttons = new Button();
 
@@ -131,7 +131,7 @@ void moveTank(OdomState target) {
 
 void setEffectorPositions() {
 
-	effectors->addPosition();
+	effectors.addPosition();
 }
 
 
@@ -203,7 +203,7 @@ void opcontrol() {
 		for(int i = 0; i < 3; i++) {
 			buttonCounts[i] = buttons->getCount(buttons->buttonList[i]);
 		}
-		effectors->step(buttonCounts, speeds);
+		effectors.step(buttonCounts, speeds);
 		intake->run(buttons->getPressed(okapi::ControllerDigital::L1), buttons->getPressed(okapi::ControllerDigital::R1), 200);
 		
 		pros::delay(10);
