@@ -8,7 +8,7 @@
 
 Drive *drive = new Drive();
 Pneumatics *pneum = new Pneumatics('F');
-Effectors *effectors = new Effectors;
+Effectors *effectors = new Effectors();
 Intake *intake = new Intake(5);
 Button *buttons = new Button();
 
