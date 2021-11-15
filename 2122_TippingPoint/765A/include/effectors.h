@@ -6,7 +6,7 @@
 class Effectors {
 private:
   okapi::Motor motors[3] = {okapi::Motor(17), okapi::Motor(16), okapi::Motor(7)};
-  std::vector<int> encPositions[3];
+  int encPositions[3][3];
   int prevCounts[3] = {0, 0, 0};
   bool goalFinal = false;
   bool spikeUp = false;

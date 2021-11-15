@@ -1,17 +1,18 @@
 #include "effectors.h"
 
+/*
 void Effectors::addPosition(int lift, int pos) {
-  encPositions[0].push_back(0);
-  encPositions[0].push_back(600);
-  encPositions[0].push_back(1200);
-  encPositions[1].push_back(0);
-  encPositions[1].push_back(-300);
-  encPositions[1].push_back(-2750);
+  encPositions[0][0] = 0;
+  encPositions[0][1] = 600;
+  encPositions[0][2] = 1200;
+  encPositions[1][0] = 0;
+  encPositions[1][1] = -300;
+  encPositions[1][2] = -2750;
 }
-
+*/ 
 void Effectors::step(int buttons[4], double speeds[4]) {
   for(int i = 0; i < 3; i++) {
-    buttons[i] = buttons[i] % encPositions[i][buttons[i] % encPositions[i].size()];
+    buttons[i] = buttons[i] % encPositions[i][buttons[i] % 3];
   }
   if(goalFinal) {
     if(motors[1].getPosition()>0.5*encPositions[1][1]) {
