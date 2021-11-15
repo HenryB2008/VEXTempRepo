@@ -36,7 +36,7 @@ void Effectors::step(int buttons[3], double speeds[3]) {
     for(int i = 0; i < 2; i++) {
       printf("%d ", buttons[i]);
       if(buttons[i] != prevCounts[i]) {
-        /*
+        
         if(i == 0 && buttons[i] == 2) {
           goalFinal = true;
           motors[1].moveAbsolute(encPositions[1][2], speeds[1]);
@@ -45,7 +45,7 @@ void Effectors::step(int buttons[3], double speeds[3]) {
           spikeUp = true;
           motors[i].moveAbsolute(encPositions[1][0], speeds[1]);
         }
-        */
+        
         motors[i].moveAbsolute(encPositions[i][buttons[i]], speeds[i]);
     }
     
