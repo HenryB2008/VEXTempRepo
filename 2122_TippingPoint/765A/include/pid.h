@@ -14,7 +14,7 @@ private:
   double kd;
   double totalerr;
 public:
-  PID(double kp, double ki, double kd);
+  PID(PIDConst constants);
   double step(double err);
 };
 

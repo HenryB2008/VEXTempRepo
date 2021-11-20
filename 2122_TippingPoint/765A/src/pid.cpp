@@ -1,9 +1,9 @@
 #include "pid.h"
 
-PID::PID(double kp, double ki, double kd) {
-  this->kp = kp;
-  this->ki = ki;
-  this->kd = kd;
+PID::PID(PIDConst constants) {
+  this->kp = constants.kp;
+  this->ki = constants.ki;
+  this->kd = constants.kd;
 }
 
 double PID::step(double err) {

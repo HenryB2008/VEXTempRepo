@@ -8,6 +8,9 @@ Button *buttons = new Button();
 
 double speeds[3] = {150, 150, 150};
 
+PIDConst forwardDefault = {0.05, 0, 0};
+PIDConst headingDefault = {0.005, 0, 0};
+PIDConst turnDefault = {0.01, 0, 0};
 
 /**
  * A callback function for LLEMU's center button.
@@ -61,7 +64,7 @@ double limiter(double prevOutput, double currOutput, double step) {
 	}
 	return output;
 }
-
+/*
 void move(OdomState target) {
 	double xOutput, yOutput, turnOutput;
 	double prevX, prevY, prevTurn;
@@ -85,8 +88,8 @@ void move(OdomState target) {
 	drive->run(0, 0, 0);
 	printf("Done");
 }
-
-void moveTank(OdomState target) {
+*/
+void moveTank(OdomState target, PIDConst forwardConstants = forwardDefault, PIDConst turnConstants = headingDefault) {
 	double forward, turn, prevForward, prevTurn;
 	QLength magerr;
 	QAngle headerr;
@@ -95,8 +98,8 @@ void moveTank(OdomState target) {
 	QLength xDiff, yDiff;
 	prevForward = 0;
 	prevTurn = 0;
-	PID forwardObj = PID(0.05, 0, 0);
-	PID turnObj = PID(0.005, 0, 0);
+	PID forwardObj = PID(forwardConstants);
+	PID turnObj = PID(turnConstants);
 
 	do {
 		currState = drive->getState();
@@ -208,6 +211,8 @@ void opcontrol() {
 
 void autonomous() {
 	OdomState x = {24_in, 0_in, 0_deg};
+	OdomState y = {0_in, 0_in, 0_deg};
+	OdomState z = {0_in, 0_in, 90_deg};
 	/*
 	lift->setTarget(250);
 	lift->stepAbsolute(50);
@@ -216,4 +221,6 @@ void autonomous() {
 	*/
 	printf("done\n");
 	moveTank(x);
+	moveTank(y);
+	moveTank(z, forwardDefault, turnDefault);
 }
