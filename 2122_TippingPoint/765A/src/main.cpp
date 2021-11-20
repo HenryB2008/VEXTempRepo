@@ -1,10 +1,4 @@
-#include "main.h"
-#include "pid.h"
-#include "drive.h"
-#include "pneumatics.h"
-#include "button.h"
-#include "intake.h"
-#include "effectors.h"
+#include "includes.h"
 
 Drive *drive = new Drive();
 Pneumatics *pneum = new Pneumatics('F');
@@ -62,7 +56,7 @@ OdomState transform(OdomState curr, OdomState target) {
 
 double limiter(double prevOutput, double currOutput, double step) {
 	double output = std::clamp(currOutput, prevOutput-step, prevOutput+step);
-	if(abs(output) < 0.05) {
+	if(abs(output) < 0.095) {
 		return 0;
 	}
 	return output;
@@ -119,8 +113,8 @@ void moveTank(OdomState target) {
 		}
 
 		//limit and set motors
-		forward = limiter(prevForward, forwardObj.step(magerr.convert(inch)), 0.08);
-		turn = limiter(prevTurn, turnObj.step(headerr.convert(degree)), 0.08);
+		forward = limiter(prevForward, forwardObj.step(magerr.convert(inch)), 0.096);
+		turn = limiter(prevTurn, turnObj.step(headerr.convert(degree)), 0.096);
 		printf("forward: %f turn: %f\n",  forward, turn);
 		drive->runTankArcade(forward, turn);
 		prevForward = forward;
