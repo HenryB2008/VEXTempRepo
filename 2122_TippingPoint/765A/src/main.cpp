@@ -188,8 +188,8 @@ void opcontrol() {
 	double turn;
 	double strafe;
 	int i = 0;
-	bool fourbarpneumstate;
-	bool auxilclampstate;
+	bool fourbarpneumstate = true;
+	bool auxilclampstate = false;
 	while(true) {
 		forward = controller.getAnalog(okapi::ControllerAnalog::rightY);
 		turn = controller.getAnalog(okapi::ControllerAnalog::leftX);
