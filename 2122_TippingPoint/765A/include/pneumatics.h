@@ -7,9 +7,8 @@
 class Pneumatics {
     private:
         pros::ADIDigitalOut piston;
-        okapi::ControllerDigital btn;
-
         bool state = false;
+        int prevCount = 0;
 
     public:
         Pneumatics(uint8_t port);
@@ -19,7 +18,7 @@ class Pneumatics {
         void turnOff();
 
         // opcontrol
-        void handle();
+        void handle(int count);
 
         // auton
         void onThenOff(int delay);

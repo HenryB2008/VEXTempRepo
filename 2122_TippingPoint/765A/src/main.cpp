@@ -197,31 +197,17 @@ void opcontrol() {
 		//printf("%f, %f", forward, turn);
 		drive->runTankArcade(forward, turn);
 		printf("%f %f %f\n", drive->getX(), drive->getY(), drive->getHeading());
-		
+
 		buttons->handleButtons(controller);
 			//printf("%d\n", buttons->getCount(x));
-		int buttonCounts[3];
-		for(int i = 0; i < 3; i++) {
+		int buttonCounts[5];
+		for(int i = 0; i < 5; i++) {
 			buttonCounts[i] = buttons->getCount(buttons->buttonList[i]);
 		}
 		effectors.step(buttonCounts, speeds);
 		intake->run(buttons->getPressed(okapi::ControllerDigital::L1), buttons->getPressed(okapi::ControllerDigital::R1), 200);
-		if (buttons->getPressed(okapi::ControllerDigital::left)) {
-			if (fourbarpneumstate){
-				fourbarpneum->turnOff();
-			} else {
-				fourbarpneum->turnOn();
-			}
-			fourbarpneumstate = !fourbarpneumstate;
-		}
-		if (buttons->getPressed(okapi::ControllerDigital::right)) {
-			if (auxilclampstate){
-				auxilclamp->turnOff();
-			} else {
-				auxilclamp->turnOn();
-			}
-			auxilclampstate = !auxilclampstate;
-		}
+		fourbarpneum->handle(buttonCounts[3]);
+		auxilclamp->handle(buttonCounts[4]);
 		pros::delay(10);
 
 	}
