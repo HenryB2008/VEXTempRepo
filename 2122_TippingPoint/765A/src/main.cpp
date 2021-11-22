@@ -8,8 +8,8 @@ Button *buttons = new Button();
 
 double speeds[3] = {150, 150, 150};
 
-PIDConst forwardDefault = {0.05, 0, 0};
-PIDConst headingDefault = {0.005, 0, 0};
+PIDConst forwardDefault = {0.025, 0, 0};
+PIDConst headingDefault = {0.00, 0, 0};
 PIDConst turnDefault = {0.01, 0, 0};
 
 /**
@@ -100,6 +100,8 @@ void moveTank(OdomState target, PIDConst forwardConstants = forwardDefault, PIDC
 	prevTurn = 0;
 	PID forwardObj = PID(forwardConstants);
 	PID turnObj = PID(turnConstants);
+
+	printf("DONE\n");
 
 	do {
 		currState = drive->getState();
