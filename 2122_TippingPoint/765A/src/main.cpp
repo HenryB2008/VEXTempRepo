@@ -1,7 +1,8 @@
 #include "includes.h"
 
 Drive *drive = new Drive();
-Pneumatics *pneum = new Pneumatics('F');
+Pneumatics *fourbarpneum = new Pneumatics('H');
+Pneumatics *auxilclamp = new Pneumatics('E');
 Effectors effectors;
 Intake *intake = new Intake(5);
 Button *buttons = new Button();
@@ -187,7 +188,8 @@ void opcontrol() {
 	double turn;
 	double strafe;
 	int i = 0;
-
+	bool fourbarpneumstate;
+	bool auxilclampstate;
 	while(true) {
 		forward = controller.getAnalog(okapi::ControllerAnalog::rightY);
 		turn = controller.getAnalog(okapi::ControllerAnalog::leftX);
@@ -204,7 +206,22 @@ void opcontrol() {
 		}
 		effectors.step(buttonCounts, speeds);
 		intake->run(buttons->getPressed(okapi::ControllerDigital::L1), buttons->getPressed(okapi::ControllerDigital::R1), 200);
-		
+		if (buttons->getPressed(okapi::ControllerDigital::left)) {
+			if (fourbarpneumstate){
+				fourbarpneum->turnOff();
+			} else {
+				fourbarpneum->turnOn();
+			}
+			fourbarpneumstate = !fourbarpneumstate;
+		}
+		if (buttons->getPressed(okapi::ControllerDigital::right)) {
+			if (auxilclampstate){
+				auxilclamp->turnOff();
+			} else {
+				auxilclamp->turnOn();
+			}
+			auxilclampstate = !auxilclampstate;
+		}
 		pros::delay(10);
 
 	}
