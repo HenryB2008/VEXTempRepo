@@ -9,9 +9,9 @@ Button *buttons = new Button();
 
 double speeds[3] = {150, 150, 150};
 
-PIDConst forwardDefault = {0.025, 0, 0};
-PIDConst headingDefault = {0.00, 0, 0};
-PIDConst turnDefault = {0.01, 0, 0};
+PIDConst forwardDefault = {0.035, 0.000001, 0};
+PIDConst headingDefault = {0.01, 0, 0};
+PIDConst turnDefault = {0.007, 0, 0};
 
 /**
  * A callback function for LLEMU's center button.
@@ -90,7 +90,7 @@ void move(OdomState target) {
 	printf("Done");
 }
 */
-void moveTank(OdomState target, PIDConst forwardConstants = forwardDefault, PIDConst turnConstants = headingDefault) {
+void moveTank(OdomState target, PIDConst forwardConstants = forwardDefault, PIDConst turnConstants = headingDefault, bool turning = false) {
 	double forward, turn, prevForward, prevTurn;
 	QLength magerr;
 	QAngle headerr;
@@ -108,12 +108,18 @@ void moveTank(OdomState target, PIDConst forwardConstants = forwardDefault, PIDC
 		currState = drive->getState();
 		xDiff = target.x-currState.x;
 		yDiff = target.y-currState.y;
-		targetAngle = 90_deg - okapi::atan2(xDiff, yDiff);
-		headerr = targetAngle-drive->getState().theta;
+		if(!turning) {
+			targetAngle = 90_deg - okapi::atan2(xDiff, yDiff);
+
+		}
+		else {
+			targetAngle = target.theta;
+		}
+		headerr = okapi::OdomMath::constrainAngle180(targetAngle-drive->getState().theta);
 		magerr = sqrt((xDiff * xDiff) + (yDiff * yDiff));
 
 		//if overshoot point, reverse direction and target heading
-		if(abs(headerr.convert(degree)) > 100) {
+		if(abs(headerr.convert(degree)) > 100 && forwardConstants.kp != 0) {
 			headerr = okapi::OdomMath::constrainAngle180(headerr-180_deg);
 			magerr*=-1;
 		}
@@ -121,10 +127,12 @@ void moveTank(OdomState target, PIDConst forwardConstants = forwardDefault, PIDC
 		//limit and set motors
 		forward = limiter(prevForward, forwardObj.step(magerr.convert(inch)), 0.096);
 		turn = limiter(prevTurn, turnObj.step(headerr.convert(degree)), 0.096);
-		printf("forward: %f turn: %f\n",  forward, turn);
+		//pros::lcd::print(2, "%f", drive->getState().theta.convert(degree));
+		pros::lcd::print(2, "forward: %f turn: %f\n",  forward, turn);
 		drive->runTankArcade(forward, turn);
 		prevForward = forward;
 		prevTurn = turn;
+		pros::lcd::clear_line(2);
 	} while(abs(forward) > 0 || abs(turn) > 0);
 	drive->runTankArcade(0, 0);
 }
@@ -196,25 +204,26 @@ void opcontrol() {
 		//strafe = controller.getAnalog(okapi::ControllerAnalog::rightX);
 		//printf("%f, %f", forward, turn);
 		drive->runTankArcade(forward, turn);
-		printf("%f %f %f\n", drive->getX(), drive->getY(), drive->getHeading());
+		pros::lcd::print(2, "%f %f %f", drive->getX(), drive->getY(), drive->getHeading());
 
 		buttons->handleButtons(controller);
 			//printf("%d\n", buttons->getCount(x));
-		int buttonCounts[5];
-		for(int i = 0; i < 5; i++) {
+		int buttonCounts[7];
+		for(int i = 0; i < 7; i++) {
 			buttonCounts[i] = buttons->getCount(buttons->buttonList[i]);
 		}
 		effectors.step(buttonCounts, speeds);
 		intake->run(buttons->getPressed(okapi::ControllerDigital::L1), buttons->getPressed(okapi::ControllerDigital::R1), 200);
-		fourbarpneum->handle(buttonCounts[3]);
-		auxilclamp->handle(buttonCounts[4]);
+		fourbarpneum->handle(buttonCounts[5]);
+		auxilclamp->handle(buttonCounts[6]);
 		pros::delay(10);
-
+		pros::lcd::clear_line(2);
 	}
 }
 
 
 void autonomous() {
+	//pros::lcd::initialize();
 	OdomState x = {24_in, 0_in, 0_deg};
 	OdomState y = {0_in, 0_in, 0_deg};
 	OdomState z = {0_in, 0_in, 90_deg};
@@ -227,5 +236,5 @@ void autonomous() {
 	printf("done\n");
 	moveTank(x);
 	moveTank(y);
-	moveTank(z, forwardDefault, turnDefault);
+	moveTank(z, {0, 0, 0}, turnDefault, true);
 }
