@@ -2,16 +2,17 @@
 
 Drive *drive = new Drive();
 Pneumatics *fourbarpneum = new Pneumatics('H');
-Pneumatics *auxilclamp = new Pneumatics('E');
+Pneumatics *auxilclamp = new Pneumatics('G');
 Effectors effectors;
 Intake *intake = new Intake(5);
 Button *buttons = new Button();
+pros::Imu imu(16);
 
 double speeds[3] = {150, 150, 150};
 
-PIDConst forwardDefault = {0.035, 0.000001, 0};
+PIDConst forwardDefault = {0.035, 0.000003, 0};
 PIDConst headingDefault = {0.01, 0, 0};
-PIDConst turnDefault = {0.007, 0, 0};
+PIDConst turnDefault = {0.01, 0.00009, 0};
 
 /**
  * A callback function for LLEMU's center button.
@@ -40,6 +41,16 @@ void on_center_button() {
 void initialize() {
 	pros::lcd::initialize();
 	pros::lcd::set_text(1, "Hello PROS User!");
+	imu.reset();
+
+	int time = pros::millis();
+	int iter = 0;
+	while (imu.is_calibrating())
+	{
+		printf("IMU calibrating... %d\n", iter);
+		iter += 10;
+		pros::delay(10);
+	}
 
 	pros::lcd::register_btn1_cb(on_center_button);
 }
@@ -59,37 +70,22 @@ OdomState transform(OdomState curr, OdomState target) {
 }
 
 double limiter(double prevOutput, double currOutput, double step) {
-	double output = std::clamp(currOutput, prevOutput-step, prevOutput+step);
-	if(abs(output) < 0.095) {
-		return 0;
-	}
+	double output;
+	if(currOutput > 0){ // positive rawOutput case
+
+        output = std::clamp(currOutput, prevOutput - step, std::min(1.0, prevOutput + step)); // clamped for slew and so finalOutput does not exceed maxOutput
+
+    } else if (currOutput < 0){ // negative rawOutput case
+
+        output = std::clamp(currOutput, std::max(-1.0, prevOutput - step), prevOutput + step); // clamped for slew and so finalOutput does not exceed -maxOutput
+
+    } else { // rawOutput is 0
+
+        output = 0; // step will return 0
+    }
 	return output;
 }
-/*
-void move(OdomState target) {
-	double xOutput, yOutput, turnOutput;
-	double prevX, prevY, prevTurn;
-	prevX = 0;
-	prevY = 0;
-  prevTurn = 0;
-	PID x = PID(0.1, 0, 0);
-	PID y = PID(0.1, 1, 0);
-	PID turn = PID(0.01, 0, 0);
-	do {
-		OdomState diff = transform(drive->getState(), target);
-		xOutput = limiter(prevX, x.step(diff.x.convert(inch)), 0.1);
-		yOutput = limiter(prevY, y.step(diff.y.convert(inch)), 0.1);
-		turnOutput = limiter(prevTurn, turn.step(diff.theta.convert(degree)), 0.1);
 
-		drive->run(xOutput, yOutput, turnOutput);
-		prevX = xOutput;
-		prevY = yOutput;
-		prevTurn = turnOutput;
-	} while(abs(xOutput) >0 || abs(yOutput) >0 || abs(turnOutput) >0);
-	drive->run(0, 0, 0);
-	printf("Done");
-}
-*/
 void moveTank(OdomState target, PIDConst forwardConstants = forwardDefault, PIDConst turnConstants = headingDefault, bool turning = false) {
 	double forward, turn, prevForward, prevTurn;
 	QLength magerr;
@@ -97,6 +93,7 @@ void moveTank(OdomState target, PIDConst forwardConstants = forwardDefault, PIDC
 	QAngle targetAngle;
 	OdomState currState;
 	QLength xDiff, yDiff;
+	double currHeading;
 	prevForward = 0;
 	prevTurn = 0;
 	PID forwardObj = PID(forwardConstants);
@@ -105,17 +102,18 @@ void moveTank(OdomState target, PIDConst forwardConstants = forwardDefault, PIDC
 	printf("DONE\n");
 
 	do {
+		//currHeading = imu.get_heading();
 		currState = drive->getState();
 		xDiff = target.x-currState.x;
 		yDiff = target.y-currState.y;
 		if(!turning) {
-			targetAngle = 90_deg - okapi::atan2(xDiff, yDiff);
-
+			targetAngle = okapi::OdomMath::constrainAngle180((PI/2 - atan2(xDiff.convert(meter), yDiff.convert(meter)))*1_rad);
+			targetAngle = 1_deg * targetAngle.convert(degree);
 		}
 		else {
 			targetAngle = target.theta;
 		}
-		headerr = okapi::OdomMath::constrainAngle180(targetAngle-drive->getState().theta);
+		headerr = okapi::OdomMath::constrainAngle180(targetAngle-(currState.theta*-1));
 		magerr = sqrt((xDiff * xDiff) + (yDiff * yDiff));
 
 		//if overshoot point, reverse direction and target heading
@@ -125,15 +123,16 @@ void moveTank(OdomState target, PIDConst forwardConstants = forwardDefault, PIDC
 		}
 
 		//limit and set motors
-		forward = limiter(prevForward, forwardObj.step(magerr.convert(inch)), 0.096);
-		turn = limiter(prevTurn, turnObj.step(headerr.convert(degree)), 0.096);
+		forward = limiter(prevForward, forwardObj.step(magerr.convert(inch)), 0.11);
+		turn = limiter(prevTurn, turnObj.step(headerr.convert(degree)), 0.11);
 		//pros::lcd::print(2, "%f", drive->getState().theta.convert(degree));
-		pros::lcd::print(2, "forward: %f turn: %f\n",  forward, turn);
+		printf("%f %f %f %f ", magerr.convert(inch), targetAngle.convert(degree), headerr.convert(degree), currState.theta.convert(degree));
+		printf("forward: %f turn: %f\n", forward, turn);
 		drive->runTankArcade(forward, turn);
 		prevForward = forward;
 		prevTurn = turn;
-		pros::lcd::clear_line(2);
-	} while(abs(forward) > 0 || abs(turn) > 0);
+		pros::delay(30);
+	} while(abs(magerr.convert(inch)) > 3 || abs(headerr.convert(degree))>5);
 	drive->runTankArcade(0, 0);
 }
 
@@ -226,7 +225,7 @@ void autonomous() {
 	//pros::lcd::initialize();
 	OdomState x = {24_in, 0_in, 0_deg};
 	OdomState y = {0_in, 0_in, 0_deg};
-	OdomState z = {0_in, 0_in, 90_deg};
+	OdomState z = {0_in, 0_in, -90_deg};
 	/*
 	lift->setTarget(250);
 	lift->stepAbsolute(50);
