@@ -15,7 +15,7 @@ public:
   void run(bool left, bool right, double speed);
   void step(int buttons[3], double speeds[3]);
   void addPosition();
-  void runOne(int lift, double pos);
+  void runOne(int lift, int pos);
 };
 
 #endif

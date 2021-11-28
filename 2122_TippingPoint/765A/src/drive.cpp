@@ -16,15 +16,15 @@ Drive::Drive() {
                   RIGHT_TRACKING_WHEEL_TOP,
                   RIGHT_TRACKING_WHEEL_BOTTOM,
                   true
-              )
-              // ADIEncoder( // back encoder
-              //     BACK_TRACKING_WHEEL_TOP,
-              //     BACK_TRACKING_WHEEL_BOTTOM,
-              //     true
-              // )
+              ),
+               ADIEncoder( // back encoder
+                   BACK_TRACKING_WHEEL_TOP,
+                   BACK_TRACKING_WHEEL_BOTTOM,
+                   true
+               )
           )
           .withOdometry(
-            ChassisScales({ODOMWHEELDIM, ODOMTRACK}, quadEncoderTPR)
+            ChassisScales({ODOMWHEELDIM, ODOMTRACK, ODOMBACKDISTANCE, ODOMWHEELDIM}, quadEncoderTPR)
           )
 
         .buildOdometry();

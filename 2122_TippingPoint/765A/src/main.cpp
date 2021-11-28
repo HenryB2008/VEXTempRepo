@@ -10,9 +10,9 @@ pros::Imu imu(16);
 
 double speeds[3] = {150, 150, 150};
 
-PIDConst forwardDefault = {0.035, 0.000003, 0};
-PIDConst headingDefault = {0.01, 0, 0};
-PIDConst turnDefault = {0.01, 0.00009, 0};
+PIDConst forwardDefault = {0.035, 0.00003, 0};
+PIDConst headingDefault = {0, 0, 0};
+PIDConst turnDefault = {0.015, 0.0002, 0};
 
 /**
  * A callback function for LLEMU's center button.
@@ -126,13 +126,23 @@ void moveTank(OdomState target, PIDConst forwardConstants = forwardDefault, PIDC
 		forward = limiter(prevForward, forwardObj.step(magerr.convert(inch)), 0.11);
 		turn = limiter(prevTurn, turnObj.step(headerr.convert(degree)), 0.11);
 		//pros::lcd::print(2, "%f", drive->getState().theta.convert(degree));
-		printf("%f %f %f %f ", magerr.convert(inch), targetAngle.convert(degree), headerr.convert(degree), currState.theta.convert(degree));
+		//printf("%f %f %f %f ", magerr.convert(inch), targetAngle.convert(degree), headerr.convert(degree), currState.theta.convert(degree));
+		printf("%f %f %f\n", drive->getX(), drive->getY(), drive->getHeading());
 		printf("forward: %f turn: %f\n", forward, turn);
 		drive->runTankArcade(forward, turn);
 		prevForward = forward;
 		prevTurn = turn;
 		pros::delay(30);
-	} while(abs(magerr.convert(inch)) > 3 || abs(headerr.convert(degree))>5);
+	} while((abs(magerr.convert(inch)) > 3 && !turning) || abs(headerr.convert(degree))>3);
+	drive->runTankArcade(0, 0);
+}
+
+void speedMove(double time, double speed) {
+	double start = pros::millis();
+	drive->runTankArcade(speed, 0);
+	while(pros::millis()-start<time) {
+		pros::delay(10);
+	}
 	drive->runTankArcade(0, 0);
 }
 
@@ -203,7 +213,7 @@ void opcontrol() {
 		//strafe = controller.getAnalog(okapi::ControllerAnalog::rightX);
 		//printf("%f, %f", forward, turn);
 		drive->runTankArcade(forward, turn);
-		pros::lcd::print(2, "%f %f %f", drive->getX(), drive->getY(), drive->getHeading());
+		printf("%f %f %f\n", drive->getX(), drive->getY(), drive->getHeading());
 
 		buttons->handleButtons(controller);
 			//printf("%d\n", buttons->getCount(x));
@@ -222,6 +232,7 @@ void opcontrol() {
 
 
 void autonomous() {
+	setEffectorPositions();
 	//pros::lcd::initialize();
 	OdomState x = {24_in, 0_in, 0_deg};
 	OdomState y = {0_in, 0_in, 0_deg};
@@ -233,7 +244,25 @@ void autonomous() {
 	lift->stepAbsolute(-50);
 	*/
 	printf("done\n");
-	moveTank(x);
-	moveTank(y);
-	moveTank(z, {0, 0, 0}, turnDefault, true);
+	//moveTank(x);
+	speedMove(1300, 1);
+	fourbarpneum->turnOn();
+	pros::delay(300);
+	effectors.runOne(GOAL_LIFT, 0);
+	//speedMove(500, -1);
+
+	OdomState goal = drive->getState();
+	goal.theta = 0_deg;
+	//moveTank(y);
+	moveTank(goal, {0, 0, 0}, turnDefault, true);
+
+	goal = drive->getState();
+	goal.x = 24_in;
+	moveTank(goal);
+
+	goal = drive->getState();
+	goal.theta = -90_deg;
+	//moveTank(y);
+	moveTank(goal, {0, 0, 0}, turnDefault, true);
+	printf("%f %f %f", drive->getState().x.convert(inch), drive->getState().y.convert(inch), drive->getState().theta.convert(degree));
 }
