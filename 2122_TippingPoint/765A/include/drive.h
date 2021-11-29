@@ -10,6 +10,7 @@
 class Drive {
 private:
   std::shared_ptr<okapi::OdomChassisController> chassis;
+  int speedfactor = 1;
 public:
   Drive();
   double getX();
@@ -20,6 +21,7 @@ public:
   void runWithController();
   void runTankArcade(double forward, double turn);
   void runTank(double left, double right);
+  void reverseOrientation(int ori);
 };
 
 #endif

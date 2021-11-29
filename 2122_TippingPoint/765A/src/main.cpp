@@ -217,14 +217,15 @@ void opcontrol() {
 
 		buttons->handleButtons(controller);
 			//printf("%d\n", buttons->getCount(x));
-		int buttonCounts[7];
-		for(int i = 0; i < 7; i++) {
+		int buttonCounts[8];
+		for(int i = 0; i < 8; i++) {
 			buttonCounts[i] = buttons->getCount(buttons->buttonList[i]);
 		}
 		effectors.step(buttonCounts, speeds);
 		intake->run(buttons->getPressed(okapi::ControllerDigital::R1), buttons->getPressed(okapi::ControllerDigital::L1), 150);
 		fourbarpneum->handle(buttonCounts[5]);
 		auxilclamp->handle(buttonCounts[6]);
+		drive->reverseOrientation(buttonCounts[7]%2);
 		pros::delay(10);
 		pros::lcd::clear_line(2);
 	}

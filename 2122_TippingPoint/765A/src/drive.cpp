@@ -59,15 +59,22 @@ void Drive::run(double forward, double strafe, double heading) {
 }
 
 void Drive::runTankArcade(double forward, double turn) {
-  chassis->getModel()->arcade(forward, turn);
+  chassis->getModel()->arcade(forward*speedfactor, turn*speedfactor);
 }
 
 void Drive::runTank(double left, double right) {
   chassis->getModel()->tank(left, right);
 }
 
-
-
 okapi::OdomState Drive::getState() {
   return chassis->getState();
+}
+
+void Drive::reverseOrientation(int ori) {
+  if(ori == 1) {
+    speedfactor = -1;
+  }
+  else {
+    speedfactor = 1;
+  }
 }
