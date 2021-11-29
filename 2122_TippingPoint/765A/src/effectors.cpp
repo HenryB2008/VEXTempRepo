@@ -6,7 +6,7 @@ Effectors::Effectors() {
 
 void Effectors::addPosition() {
   encPositions[0][0] = -4000;
-  encPositions[0][1] = -2300;
+  encPositions[0][1] = -1800;
   encPositions[1][0] = 0;
   encPositions[1][1] = 2300;
   prevCounts[0] = 0;

@@ -222,7 +222,7 @@ void opcontrol() {
 			buttonCounts[i] = buttons->getCount(buttons->buttonList[i]);
 		}
 		effectors.step(buttonCounts, speeds);
-		intake->run(buttons->getPressed(okapi::ControllerDigital::L1), buttons->getPressed(okapi::ControllerDigital::R1), 200);
+		intake->run(buttons->getPressed(okapi::ControllerDigital::R1), buttons->getPressed(okapi::ControllerDigital::L1), 150);
 		fourbarpneum->handle(buttonCounts[5]);
 		auxilclamp->handle(buttonCounts[6]);
 		pros::delay(10);
