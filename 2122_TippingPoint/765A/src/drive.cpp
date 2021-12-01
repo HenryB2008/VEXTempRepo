@@ -2,7 +2,7 @@
 
 Drive::Drive() {
   chassis = ChassisControllerBuilder()
-            .withMotors(TOP_LEFT_MOTOR, -TOP_RIGHT_MOTOR, -BOTTOM_RIGHT_MOTOR, BOTTOM_LEFT_MOTOR)
+            .withMotors(-TOP_LEFT_MOTOR, TOP_RIGHT_MOTOR, BOTTOM_RIGHT_MOTOR, -BOTTOM_LEFT_MOTOR)
             .withDimensions(
               AbstractMotor::gearset::green,
 			        ChassisScales({WHEELDIM, WHEELTRACK}, imev5GreenTPR))
@@ -29,6 +29,7 @@ Drive::Drive() {
 
         .buildOdometry();
         chassis->getModel()->setBrakeMode(AbstractMotor::brakeMode::brake);
+        speedfactor = 1;
 }
 
 
@@ -59,7 +60,7 @@ void Drive::run(double forward, double strafe, double heading) {
 }
 
 void Drive::runTankArcade(double forward, double turn) {
-  chassis->getModel()->arcade(forward*speedfactor, turn*speedfactor);
+  chassis->getModel()->arcade(forward, turn);
 }
 
 void Drive::runTank(double left, double right) {
@@ -71,7 +72,8 @@ okapi::OdomState Drive::getState() {
 }
 
 void Drive::reverseOrientation(int ori) {
-  if(ori == 1) {
+  if(ori%2 == 1) {
+    printf("REVERSED\n");
     speedfactor = -1;
   }
   else {

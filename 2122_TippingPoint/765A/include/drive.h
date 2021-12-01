@@ -10,7 +10,7 @@
 class Drive {
 private:
   std::shared_ptr<okapi::OdomChassisController> chassis;
-  int speedfactor = 1;
+  int speedfactor;
 public:
   Drive();
   double getX();
