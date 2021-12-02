@@ -1,17 +1,20 @@
 #include "effectors.h"
 
 Effectors::Effectors() {
-
+  for(int i = 0; i < 3; i++) {
+    motors[i].getEncoder().reset();
+  }
 }
 
 void Effectors::addPosition() {
-  encPositions[0][0] = -4300;
-  encPositions[0][1] = -2150;
-  encPositions[1][0] = -450;
-  encPositions[1][1] = 2300;
+  encPositions[0][0] = 1800;
+  encPositions[0][1] = 4400;
+  encPositions[1][0] = 0;
+  encPositions[1][1] = 2400;
   prevCounts[0] = 0;
   prevCounts[1] = 0;
   prevCounts[2] = 0;
+
 }
 
 void Effectors::step(int buttons[3], double speeds[3]) {
@@ -21,6 +24,7 @@ void Effectors::step(int buttons[3], double speeds[3]) {
 
     for(int i = 0; i < 2; i++) {
       //printf("%d ", buttons[i]);
+      printf("Enc position: %f", motors[i].getPosition());
       if(buttons[i] != prevCounts[i]) {
         motors[i].moveAbsolute(encPositions[i][buttons[i]], speeds[i]);
         if(i == 1) {

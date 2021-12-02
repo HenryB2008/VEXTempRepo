@@ -208,8 +208,8 @@ void opcontrol() {
 	bool fourbarpneumstate = true;
 	bool auxilclampstate = false;
 	while(true) {
-		forward = controller.getAnalog(okapi::ControllerAnalog::rightY);
-		turn = controller.getAnalog(okapi::ControllerAnalog::leftX);
+		forward = controller.getAnalog(okapi::ControllerAnalog::leftY);
+		turn = controller.getAnalog(okapi::ControllerAnalog::rightX);
 		//strafe = controller.getAnalog(okapi::ControllerAnalog::rightX);
 		//printf("%f, %f", forward, turn);
 		drive->runTankArcade(forward*-1, turn*-1);
@@ -250,7 +250,7 @@ void right() {
 	speedMove(1500, 1);
 	fourbarpneum->turnOn();
 	pros::delay(300);
-	
+
 	//speedMove(500, -1);
 
 	OdomState goal = drive->getState();
@@ -261,7 +261,7 @@ void right() {
 	goal = drive->getState();
 	goal.x = 17_in;
 	moveTank(goal);
-  
+
 	goal = drive->getState();
 	goal.theta = 90_deg;
 	//moveTank(y);
@@ -289,10 +289,16 @@ void left() {
   effectors.runOne(GOAL_LIFT, 0);
   pros::delay(2000);
   speedMove(1200, -0.5);
-  effectors.runOne(GOAL_LIFT, 1);
+	effectors.runOne(GOAL_LIFT, 1);
+	speedMove(1000, 0.5);
+	goal = drive->getState();
+  goal.theta = 300_deg;
+	moveTank(goal, {0, 0, 0}, turnDefault, true);
+	fourbarpneum->turnOn();
+	
 }
 
 void autonomous() {
-  
-	left();
+
+	right();
 }
