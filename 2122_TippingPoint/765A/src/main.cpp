@@ -286,19 +286,23 @@ void left() {
   goal.theta = 90_deg;
   moveTank(goal, {0, 0, 0}, turnDefault, true);
   speedMove(500, 0.5);
-  effectors.runOne(GOAL_LIFT, 0);
+  effectors.runOne(GOAL_LIFT, 1);
   pros::delay(2000);
-  speedMove(1200, -0.5);
-	effectors.runOne(GOAL_LIFT, 1);
+  speedMove(1300, -0.5);
+	effectors.runOne(GOAL_LIFT, 0);
+	pros::delay(500);
 	speedMove(1000, 0.5);
 	goal = drive->getState();
   goal.theta = 300_deg;
 	moveTank(goal, {0, 0, 0}, turnDefault, true);
 	fourbarpneum->turnOn();
+   intake->run(true, false, 150);
+  pros::delay(5000);
+  intake->run(true, false, 0);
 	
 }
 
 void autonomous() {
 
-	right();
+	left();
 }
