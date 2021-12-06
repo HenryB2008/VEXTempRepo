@@ -12,7 +12,7 @@ double speeds[3] = {150, 150, 150};
 
 PIDConst forwardDefault = {0.035, 0.00005, 0};
 PIDConst headingDefault = {0, 0, 0};
-PIDConst turnDefault = {0.0095, 0.00006, 0};
+PIDConst turnDefault = {0.002, 0.00006, 0};
 
 /**
  * A callback function for LLEMU's center button.
@@ -267,15 +267,15 @@ void right() {
 	//moveTank(y);
 	moveTank(goal, {0, 0, 0}, turnDefault, true);
   speedMove(700, 0.5);
-  effectors.runOne(GOAL_LIFT, 0);
+  effectors.runOne(GOAL_LIFT, 1);
   pros::delay(2000);
   goal = drive->getState();
   goal.y = -18_in;
   speedMove(1500, -0.5);
-  effectors.runOne(GOAL_LIFT, 1);
+  effectors.runOne(GOAL_LIFT, 0);
   pros::delay(1500);
   intake->run(true, false, 150);
-  pros::delay(5000);
+  pros::delay(10000);
   intake->run(true, false, 0);
 	printf("%f %f %f", drive->getState().x.convert(inch), drive->getState().y.convert(inch), drive->getState().theta.convert(degree));
 }
@@ -293,17 +293,17 @@ void left() {
 	pros::delay(500);
 	speedMove(1000, 0.5); // forwards
 	goal = drive->getState();
-  goal.theta = 300_deg;
+  goal.theta = 325_deg;
 	moveTank(goal, {0, 0, 0}, turnDefault, true); // turn towards central mogo
    intake->run(true, false, 150);  //run intake to deposit rings
-   speedMove(2000, 1);  //move towards
-   fourbarpneum->turnOn(); 
-   speedMove(2000, -1);  //move towards
+   speedMove(2500, 1);  //move towards
+   fourbarpneum->turnOn();
+   speedMove(2500, -1);  //move towards
 	//   intake->run(true, false, 0);  //stop intake
-	
+
 }
 
 void autonomous() {
 
-	left();
+	right();
 }
