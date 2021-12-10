@@ -113,7 +113,8 @@ void moveTank(OdomState target, PIDConst forwardConstants = forwardDefault, PIDC
 		else {
 			targetAngle = target.theta;
 		}
-		headerr = okapi::OdomMath::constrainAngle180(targetAngle-(currState.theta));
+		QAngle curr = okapi::OdomMath::constrainAngle180(imu.get_heading()*1_deg);
+		headerr = okapi::OdomMath::constrainAngle180(curr-targetAngle);
 		magerr = sqrt((xDiff * xDiff) + (yDiff * yDiff));
 
 		//if overshoot point, reverse direction and target heading
@@ -126,8 +127,8 @@ void moveTank(OdomState target, PIDConst forwardConstants = forwardDefault, PIDC
 		forward = limiter(prevForward, forwardObj.step(magerr.convert(inch)), 0.11);
 		turn = limiter(prevTurn, turnObj.step(headerr.convert(degree)), 0.11);
 		//pros::lcd::print(2, "%f", drive->getState().theta.convert(degree));
-	//	printf("Errors: %f %f %f %f\n", magerr.convert(inch), targetAngle.convert(degree), headerr.convert(degree), currState.theta.convert(degree));
-		printf("%f %f %f\n", drive->getX(), drive->getY(), drive->getHeading());
+		printf("Errors: %f %f %f %f\n", magerr.convert(inch), targetAngle.convert(degree), headerr.convert(degree), curr.convert(degree));
+		//printf("%f %f %f\n", drive->getX(), drive->getY(), drive->getHeading());
 		//printf("forward: %f turn: %f\n", forward, turn);
 		drive->runTankArcade(forward, turn);
 		prevForward = forward;
@@ -304,6 +305,8 @@ void left() {
 }
 
 void autonomous() {
-
-	right();
+	OdomState goal = drive->getState();
+  goal.theta = 90_deg;
+  moveTank(goal, {0, 0, 0}, turnDefault, true);
+	//right();
 }

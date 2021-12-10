@@ -2,6 +2,8 @@
 #define _PPFOLLOWER_
 
 #include "main.h"
+#include "ports.h"
+#include "PurePursuitPathGen.h"
 #include <vector>
 #include <string>
 #include <fstream>
@@ -36,6 +38,7 @@ public:
 	void calc_curvature_at_point(double x, double y, double theta);
 	std::array<double, 4> follow_sim(double x, double y, double theta);
 	std::array<double, 4> follow(double x, double y, double theta);
+	void read(PurePursuitPathGen obj);
 	PurePursuitFollower(double lookahead);
 };
 

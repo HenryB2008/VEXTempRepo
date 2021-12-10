@@ -1,4 +1,5 @@
 #include "../include/PurePursuitFollower.h"
+#include "PurePursuitPathGen.h"
 
 #include <vector>
 #include <string>
@@ -21,6 +22,18 @@ void PurePursuitFollower::read_from_file(std::string filename) {
 	followPoint temp;
 	while (!fin.eof()) {
 		fin >> temp.x >> temp.y >> temp.vel;
+		points.push_back(temp);
+	}
+}
+
+void PurePursuitFollower::read(PurePursuitPathGen obj) {
+	std::vector<point> temppoints;
+	temppoints = obj.get_points();
+	followPoint temp;
+	for(int i = 0; i < points.size(); i++) {
+		temp.x = temppoints[i].x;
+		temp.y = temppoints[i].y;
+		temp.vel = temppoints[i].vel;
 		points.push_back(temp);
 	}
 }
@@ -117,14 +130,15 @@ std::array<double, 4> PurePursuitFollower::follow(double x, double y, double the
 		return vels;
 	}
 	double time = (timer.millis().convert(second)-prev_time)*1000;
-	double vel;
-	vel = ((closest_point.vel)*60)/(4*PI);
+	double vel, left, right;
+	vel = (closest_point.vel);
 	vel = prev_vel+(std::clamp(vel-prev_vel, -(time*max_accel), (time*max_accel)));
-	double angvel = (vel * curvature)*13.5;
-	vels[0] = angvel+vel;
-	vels[1] = angvel-vel;
-	vels[2] = angvel+vel;
-	vels[3] = angvel-vel;
+	left = vel * (2+(curvature*TRACK))/2;
+	right = vel * (2-(curvature*TRACK))/2;
+	vels[0] = left;
+	vels[1] = left;
+	vels[2] = right;
+	vels[3] = right;
 	prev_time = timer.millis().convert(second);
 	return vels;
 }
