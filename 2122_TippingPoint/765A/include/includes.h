@@ -8,6 +8,8 @@
 #include "button.h"
 #include "intake.h"
 #include "effectors.h"
+#include "PurePursuitPathGen.h"
+#include "PurePursuitFollower.h"
 
 extern Drive *drive;
 extern Pneumatics *pneum;

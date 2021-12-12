@@ -12,7 +12,7 @@
 
 #define BOTTOM_RIGHT_MOTOR 14
 #define BOTTOM_LEFT_MOTOR 6
-#define TOP_RIGHT_MOTOR 4
+#define TOP_RIGHT_MOTOR 12
 #define TOP_LEFT_MOTOR 2
 
 #define LEFT_TRACKING_WHEEL_TOP 'C'
@@ -31,6 +31,6 @@
 #define SPIKE 2
 #define INTAKE 3
 
-#define TRACK 25
+#define TRACK 14
 
 #endif

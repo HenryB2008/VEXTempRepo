@@ -1,4 +1,5 @@
 #include "includes.h"
+#include <array>
 
 Drive *drive = new Drive();
 Pneumatics *fourbarpneum = new Pneumatics('H');
@@ -12,7 +13,7 @@ double speeds[3] = {150, 150, 150};
 
 PIDConst forwardDefault = {0.035, 0.00005, 0};
 PIDConst headingDefault = {0, 0, 0};
-PIDConst turnDefault = {0.002, 0.00006, 0};
+PIDConst turnDefault = {0.03, 0.00006, 0};
 
 /**
  * A callback function for LLEMU's center button.
@@ -127,8 +128,8 @@ void moveTank(OdomState target, PIDConst forwardConstants = forwardDefault, PIDC
 		forward = limiter(prevForward, forwardObj.step(magerr.convert(inch)), 0.11);
 		turn = limiter(prevTurn, turnObj.step(headerr.convert(degree)), 0.11);
 		//pros::lcd::print(2, "%f", drive->getState().theta.convert(degree));
-		printf("Errors: %f %f %f %f\n", magerr.convert(inch), targetAngle.convert(degree), headerr.convert(degree), curr.convert(degree));
-		//printf("%f %f %f\n", drive->getX(), drive->getY(), drive->getHeading());
+		//printf("Errors: %f %f %f %f\n", magerr.convert(inch), targetAngle.convert(degree), headerr.convert(degree), curr.convert(degree));
+		printf("%f %f %f\n", drive->getX(), drive->getY(), drive->getHeading());
 		//printf("forward: %f turn: %f\n", forward, turn);
 		drive->runTankArcade(forward, turn);
 		prevForward = forward;
@@ -138,12 +139,18 @@ void moveTank(OdomState target, PIDConst forwardConstants = forwardDefault, PIDC
 	drive->runTankArcade(0, 0);
 }
 
+
+
 void speedMove(double time, double speed) {
+
 	double start = pros::millis();
+	printf("%f\n", start);
 	drive->runTankArcade(speed, 0);
 	while(pros::millis()-start<time) {
 		pros::delay(10);
 	}
+	double end = pros::millis();
+	printf("%f\n", end);
 	drive->runTankArcade(0, 0);
 }
 
@@ -249,9 +256,9 @@ void right() {
 	printf("done\n");
 	//moveTank(x);
 	speedMove(1500, 1);
-	fourbarpneum->turnOn();
+	//fourbarpneum->turnOn();
 	pros::delay(300);
-
+	printf("Finished\n");
 	//speedMove(500, -1);
 
 	OdomState goal = drive->getState();
@@ -304,9 +311,54 @@ void left() {
 
 }
 
-void autonomous() {
+void rightmiddle() {
+	setEffectorPositions();
+	speedMove(500, 1);
 	OdomState goal = drive->getState();
-  goal.theta = 90_deg;
-  moveTank(goal, {0, 0, 0}, turnDefault, true);
-	//right();
+	goal.theta = -90_deg;
+	moveTank(goal, {0, 0, 0}, turnDefault, true);
+	pros::delay(1000);
+	double currHeading = 90-imu.get_heading();
+	QLength x = abs(cos(currHeading))*30_in;
+	QLength y = abs(sin(currHeading))*30_in;
+	goal = drive->getState();
+	goal.y = goal.y-x;
+	goal.x = goal.x-y;
+	moveTank(goal, forwardDefault, headingDefault);
+
+}
+
+
+
+void autonomous() {
+	/*
+	std::vector<point> points;
+	points.push_back({0, 0, 0, 0, 0});
+	points.push_back({0, 24, 0, 0, 0});
+	points.push_back({-15, 40, 0, 0, 0});
+	PurePursuitPathGen path = PurePursuitPathGen(3, 0.25, 0.75,0.001, points,10.0, 10.0, 2);
+	path.interpolate();
+  path.smooth();
+  path.calc_distances();
+	path.calc_curvature();
+	path.calc_velocities();
+	path.print_path();
+	PurePursuitFollower follow = PurePursuitFollower(8);
+	follow.read(path);
+	std::array<double, 4> vels = {0, 0, 0, 0};
+	double x, y, theta;
+	do {
+		theta = 90-imu.get_heading();
+		x = drive->getX();
+		y = drive->getY();
+		vels = follow.follow(y, x, theta);
+		printf("POS: %f %f %f\n", y, x, theta);
+		printf("%f %f %f %f\n", vels[0], vels[1], vels[2], vels[3]);
+		drive->runTankArcade(vels[0], vels[1]);
+		pros::delay(30);
+
+	} while(vels[0] != 0 && vels[1] != 0 &&vels[2] != 0 &&vels[3] != 0);
+	drive->runTank(0, 0);
+*/
+	rightmiddle();
 }

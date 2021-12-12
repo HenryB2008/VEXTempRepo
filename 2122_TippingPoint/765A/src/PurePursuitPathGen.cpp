@@ -108,25 +108,25 @@ void PurePursuitPathGen::write_to_file() {
     fout.close();
 }
 void PurePursuitPathGen::print_path() {
-    std::cout << "INITIAL\n";
+    printf("INITIAL\n");
     for(int i = 0; i < initial_points.size(); i++) {
-        std::cout << initial_points[i].x << " "<< initial_points[i].y << "\n";
+        printf("%f %f\n", initial_points[i].x, initial_points[i].y);
     }
-    std::cout <<"FINAL\n";
+    printf("FINAL\n");
     for(int i = 0; i < final_points.size(); i++) {
-        std::cout << final_points[i].x << " "<< final_points[i].y << "\n";
+        printf("%f %f\n", final_points[i].x, final_points[i].y);
     }
-    std::cout <<"DISTANCE\n";
+    printf("DISTANCE\n");
     for(int i = 0; i < final_points.size(); i++) {
-        std::cout << final_points[i].distance << "\n";
+      printf("%f\n", final_points[i].distance);
     }
-    std::cout <<"CURVATURE\n";
+    printf("CURVATURE\n");
     for(int i = 0; i < final_points.size(); i++) {
-        std::cout << final_points[i].curve << "\n";
+        printf("%f\n", final_points[i].curve);
     }
-    std::cout <<"VELOCITIES\n";
+    printf("VELOCITIES\n");
     for(int i = 0; i < final_points.size(); i++) {
-        std::cout << final_points[i].vel << "\n";
+        printf("%f\n", final_points[i].vel);
     }
 
 }

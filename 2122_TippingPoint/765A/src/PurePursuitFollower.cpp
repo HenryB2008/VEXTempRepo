@@ -13,6 +13,7 @@
 
 PurePursuitFollower::PurePursuitFollower(double lookahead) {
 	this->lookahead = lookahead;
+	this->prev_time = timer.millis().convert(second);
 }
 
 void PurePursuitFollower::read_from_file(std::string filename) {
@@ -30,11 +31,15 @@ void PurePursuitFollower::read(PurePursuitPathGen obj) {
 	std::vector<point> temppoints;
 	temppoints = obj.get_points();
 	followPoint temp;
-	for(int i = 0; i < points.size(); i++) {
+	printf("READING\n");
+	for(int i = 0; i < temppoints.size(); i++) {
 		temp.x = temppoints[i].x;
 		temp.y = temppoints[i].y;
 		temp.vel = temppoints[i].vel;
 		points.push_back(temp);
+	}
+	for(followPoint x: points) {
+		printf("%f %f %f\n", x.x, x.y, x.vel);
 	}
 }
 
@@ -129,16 +134,19 @@ std::array<double, 4> PurePursuitFollower::follow(double x, double y, double the
 		vels[3] = 0;
 		return vels;
 	}
-	double time = (timer.millis().convert(second)-prev_time)*1000;
-	double vel, left, right;
+	double time = (timer.millis().convert(second)-prev_time);
+	double vel, ang;
 	vel = (closest_point.vel);
 	vel = prev_vel+(std::clamp(vel-prev_vel, -(time*max_accel), (time*max_accel)));
-	left = vel * (2+(curvature*TRACK))/2;
-	right = vel * (2-(curvature*TRACK))/2;
-	vels[0] = left;
-	vels[1] = left;
-	vels[2] = right;
-	vels[3] = right;
+	printf("vel: %f curvature: %f\n", vel, curvature);
+	vel = vel/10;
+	ang = vel*curvature;
+	ang = ang/(10/(2*PI));
+	vels[0] = vel;
+	vels[1] = ang;
+	vels[2] = vel;
+	vels[3] = ang;
 	prev_time = timer.millis().convert(second);
+	prev_vel = vel;
 	return vels;
 }

@@ -23,13 +23,15 @@ public:
 	double lookahead;
 	double last_fractional_index = 0;
 	int last_closest_point = 0;
-	double prev_vel;
+	double prev_vel = 0;
+	double prev_left = 0;
+	double prev_right = 0;
 	double prev_time;
 	std::pair<double, double> last_lookahead_point;
 	std::pair<double, double> lookahead_point;
 	followPoint closest_point;
 	double curvature;
-	double max_accel = 25.0;
+	double max_accel = 10.0;
 	double prevtime;
 
 	void calc_closest_point(double x, double y);
