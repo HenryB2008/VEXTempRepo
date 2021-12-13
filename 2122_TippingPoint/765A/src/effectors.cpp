@@ -7,8 +7,8 @@ Effectors::Effectors() {
 }
 
 void Effectors::addPosition() {
-  encPositions[0][0] = 1800;
-  encPositions[0][1] = 4400;
+  encPositions[0][0] = 2150;
+  encPositions[0][1] = 4500;
   encPositions[1][0] = 0;
   encPositions[1][1] = 2400;
   prevCounts[0] = 0;
