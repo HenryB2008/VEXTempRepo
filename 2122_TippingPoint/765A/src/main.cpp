@@ -139,7 +139,19 @@ void moveTank(OdomState target, PIDConst forwardConstants = forwardDefault, PIDC
 	drive->runTankArcade(0, 0);
 }
 
+void distanceMove(double distance, double speed) {
+	OdomState initial = drive->getState();
+	double error = 0;
+	drive->runTankArcade(speed, 0);
+	do {
+		OdomState temp = drive->getState();
+		QLength xdiff = temp.x-initial.x;
+		QLength ydiff = temp.y-initial.y;
 
+		error = okapi::sqrt((xdiff*xdiff) + (ydiff*ydiff)).convert(inch);
+	} while(error<distance);
+	drive->runTankArcade(0, 0);
+}
 
 void speedMove(double time, double speed) {
 
