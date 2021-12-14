@@ -13,7 +13,7 @@ double speeds[3] = {150, 150, 150};
 
 PIDConst forwardDefault = {0.035, 0.00005, 0};
 PIDConst headingDefault = {0, 0, 0};
-PIDConst turnDefault = {0.03, 0.00006, 0};
+PIDConst turnDefault = {0.02, 0.00002, 0};
 
 /**
  * A callback function for LLEMU's center button.
@@ -267,8 +267,8 @@ void right() {
 	*/
 	printf("done\n");
 	//moveTank(x);
-	speedMove(1500, 1);
-	//fourbarpneum->turnOn();
+	speedMove(1250, 1);
+	fourbarpneum->turnOn();
 	pros::delay(300);
 	printf("Finished\n");
 	//speedMove(500, -1);
@@ -279,11 +279,11 @@ void right() {
 	moveTank(goal, {0, 0, 0}, turnDefault, true);
 
 	goal = drive->getState();
-	goal.x = 17_in;
+	goal.x = 15_in;
 	moveTank(goal);
 
 	goal = drive->getState();
-	goal.theta = 90_deg;
+	goal.theta = -90_deg;
 	//moveTank(y);
 	moveTank(goal, {0, 0, 0}, turnDefault, true);
   speedMove(700, 0.5);
@@ -303,8 +303,8 @@ void right() {
 void left() {
   setEffectorPositions();
   OdomState goal = drive->getState();
-  goal.theta = 90_deg;
-  moveTank(goal, {0, 0, 0}, turnDefault, true); // turn left
+  goal.theta = -90_deg;
+  moveTank(goal, {0, 0, 0}, {0.015, 0.00004, 0}, true); // turn left
   speedMove(500, 0.5);	//backwards
   effectors.runOne(GOAL_LIFT, 1); //lower goal lift
   pros::delay(2000);
@@ -313,31 +313,35 @@ void left() {
 	pros::delay(500);
 	speedMove(1000, 0.5); // forwards
 	goal = drive->getState();
-  goal.theta = 325_deg;
-	moveTank(goal, {0, 0, 0}, turnDefault, true); // turn towards central mogo
+  goal.theta = 35_deg;
+	moveTank(goal, {0, 0, 0}, {0.015, 0.00002, 0}, true); // turn towards central mogo
    intake->run(true, false, 150);  //run intake to deposit rings
-   speedMove(2500, 1);  //move towards
+   speedMove(1900, 1);  //move towards
+
    fourbarpneum->turnOn();
-   speedMove(2500, -1);  //move towards
+	 pros::delay(300);
+   speedMove(1900, -1);  //move towards
 	//   intake->run(true, false, 0);  //stop intake
 
 }
 
 void rightmiddle() {
 	setEffectorPositions();
-	speedMove(500, 1);
 	OdomState goal = drive->getState();
-	goal.theta = -90_deg;
-	moveTank(goal, {0, 0, 0}, turnDefault, true);
+	goal.theta = -27_deg;
+	moveTank(goal, {0, 0, 0}, {0.03, 0.00003, 0}, true);
+//	pros::delay(1000);
+	speedMove(1400, 1);
+	fourbarpneum->turnOn();
+	goal.theta = -60_deg;
+	moveTank(goal, {0, 0, 0}, {0.03, 0.00006, 0}, true);
+	effectors.runOne(GOAL_LIFT, 1); //lower goal lift
+	distanceMove(48, -0.5);
+	effectors.runOne(GOAL_LIFT, 0); // raise goal lift
 	pros::delay(1000);
-	double currHeading = 90-imu.get_heading();
-	QLength x = abs(cos(currHeading))*30_in;
-	QLength y = abs(sin(currHeading))*30_in;
-	goal = drive->getState();
-	goal.y = goal.y-x;
-	goal.x = goal.x-y;
-	moveTank(goal, forwardDefault, headingDefault);
-
+	intake->run(true, false, 150);
+	pros::delay(3000);
+	intake->run(true, false, 0);
 }
 
 
