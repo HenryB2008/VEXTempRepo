@@ -378,3 +378,34 @@ void autonomous() {
 */
 	rightmiddle();
 }
+
+void esbensOdom() {
+	float x = 0;
+	float y = 0;
+
+	ADIEncoder righttrack = ADIEncoder('A', 'B', false);
+	ADIEncoder lefttrack = ADIEncoder('C', 'D', true);
+
+	righttrack.reset();
+	lefttrack.reset();
+
+	int lastright = 0;
+	int lastleft = 0;
+
+	while (true) {
+		int tempright = righttrack.get();
+		int templeft = lefttrack.get();
+		double heading = imu.get_heading();
+		x += ((tempright + templeft)/2/360*2.75*2*PI)*sin(heading);
+		y += ((tempright + templeft)/2/360*2.75*2*PI)*sin(heading);
+
+		lastright = tempright;
+		lastleft = templeft;
+		pros::c::lcd_print(0, "OdomX: %f\n", x);
+		pros::c::lcd_print(1, "OdomY: %f\n", y);
+		pros::c::lcd_print(2, "OdomH: %d\n", heading);
+		pros::delay(20);
+
+	}
+
+}
