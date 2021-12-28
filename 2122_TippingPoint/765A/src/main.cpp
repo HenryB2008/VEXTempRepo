@@ -380,32 +380,30 @@ void autonomous() {
 }
 
 void esbensOdom() {
-	float x = 0;
+	float x = 0;		//variables for tracking
 	float y = 0;
 
-	ADIEncoder righttrack = ADIEncoder('A', 'B', false);
+	ADIEncoder righttrack = ADIEncoder('A', 'B', false);		//encoders because i don't know how to get values
 	ADIEncoder lefttrack = ADIEncoder('C', 'D', true);
 
-	righttrack.reset();
+	righttrack.reset();	//reset encoders to zero
 	lefttrack.reset();
 
-	int lastright = 0;
+	int lastright = 0;		//track the last position in the previous iteration
 	int lastleft = 0;
 
 	while (true) {
-		int tempright = righttrack.get();
+		int tempright = righttrack.get();		//get right and left values
 		int templeft = lefttrack.get();
 		double heading = imu.get_heading();
-		x += ((tempright + templeft)/2/360*2.75*2*PI)*sin(heading);
-		y += ((tempright + templeft)/2/360*2.75*2*PI)*sin(heading);
+		x += ((tempright + templeft)/2/360*2.75*2*PI)*sin(heading);		//get average degrees, convert to inches and use sin or cos to get the change in x or y
+		y += ((tempright + templeft)/2/360*2.75*2*PI)*cos(heading);	
 
-		lastright = tempright;
+		lastright = tempright;		//update the last value
 		lastleft = templeft;
-		pros::c::lcd_print(0, "OdomX: %f\n", x);
+		pros::c::lcd_print(0, "OdomX: %f\n", x);		//display on lcd screen
 		pros::c::lcd_print(1, "OdomY: %f\n", y);
 		pros::c::lcd_print(2, "OdomH: %d\n", heading);
 		pros::delay(20);
-
 	}
-
 }
