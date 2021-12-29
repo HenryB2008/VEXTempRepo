@@ -301,19 +301,15 @@ void right() {
 }
 
 void left() {
-  setEffectorPositions();
-  OdomState goal = drive->getState();
-  goal.theta = -90_deg;
-  moveTank(goal, {0, 0, 0}, {0.015, 0.00004, 0}, true); // turn left
-  speedMove(500, 0.5);	//backwards
+	setEffectorPositions();
   effectors.runOne(GOAL_LIFT, 1); //lower goal lift
   pros::delay(2000);
   speedMove(1300, -0.5); // move forwards and get goal
 	effectors.runOne(GOAL_LIFT, 0); // raise goal lift
 	pros::delay(500);
 	speedMove(1000, 0.5); // forwards
-	goal = drive->getState();
-  goal.theta = 35_deg;
+	OdomState goal = drive->getState();
+  goal.theta = 120_deg;
 	moveTank(goal, {0, 0, 0}, {0.015, 0.00002, 0}, true); // turn towards central mogo
    intake->run(true, false, 150);  //run intake to deposit rings
    speedMove(1900, 1);  //move towards
@@ -344,6 +340,24 @@ void rightmiddle() {
 	intake->run(true, false, 0);
 }
 
+void leftWithLeft() {
+	setEffectorPositions();
+	effectors.runOne(GOAL_LIFT, 1); //lower goal lift
+	pros::delay(2000);
+	speedMove(1300, -0.5); // move forwards and get goal
+	effectors.runOne(GOAL_LIFT, 0); // raise goal lift
+	pros::delay(500);
+	speedMove(1000, 0.5); // forwards
+	OdomState goal = drive->getState();
+	goal.theta = 105_deg;
+	moveTank(goal, {0, 0, 0}, {0.016, 0.00002, 0}, true); // turn towards central mogo
+   intake->run(true, false, 150);  //run intake to deposit rings
+   speedMove(1400, 1);  //move towards
+
+   fourbarpneum->turnOn();
+	 pros::delay(300);
+   speedMove(800, -1);  //move towards
+}
 
 
 void autonomous() {
@@ -376,5 +390,5 @@ void autonomous() {
 	} while(vels[0] != 0 && vels[1] != 0 &&vels[2] != 0 &&vels[3] != 0);
 	drive->runTank(0, 0);
 */
-	rightmiddle();
+	right();
 }
