@@ -5,7 +5,8 @@
 
 class Effectors {
 private:
-  okapi::Motor motors[3] = {okapi::Motor(1), okapi::Motor(20), okapi::Motor(8)};
+  //two bar, then two four bar motor ports
+  okapi::Motor motors[3] = {okapi::Motor(9), okapi::Motor(1), okapi::Motor(-10)};
   int encPositions[3][3];
   int prevCounts[3];
   bool goalFinal = false;
