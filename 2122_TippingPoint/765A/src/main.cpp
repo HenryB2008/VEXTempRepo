@@ -244,7 +244,7 @@ void opcontrol() {
     //printf("%d", buttonCounts[7]%2);
     //printf("\n");
 		effectors.step(buttonCounts, speeds);
-		intake->run(buttons->getPressed(okapi::ControllerDigital::R1), buttons->getPressed(okapi::ControllerDigital::L1), 150);
+		intake->run(buttons->getPressed(okapi::ControllerDigital::R1), buttons->getPressed(okapi::ControllerDigital::L1), 100);
 		fourbarpneum->handle(buttonCounts[5]);
 		auxilclamp->handle(buttonCounts[6]);
 		//drive->reverseOrientation(buttonCounts[7]%2);

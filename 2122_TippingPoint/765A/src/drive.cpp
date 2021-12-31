@@ -2,7 +2,7 @@
 
 Drive::Drive() {
   chassis = ChassisControllerBuilder()
-            .withMotors(-TOP_LEFT_MOTOR, TOP_RIGHT_MOTOR, BOTTOM_RIGHT_MOTOR, -BOTTOM_LEFT_MOTOR)
+            .withMotors(TOP_LEFT_MOTOR, -TOP_RIGHT_MOTOR, -BOTTOM_RIGHT_MOTOR, BOTTOM_LEFT_MOTOR)
             .withDimensions(
               AbstractMotor::gearset::green,
 			        ChassisScales({WHEELDIM, WHEELTRACK}, imev5GreenTPR))
