@@ -26,7 +26,7 @@
 #define ODOMWHEELDIM 2.75_in
 #define ODOMBACKDISTANCE 6.5_in
 
-#define GOAL_LIFT 0
+#define GOAL_LIFT 9
 #define FOUR_BAR 1
 #define SPIKE 2
 #define INTAKE 3
