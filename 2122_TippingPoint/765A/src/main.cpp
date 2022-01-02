@@ -2,8 +2,7 @@
 #include <array>
 
 Drive *drive = new Drive();
-Pneumatics *fourbarpneum = new Pneumatics('H');
-Pneumatics *auxilclamp = new Pneumatics('G');
+Pneumatics *fourbarpneum = new Pneumatics('G');
 Effectors effectors;
 Intake *intake = new Intake(5);
 Button *buttons = new Button();
@@ -147,7 +146,7 @@ void distanceMove(double distance, double speed) {
 		OdomState temp = drive->getState();
 		QLength xdiff = temp.x-initial.x;
 		QLength ydiff = temp.y-initial.y;
-
+		printf("Odom: %f %f %f\n", temp.x.convert(inch), temp.y.convert(inch), temp.theta.convert(degree));
 		error = okapi::sqrt((xdiff*xdiff) + (ydiff*ydiff)).convert(inch);
 	} while(error<distance);
 	drive->runTankArcade(0, 0);
@@ -171,7 +170,25 @@ void setEffectorPositions() {
 	effectors.addPosition();
 }
 
-
+void dragTurn(double heading, double direction, double side) {
+	while(abs(heading-imu.get_heading())>4) {
+		if(side == 0) {
+			drive->runTank(0.5*direction, 0.1*direction*-1);
+		}
+		if(side == 1) {
+			drive->runTank(0.1*direction*-1, 0.5*direction);
+		}
+		pros::delay(30);
+	}
+	drive->runTank(0, 0);
+}
+/*
+void autonSelector(okapi::Controller controller) {
+	while(1) {
+		if(controller.getDigital(okapi::ControllerDigital ))
+	}
+}
+*/
 /**
  * Runs while the robot is in the disabled state of Field Management System or
  * the VEX Competition Switch, following either autonomous or opcontrol. When
@@ -244,9 +261,8 @@ void opcontrol() {
     //printf("%d", buttonCounts[7]%2);
     //printf("\n");
 		effectors.step(buttonCounts, speeds);
-		intake->run(buttons->getPressed(okapi::ControllerDigital::R1), buttons->getPressed(okapi::ControllerDigital::L1), 100);
+		intake->run(buttons->getPressed(okapi::ControllerDigital::R1), buttons->getPressed(okapi::ControllerDigital::L1), 150);
 		fourbarpneum->handle(buttonCounts[5]);
-		auxilclamp->handle(buttonCounts[6]);
 		//drive->reverseOrientation(buttonCounts[7]%2);
 		pros::delay(30);
 		pros::lcd::clear_line(2);
@@ -303,20 +319,25 @@ void right() {
 void left() {
 	setEffectorPositions();
   effectors.runOne(GOAL_LIFT, 1); //lower goal lift
+  effectors.runOneToPosition(FOUR_BAR, 500);
   pros::delay(2000);
-  speedMove(1300, -0.5); // move forwards and get goal
+  	speedMove(750, 0.5); // move forwards and get goal
 	effectors.runOne(GOAL_LIFT, 0); // raise goal lift
 	pros::delay(500);
-	speedMove(1000, 0.5); // forwards
+	speedMove(500, -0.5); // forwards
 	OdomState goal = drive->getState();
-  goal.theta = 120_deg;
-	moveTank(goal, {0, 0, 0}, {0.015, 0.00002, 0}, true); // turn towards central mogo
-   intake->run(true, false, 150);  //run intake to deposit rings
-   speedMove(1900, 1);  //move towards
+  goal.theta = 90_deg;
+	//moveTank(goal, {0, 0, 0}, {0.01, 0.00001, 0}, true); // turn towards central mogo
+	dragTurn(100, -1, 0);
+   intake->run(true, false, -150);  //run intake to deposit rings
+   pros::delay(500);
+   intake->run(true, false, 0);
+   effectors.runOne(FOUR_BAR, 0);
+   distanceMove(46, -1);  //move towards
 
    fourbarpneum->turnOn();
 	 pros::delay(300);
-   speedMove(1900, -1);  //move towards
+   distanceMove(46, 1);  //move towards
 	//   intake->run(true, false, 0);  //stop intake
 
 }
@@ -390,7 +411,7 @@ void autonomous() {
 	} while(vels[0] != 0 && vels[1] != 0 &&vels[2] != 0 &&vels[3] != 0);
 	drive->runTank(0, 0);
 */
-	right();
+	left();
 }
 
 void esbensOdom() {
