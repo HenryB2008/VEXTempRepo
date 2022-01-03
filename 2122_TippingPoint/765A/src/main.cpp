@@ -261,7 +261,7 @@ void opcontrol() {
     //printf("%d", buttonCounts[7]%2);
     //printf("\n");
 		effectors.step(buttonCounts, speeds);
-		intake->run(buttons->getPressed(okapi::ControllerDigital::R1), buttons->getPressed(okapi::ControllerDigital::L1), 150);
+		intake->run(buttons->getPressed(okapi::ControllerDigital::R1), buttons->getPressed(okapi::ControllerDigital::L1), 175);
 		fourbarpneum->handle(buttonCounts[5]);
 		//drive->reverseOrientation(buttonCounts[7]%2);
 		pros::delay(30);
@@ -329,7 +329,7 @@ void left() {
   goal.theta = 90_deg;
 	//moveTank(goal, {0, 0, 0}, {0.01, 0.00001, 0}, true); // turn towards central mogo
 	dragTurn(100, -1, 0);
-   intake->run(true, false, -150);  //run intake to deposit rings
+   intake->run(true, false, -175);  //run intake to deposit rings
    pros::delay(500);
    intake->run(true, false, 0);
    effectors.runOne(FOUR_BAR, 0);

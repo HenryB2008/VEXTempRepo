@@ -7,7 +7,7 @@ Effectors::Effectors() {
 }
 
 void Effectors::addPosition() {
-  encPositions[0][0] = 3100; // Two bar upper position
+  encPositions[0][0] = 3050; // Two bar upper position
   encPositions[0][1] = 4400; // Two bar lower position
   encPositions[1][0] = 0;    // four bar position
   encPositions[1][1] = 2200; // four bar position
