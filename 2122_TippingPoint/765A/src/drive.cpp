@@ -75,3 +75,7 @@ void Drive::reverseOrientation(int ori) {
     speedfactor = 1;
   }
 }
+
+void Drive::setMode(okapi::AbstractMotor::brakeMode brakeMode) {
+  chassis->getModel()->setBrakeMode(brakeMode);
+}

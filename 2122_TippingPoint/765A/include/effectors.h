@@ -7,7 +7,7 @@ class Effectors {
 private:
   //two bar, then two four bar motor ports
   //one four bar port must be negative because the motors are facing each other
-  okapi::Motor motors[3] = {okapi::Motor(9), okapi::Motor(-1), okapi::Motor(10)};
+  okapi::Motor motors[1] = {okapi::Motor(9)};
   int encPositions[3][3];
   int prevCounts[3];
   bool goalFinal = false;

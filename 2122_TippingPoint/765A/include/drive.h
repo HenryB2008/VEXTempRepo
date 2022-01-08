@@ -22,6 +22,7 @@ public:
   void runTankArcade(double forward, double turn);
   void runTank(double left, double right);
   void reverseOrientation(int ori);
+  void setMode(okapi::AbstractMotor::brakeMode brakeMode);
 };
 
 #endif
