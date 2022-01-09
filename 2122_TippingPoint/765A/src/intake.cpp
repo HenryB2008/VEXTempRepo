@@ -1,13 +1,23 @@
 #include "intake.h"
 
-Intake::Intake(double port) : m(port), e(port)
+Intake::Intake(double port) : m(port)
 {
-  m.setBrakeMode(okapi::AbstractMotor::brakeMode::brake);
-  e.reset();
+  m.setBrakeMode(okapi::AbstractMotor::brakeMode::hold);
+  m.getEncoder().reset();
 }
 
 void Intake::addPosition(int pos) {
   encPositions.push_back(pos);
+}
+
+void Intake::moveTarget(double enc) {
+  m.moveAbsolute(enc, 200);
+}
+
+void Intake::setLimits(int upper, int lower) {
+  this->upper = upper;
+  this->lower = lower;
+  limits = true;
 }
 
 void Intake::run(bool left, bool right, double speed) {
@@ -17,10 +27,17 @@ void Intake::run(bool left, bool right, double speed) {
   if(right) {
     m.moveVelocity(-speed);
   }
-  else if(!left && !right) {
+  else if((!left && !right)) {
     m.moveVelocity(0);
   }
+  /*
+  else if(limits && (e.get()>upper || e.get()<lower)) {
+    m.moveVelocity(0);
+  }
+  */
 }
+
+
 
 void Intake::stepAbsolute(int count, double speed) {
   printf("count: %d\n", count % encPositions.size());

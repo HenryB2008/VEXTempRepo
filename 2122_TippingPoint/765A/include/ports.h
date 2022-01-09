@@ -26,11 +26,13 @@
 #define ODOMWHEELDIM 2.75_in
 #define ODOMBACKDISTANCE 6.5_in
 
-#define GOAL_LIFT 9
+
+//These are lift macros for the index of the lift. Do not touch
+#define GOAL_LIFT 0
 #define FOUR_BAR 1
 #define SPIKE 2
 #define INTAKE 3
 
-#define TRACK 14
+#define TRACK 6.875
 
 #endif

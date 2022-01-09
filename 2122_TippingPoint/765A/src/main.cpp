@@ -2,10 +2,11 @@
 #include <array>
 
 Drive *drive = new Drive();
-Pneumatics *fourbarpneum = new Pneumatics('H');
-Pneumatics *auxilclamp = new Pneumatics('G');
+Pneumatics *fourbarpneum = new Pneumatics('G');
 Effectors effectors;
 Intake *intake = new Intake(5);
+Intake *fourbar1 = new Intake(-1);
+Intake *fourbar2 = new Intake(10);
 Button *buttons = new Button();
 pros::Imu imu(16);
 
@@ -13,7 +14,9 @@ double speeds[3] = {150, 150, 150};
 
 PIDConst forwardDefault = {0.035, 0.00005, 0};
 PIDConst headingDefault = {0, 0, 0};
-PIDConst turnDefault = {0.02, 0.00002, 0};
+PIDConst turnDefault = {0.02, 0.000025, 0};
+
+int route;
 
 /**
  * A callback function for LLEMU's center button.
@@ -40,6 +43,8 @@ void on_center_button() {
  * to keep execution time for this mode under a few seconds.
  */
 void initialize() {
+	fourbar1->setLimits(2200, 0);
+	fourbar2->setLimits(2200, 0);
 	pros::lcd::initialize();
 	pros::lcd::set_text(1, "Hello PROS User!");
 	imu.reset();
@@ -147,7 +152,7 @@ void distanceMove(double distance, double speed) {
 		OdomState temp = drive->getState();
 		QLength xdiff = temp.x-initial.x;
 		QLength ydiff = temp.y-initial.y;
-
+		printf("Odom: %f %f %f\n", temp.x.convert(inch), temp.y.convert(inch), temp.theta.convert(degree));
 		error = okapi::sqrt((xdiff*xdiff) + (ydiff*ydiff)).convert(inch);
 	} while(error<distance);
 	drive->runTankArcade(0, 0);
@@ -171,6 +176,39 @@ void setEffectorPositions() {
 	effectors.addPosition();
 }
 
+void dragTurn(double heading, double direction, double side) {
+	while(abs(heading-imu.get_heading())>4) {
+		if(side == 0) {
+			drive->runTank(0.5*direction, 0.1*direction*-1);
+		}
+		if(side == 1) {
+			drive->runTank(0.1*direction*-1, 0.5*direction);
+		}
+		pros::delay(30);
+	}
+	drive->runTank(0, 0);
+}
+
+void autonSelector(okapi::Controller controller) {
+	while(1) {
+		if(controller.getDigital(okapi::ControllerDigital::A)) {
+			route = 1;
+			break;
+		}
+		if(controller.getDigital(okapi::ControllerDigital::B)) {
+			route = 2;
+			break;
+		}
+		if(controller.getDigital(okapi::ControllerDigital::X)) {
+			route = 3;
+			break;
+		}
+		if(controller.getDigital(okapi::ControllerDigital::Y)) {
+			route = 4;
+			break;
+		}
+	}
+}
 
 /**
  * Runs while the robot is in the disabled state of Field Management System or
@@ -244,9 +282,10 @@ void opcontrol() {
     //printf("%d", buttonCounts[7]%2);
     //printf("\n");
 		effectors.step(buttonCounts, speeds);
-		intake->run(buttons->getPressed(okapi::ControllerDigital::R1), buttons->getPressed(okapi::ControllerDigital::L1), 100);
+		intake->run(false, buttons->getPressed(okapi::ControllerDigital::L1), 175);
+		fourbar1->run(buttons->getPressed(okapi::ControllerDigital::R1), buttons->getPressed(okapi::ControllerDigital::R2), 175);
+		fourbar2->run(buttons->getPressed(okapi::ControllerDigital::R1), buttons->getPressed(okapi::ControllerDigital::R2), 175);
 		fourbarpneum->handle(buttonCounts[5]);
-		auxilclamp->handle(buttonCounts[6]);
 		//drive->reverseOrientation(buttonCounts[7]%2);
 		pros::delay(30);
 		pros::lcd::clear_line(2);
@@ -256,32 +295,43 @@ void opcontrol() {
 void right() {
   setEffectorPositions();
 	//pros::lcd::initialize();
-	OdomState x = {24_in, 0_in, 0_deg};
-	OdomState y = {0_in, 0_in, 0_deg};
-	OdomState z = {0_in, 0_in, -90_deg};
-	/*
-	lift->setTarget(250);
-	lift->stepAbsolute(50);
-	lift->setTarget(250);
-	lift->stepAbsolute(-50);
-	*/
 	printf("done\n");
 	//moveTank(x);
-	speedMove(1250, 1);
+	distanceMove(43, -1);
 	fourbarpneum->turnOn();
 	pros::delay(300);
 	printf("Finished\n");
-	//speedMove(500, -1);
+	distanceMove(9, 1);
+
 
 	OdomState goal = drive->getState();
-	goal.theta = 0_deg;
-	//moveTank(y);
+	goal.theta = 310_deg;
 	moveTank(goal, {0, 0, 0}, turnDefault, true);
-
+	effectors.runOne(GOAL_LIFT, 1);
+	pros::delay(1500);
+	distanceMove(12, 1);
+	effectors.runOne(GOAL_LIFT, 0);
+	fourbar1->moveTarget(500);
+  	fourbar2->moveTarget(500);
+	intake->run(true, false, -175);
 	goal = drive->getState();
-	goal.x = 15_in;
-	moveTank(goal);
+	goal.theta = 180_deg;
+	moveTank(goal, {0, 0, 0}, {0.01, 0.000005, 0}, true);
+	fourbarpneum->turnOff();
+	pros::delay(750);
+	intake->run(true, false, 0);
+	fourbar1->moveTarget(0);
+  	fourbar2->moveTarget(0);
+	goal = drive->getState();
+	goal.theta = 295_deg;
+	moveTank(goal, {0, 0, 0}, {0.01, 0.000005, 0}, true);
+	distanceMove(50, -1);
+	fourbarpneum->turnOn();
+	pros::delay(500);
+	distanceMove(50, 1);
 
+
+/*
 	goal = drive->getState();
 	goal.theta = -90_deg;
 	//moveTank(y);
@@ -298,25 +348,33 @@ void right() {
   pros::delay(10000);
   intake->run(true, false, 0);
 	printf("%f %f %f", drive->getState().x.convert(inch), drive->getState().y.convert(inch), drive->getState().theta.convert(degree));
+	*/
 }
 
 void left() {
 	setEffectorPositions();
   effectors.runOne(GOAL_LIFT, 1); //lower goal lift
+  fourbar1->moveTarget(500);
+  fourbar2->moveTarget(500);
   pros::delay(2000);
-  speedMove(1300, -0.5); // move forwards and get goal
+  	speedMove(750, 0.5); // move forwards and get goal
 	effectors.runOne(GOAL_LIFT, 0); // raise goal lift
 	pros::delay(500);
-	speedMove(1000, 0.5); // forwards
+	speedMove(500, -0.5); // forwards
 	OdomState goal = drive->getState();
-  goal.theta = 120_deg;
-	moveTank(goal, {0, 0, 0}, {0.015, 0.00002, 0}, true); // turn towards central mogo
-   intake->run(true, false, 150);  //run intake to deposit rings
-   speedMove(1900, 1);  //move towards
+  goal.theta = 90_deg;
+	//moveTank(goal, {0, 0, 0}, {0.01, 0.00001, 0}, true); // turn towards central mogo
+	dragTurn(100, -1, 0);
+   intake->run(true, false, -175);  //run intake to deposit rings
+   pros::delay(500);
+   intake->run(true, false, 0);
+   fourbar1->moveTarget(0);
+  fourbar2->moveTarget(0);
+   distanceMove(46, -1);  //move towards
 
    fourbarpneum->turnOn();
 	 pros::delay(300);
-   speedMove(1900, -1);  //move towards
+   distanceMove(46, 1);  //move towards
 	//   intake->run(true, false, 0);  //stop intake
 
 }
@@ -361,6 +419,7 @@ void leftWithLeft() {
 
 
 void autonomous() {
+	drive->setMode(okapi::AbstractMotor::brakeMode::hold);
 	/*
 	std::vector<point> points;
 	points.push_back({0, 0, 0, 0, 0});
@@ -391,6 +450,7 @@ void autonomous() {
 	drive->runTank(0, 0);
 */
 	right();
+	drive->setMode(okapi::AbstractMotor::brakeMode::coast);
 }
 
 void esbensOdom() {
@@ -411,7 +471,7 @@ void esbensOdom() {
 		int templeft = lefttrack.get();
 		double heading = imu.get_heading();
 		x += ((tempright + templeft)/2/360*2.75*2*PI)*sin(heading);		//get average degrees, convert to inches and use sin or cos to get the change in x or y
-		y += ((tempright + templeft)/2/360*2.75*2*PI)*cos(heading);	
+		y += ((tempright + templeft)/2/360*2.75*2*PI)*cos(heading);
 
 		lastright = tempright;		//update the last value
 		lastleft = templeft;

@@ -14,8 +14,8 @@ Drive::Drive() {
               ),
               ADIEncoder( // right encoder
                   RIGHT_TRACKING_WHEEL_TOP,
-                  RIGHT_TRACKING_WHEEL_BOTTOM,
-                  true
+                  RIGHT_TRACKING_WHEEL_BOTTOM
+                  
               )
           )
           .withOdometry(
@@ -23,7 +23,7 @@ Drive::Drive() {
           )
 
         .buildOdometry();
-        chassis->getModel()->setBrakeMode(AbstractMotor::brakeMode::brake);
+        //chassis->getModel()->setBrakeMode(AbstractMotor::brakeMode::brake);
         speedfactor = 1;
 }
 
@@ -74,4 +74,8 @@ void Drive::reverseOrientation(int ori) {
   else {
     speedfactor = 1;
   }
+}
+
+void Drive::setMode(okapi::AbstractMotor::brakeMode brakeMode) {
+  chassis->getModel()->setBrakeMode(brakeMode);
 }
