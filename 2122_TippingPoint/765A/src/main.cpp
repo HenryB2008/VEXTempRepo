@@ -282,7 +282,7 @@ void opcontrol() {
     //printf("%d", buttonCounts[7]%2);
     //printf("\n");
 		effectors.step(buttonCounts, speeds);
-		intake->run(false, buttons->getPressed(okapi::ControllerDigital::L1), 175);
+		intake->run(false, buttons->getPressed(okapi::ControllerDigital::right), 175);
 		fourbar1->run(buttons->getPressed(okapi::ControllerDigital::R1), buttons->getPressed(okapi::ControllerDigital::R2), 175);
 		fourbar2->run(buttons->getPressed(okapi::ControllerDigital::R1), buttons->getPressed(okapi::ControllerDigital::R2), 175);
 		fourbarpneum->handle(buttonCounts[5]);
@@ -297,17 +297,20 @@ void right() {
 	//pros::lcd::initialize();
 	printf("done\n");
 	//moveTank(x);
+	effectors.runOne(GOAL_LIFT, 1);
+
 	distanceMove(43, -1);
 	fourbarpneum->turnOn();
 	pros::delay(300);
 	printf("Finished\n");
 	distanceMove(9, 1);
+	
 
 
 	OdomState goal = drive->getState();
 	goal.theta = 310_deg;
 	moveTank(goal, {0, 0, 0}, turnDefault, true);
-	effectors.runOne(GOAL_LIFT, 1);
+	
 	pros::delay(1500);
 	distanceMove(12, 1);
 	effectors.runOne(GOAL_LIFT, 0);
@@ -325,30 +328,81 @@ void right() {
 	goal = drive->getState();
 	goal.theta = 295_deg;
 	moveTank(goal, {0, 0, 0}, {0.01, 0.000005, 0}, true);
-	distanceMove(50, -1);
+	distanceMove(54, -1);
 	fourbarpneum->turnOn();
 	pros::delay(500);
-	distanceMove(50, 1);
+	goal.theta = 330_deg;
+	moveTank(goal, {0, 0, 0}, {0.02, 0.000005, 0}, true);
+	distanceMove(40, 1);
 
 
-/*
-	goal = drive->getState();
-	goal.theta = -90_deg;
-	//moveTank(y);
+}
+
+void skills() {
+	setEffectorPositions();
+	//pros::lcd::initialize();
+	printf("done\n");
+	//moveTank(x);
+	effectors.runOne(GOAL_LIFT, 1);
+
+	distanceMove(43, -1);
+	fourbarpneum->turnOn();
+	pros::delay(300);
+	printf("Finished\n");
+	distanceMove(9, 1);
+	
+
+
+	OdomState goal = drive->getState();
+	goal.theta = 310_deg;
 	moveTank(goal, {0, 0, 0}, turnDefault, true);
-  speedMove(700, 0.5);
-  effectors.runOne(GOAL_LIFT, 1);
-  pros::delay(2000);
-  goal = drive->getState();
-  goal.y = -18_in;
-  speedMove(1500, -0.5);
-  effectors.runOne(GOAL_LIFT, 0);
-  pros::delay(1500);
-  intake->run(true, false, 150);
-  pros::delay(10000);
-  intake->run(true, false, 0);
-	printf("%f %f %f", drive->getState().x.convert(inch), drive->getState().y.convert(inch), drive->getState().theta.convert(degree));
-	*/
+	
+	pros::delay(1500);
+	distanceMove(12, 1);
+	effectors.runOne(GOAL_LIFT, 0);
+	fourbar1->moveTarget(500);
+  	fourbar2->moveTarget(500);
+	intake->run(true, false, -175);
+	goal = drive->getState();
+	goal.theta = 180_deg;
+	moveTank(goal, {0, 0, 0}, {0.01, 0.000005, 0}, true);
+	fourbarpneum->turnOff();
+	pros::delay(750);
+	intake->run(true, false, 0);
+	fourbar1->moveTarget(0);
+  	fourbar2->moveTarget(0);
+	goal = drive->getState();
+	goal.theta = 295_deg;
+	moveTank(goal, {0, 0, 0}, {0.01, 0.000005, 0}, true);
+	distanceMove(54, -1);
+	fourbarpneum->turnOn();
+	pros::delay(500);
+	distanceMove(54, 1);
+	goal.theta = 220_deg;
+	moveTank(goal, {0, 0, 0}, {0.01, 0.000005, 0}, true);
+	fourbarpneum->turnOff();
+	goal.theta = 295_deg;
+	moveTank(goal, {0, 0, 0}, {0.01, 0.000005, 0}, true);
+	distanceMove(72, 1);
+}
+
+void rightrings() {
+	setEffectorPositions();
+	fourbar1->moveTarget(500);
+  	fourbar2->moveTarget(500);
+	effectors.runOne(GOAL_LIFT, 1);
+	pros::delay(1500);
+	distanceMove(20, 1);
+	effectors.runOne(GOAL_LIFT, 0);
+	distanceMove(12, -1);
+	intake->run(true, false, -175);
+	while(1) {
+		distanceMove(7, -0.5);
+		pros::delay(500);
+		distanceMove(7, 0.5);
+	}
+
+	
 }
 
 void left() {
@@ -377,6 +431,20 @@ void left() {
    distanceMove(46, 1);  //move towards
 	//   intake->run(true, false, 0);  //stop intake
 
+}
+
+void leftmiddle() {
+	setEffectorPositions();
+	effectors.runOne(GOAL_LIFT, 1);
+	fourbar1->moveTarget(500);
+	fourbar2->moveTarget(500);
+	pros::delay(2000);
+  	speedMove(750, 0.5); // move forwards and get goal
+	effectors.runOne(GOAL_LIFT, 0); // raise goal lift
+	pros::delay(500);
+	speedMove(500, -0.5); // forwards
+	OdomState goal = drive->getState();
+  	goal.theta = 90_deg;
 }
 
 void rightmiddle() {
