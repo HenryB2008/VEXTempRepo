@@ -524,7 +524,12 @@ void autonomous() {
 	drive->setMode(okapi::AbstractMotor::brakeMode::coast);
 }
 
+
 void esbensOdom() {
+	// jank, Esben-coded odom that involves taking the current angle at the middle of an interval of 50 ms and after 50 ms,
+	// calculating a linear distance in x and y even if the movement is a curve
+	// essentially a linear approximation of the movement, 20 times per second
+	
 	float x = 0;		//variables for tracking
 	float y = 0;
 
@@ -534,21 +539,23 @@ void esbensOdom() {
 	righttrack.reset();	//reset encoders to zero
 	lefttrack.reset();
 
-	int lastright = 0;		//track the last position in the previous iteration
-	int lastleft = 0;
+	float currangle = imu.get_heading();
+	float right = 0;
+	float left = 0;
 
-	while (true) {
-		int tempright = righttrack.get();		//get right and left values
-		int templeft = lefttrack.get();
-		double heading = imu.get_heading();
-		x += ((tempright + templeft)/2/360*2.75*2*PI)*sin(heading);		//get average degrees, convert to inches and use sin or cos to get the change in x or y
-		y += ((tempright + templeft)/2/360*2.75*2*PI)*cos(heading);
-
-		lastright = tempright;		//update the last value
-		lastleft = templeft;
+	while (true)
+	{
+		pros::delay(25);
+		currangle = imu.get_heading();
+		pros::delay(25);
+		int rightencchange = righttrack.get() - right;
+		int leftencchange = lefttrack.get() - left;
+		float average = (rightencchange + leftencchange)/2 / 360 * 2.75 * PI;
+		x += average * cos(currangle);
+		y += average * sin(currangle);
 		pros::c::lcd_print(0, "OdomX: %f\n", x);		//display on lcd screen
 		pros::c::lcd_print(1, "OdomY: %f\n", y);
-		pros::c::lcd_print(2, "OdomH: %d\n", heading);
-		pros::delay(20);
+		pros::c::lcd_print(2, "OdomH: %d\n", currangle);
 	}
+	
 }
