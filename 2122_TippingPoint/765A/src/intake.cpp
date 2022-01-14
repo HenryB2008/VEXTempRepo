@@ -21,19 +21,18 @@ void Intake::setLimits(int upper, int lower) {
 }
 
 void Intake::run(bool left, bool right, double speed) {
-  if(left) {
+  if(limits && ((m.getPosition()>upper && left) || (m.getPosition()<lower && right))) {
+    m.moveVelocity(0);
+  }
+  else if(left) {
     m.moveVelocity(speed);
   }
-  if(right) {
+  else if(right) {
     m.moveVelocity(-speed);
   }
   else if((!left && !right)) {
     m.moveVelocity(0);
   }
-  else if(limits && (m.getPosition()>upper || m.getPosition()<lower)) {
-    m.moveVelocity(0);
-  }
-
 }
 
 
