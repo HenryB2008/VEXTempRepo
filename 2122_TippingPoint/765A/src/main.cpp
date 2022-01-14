@@ -299,41 +299,42 @@ void right() {
 	//moveTank(x);
 	effectors.runOne(GOAL_LIFT, 1);
 
-	distanceMove(43, -1);
-	fourbarpneum->turnOn();
-	pros::delay(300);
+	distanceMove(43, -1);	//move towards side neutral at full speed
+	fourbarpneum->turnOn(); //clamp it
+	pros::delay(300); //delay 300 ms
 	printf("Finished\n");
-	distanceMove(9, 1);
+	distanceMove(9, 1); //move back
 
 
 
-	OdomState goal = drive->getState();
-	goal.theta = 310_deg;
-	moveTank(goal, {0, 0, 0}, turnDefault, true);
+	OdomState goal = drive->getState();  //
+	goal.theta = 310_deg;  //turn backside towards alliance goal
+	moveTank(goal, {0, 0, 0}, turnDefault, true);  //make the turn
 
-	pros::delay(1500);
+	pros::delay(300);
 	distanceMove(12, 1);
 	effectors.runOne(GOAL_LIFT, 0);
 	fourbar1->moveTarget(500);
   	fourbar2->moveTarget(500);
-	intake->run(true, false, -175);
+	intake->run(true, false, -175); //start intake
 	goal = drive->getState();
-	goal.theta = 180_deg;
-	moveTank(goal, {0, 0, 0}, {0.01, 0.000005, 0}, true);
-	fourbarpneum->turnOff();
-	pros::delay(750);
-	intake->run(true, false, 0);
-	fourbar1->moveTarget(0);
-  	fourbar2->moveTarget(0);
+	goal.theta = 180_deg; //
+	moveTank(goal, {0, 0, 0}, {0.01, 0.000005, 0}, true); //turn to dump goal
+	fourbarpneum->turnOff(); //dump goal
+	pros::delay(750); //wait
+	intake->run(true, false, 0); //end intake
+	fourbar1->moveTarget(0); //lower four bar
+  	fourbar2->moveTarget(0); //lower four bar
 	goal = drive->getState();
-	goal.theta = 295_deg;
-	moveTank(goal, {0, 0, 0}, {0.01, 0.000005, 0}, true);
-	distanceMove(54, -1);
-	fourbarpneum->turnOn();
-	pros::delay(500);
-	goal.theta = 330_deg;
-	moveTank(goal, {0, 0, 0}, {0.02, 0.000005, 0}, true);
-	distanceMove(40, 1);
+	goal.theta = 295_deg; 
+	moveTank(goal, {0, 0, 0}, {0.01, 0.000005, 0}, true); //turn towards center goal
+	pros::delay(200);
+	distanceMove(54, -1); //move towards center goal
+	fourbarpneum->turnOn(); //clamp
+	pros::delay(300); //wait
+	goal.theta = 315_deg;
+	moveTank(goal, {0, 0, 0}, {0.02, 0.000005, 0}, true); //turn slightly to be able to get back into home zone
+	distanceMove(40, 1); //move backwards into homezone
 
 
 }
