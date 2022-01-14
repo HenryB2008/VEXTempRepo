@@ -304,13 +304,13 @@ void right() {
 	pros::delay(300);
 	printf("Finished\n");
 	distanceMove(9, 1);
-	
+
 
 
 	OdomState goal = drive->getState();
 	goal.theta = 310_deg;
 	moveTank(goal, {0, 0, 0}, turnDefault, true);
-	
+
 	pros::delay(1500);
 	distanceMove(12, 1);
 	effectors.runOne(GOAL_LIFT, 0);
@@ -350,13 +350,13 @@ void skills() {
 	pros::delay(300);
 	printf("Finished\n");
 	distanceMove(9, 1);
-	
+
 
 
 	OdomState goal = drive->getState();
 	goal.theta = 310_deg;
 	moveTank(goal, {0, 0, 0}, turnDefault, true);
-	
+
 	pros::delay(1500);
 	distanceMove(12, 1);
 	effectors.runOne(GOAL_LIFT, 0);
@@ -402,7 +402,7 @@ void rightrings() {
 		distanceMove(7, 0.5);
 	}
 
-	
+
 }
 
 void left() {

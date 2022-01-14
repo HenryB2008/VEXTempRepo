@@ -30,11 +30,10 @@ void Intake::run(bool left, bool right, double speed) {
   else if((!left && !right)) {
     m.moveVelocity(0);
   }
-  /*
-  else if(limits && (e.get()>upper || e.get()<lower)) {
+  else if(limits && (m.getPosition()>upper || m.getPosition()<lower)) {
     m.moveVelocity(0);
   }
-  */
+
 }
 
 
