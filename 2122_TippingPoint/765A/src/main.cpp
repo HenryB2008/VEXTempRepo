@@ -80,10 +80,12 @@ double limiter(double prevOutput, double currOutput, double step) {
 	if(currOutput > 0){ // positive rawOutput case
 
         output = std::clamp(currOutput, prevOutput - step, std::min(1.0, prevOutput + step)); // clamped for slew and so finalOutput does not exceed maxOutput
+		output = std::max(0.2, output);
 
     } else if (currOutput < 0){ // negative rawOutput case
 
         output = std::clamp(currOutput, std::max(-1.0, prevOutput - step), prevOutput + step); // clamped for slew and so finalOutput does not exceed -maxOutput
+		output = std::min(-0.2, output);
 
     } else { // rawOutput is 0
 
