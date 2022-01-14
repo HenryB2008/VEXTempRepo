@@ -312,7 +312,7 @@ void right() {
 	moveTank(goal, {0, 0, 0}, turnDefault, true);  //make the turn
 
 	pros::delay(300);
-	distanceMove(12, 1);
+	distanceMove(12, 1); //move towards alliance goal
 	effectors.runOne(GOAL_LIFT, 0);
 	fourbar1->moveTarget(500);
   	fourbar2->moveTarget(500);
