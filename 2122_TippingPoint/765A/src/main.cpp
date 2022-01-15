@@ -357,45 +357,54 @@ void skills() {
 	//moveTank(x);
 	effectors.runOne(GOAL_LIFT, 1);
 
-	distanceMove(43, -1);
-	fourbarpneum->turnOn();
-	pros::delay(300);
+	distanceMove(43, -1);	//move towards side neutral at full speed
+	fourbarpneum->turnOn(); //clamp it
+	pros::delay(300); //delay 300 ms
 	printf("Finished\n");
-	distanceMove(9, 1);
+	distanceMove(9, 1); //move back
 
 
 
-	OdomState goal = drive->getState();
-	goal.theta = 310_deg;
-	moveTank(goal, {0, 0, 0}, turnDefault, true);
+	OdomState goal = drive->getState();  //
+	goal.theta = 310_deg;  //turn backside towards alliance goal
+	moveTank(goal, {0, 0, 0}, turnDefault, true);  //make the turn
 
-	pros::delay(1500);
-	distanceMove(12, 1);
+	pros::delay(300);
+	distanceMove(12, 1); //move towards alliance goal
 	effectors.runOne(GOAL_LIFT, 0);
 	fourbar1->moveTarget(500);
   	fourbar2->moveTarget(500);
-	intake->run(true, false, -175);
+
 	goal = drive->getState();
-	goal.theta = 180_deg;
-	moveTank(goal, {0, 0, 0}, {0.01, 0.000005, 0}, true);
+	goal.theta = 180_deg; //
+	moveTank(goal, {0, 0, 0}, {0.01, 0.000005, 0}, true); //turn to dump goal
+	intake->run(true, false, -200); //start intake
+	fourbarpneum->turnOff(); //dump goal
+	pros::delay(750); //wait
+	goal = drive->getState();
+	goal.theta = 295_deg; 
+	moveTank(goal, {0, 0, 0}, {0.01, 0.000005, 0}, true); //turn towards center goal
+	pros::delay(200);
+	intake->run(true, false, 0); //end intake
+	fourbar1->moveTarget(0); //lower four bar
+  	fourbar2->moveTarget(0); //lower four bar
+	distanceMove(54, -1); //move towards center goal
+	fourbarpneum->turnOn(); //clamp
+	pros::delay(300); //wait
+	//goal.theta = 225_deg;
+	//moveTank(goal, {0, 0, 0}, {0.02, 0.000005, 0}, true); //turn slightly to be able to get back into home zone
+	distanceMove(30, -1); //move goal forwards
+	// goal.theta = 225_deg;
+	// moveTank(goal, {0, 0, 0}, {0.02, 0.000005, 0}, true); //drop neutral
 	fourbarpneum->turnOff();
-	pros::delay(750);
-	intake->run(true, false, 0);
-	fourbar1->moveTarget(0);
-  	fourbar2->moveTarget(0);
-	goal = drive->getState();
-	goal.theta = 295_deg;
-	moveTank(goal, {0, 0, 0}, {0.01, 0.000005, 0}, true);
-	distanceMove(54, -1);
+	goal.theta = 225_deg;
+	moveTank(goal, {0, 0, 0}, {0.02, 0.000005, 0}, true); //turn towards other neutral
+	distanceMove(30, -1);
 	fourbarpneum->turnOn();
-	pros::delay(500);
-	distanceMove(54, 1);
-	goal.theta = 220_deg;
-	moveTank(goal, {0, 0, 0}, {0.01, 0.000005, 0}, true);
-	fourbarpneum->turnOff();
-	goal.theta = 295_deg;
-	moveTank(goal, {0, 0, 0}, {0.01, 0.000005, 0}, true);
-	distanceMove(72, 1);
+	pros::delay(600);
+	// goal.theta = 0_deg;
+	// moveTank(goal, {0, 0, 0}, {0.02, 0.000005, 0}, true); //turn towards other zone
+	distanceMove(35, 1);
 }
 
 void rightrings() {
@@ -562,7 +571,7 @@ void autonomous() {
 	} while(vels[0] != 0 && vels[1] != 0 &&vels[2] != 0 &&vels[3] != 0);
 	drive->runTank(0, 0);
 */
-	right();
+	skills();
 	// esbensOdom();
 	drive->setMode(okapi::AbstractMotor::brakeMode::coast);
 	// esbensOdom();
