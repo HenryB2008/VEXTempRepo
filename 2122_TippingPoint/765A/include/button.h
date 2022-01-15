@@ -3,12 +3,13 @@
 #include "main.h"
 
 
-
+//structure to store button state and count
 struct But {
   bool state;
   int count;
 };
 
+//class to handle all controller buttons
 class Button {
 private:
   std::unordered_map<okapi::ControllerDigital, But> buttons;

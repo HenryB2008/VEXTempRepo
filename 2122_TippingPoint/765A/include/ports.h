@@ -1,20 +1,14 @@
 #ifndef _PORTS_
 #define _PORTS_
 
-#define INTAKEIN ControllerDigital::L1
-#define INTAKEOUT ControllerDigital::R1
 
-#define BACKUP ControllerDigital::up
-#define BACKDOWN ControllerDigital::down
-
-#define FRONTUP ControllerDigital::X
-#define FRONTDOWN ControllerDigital::B
-
+//motor ports
 #define BOTTOM_RIGHT_MOTOR 2
 #define BOTTOM_LEFT_MOTOR 12
 #define TOP_RIGHT_MOTOR 6
 #define TOP_LEFT_MOTOR 14
 
+//tracking wheel ports
 #define LEFT_TRACKING_WHEEL_TOP 'C'
 #define LEFT_TRACKING_WHEEL_BOTTOM 'D'
 #define RIGHT_TRACKING_WHEEL_TOP 'B'
@@ -22,6 +16,8 @@
 #define BACK_TRACKING_WHEEL_TOP 'E'
 #define BACK_TRACKING_WHEEL_BOTTOM 'F'
 
+
+//odom distances between wheels
 #define ODOMTRACK 14_in
 #define ODOMWHEELDIM 2.75_in
 #define ODOMBACKDISTANCE 6.5_in

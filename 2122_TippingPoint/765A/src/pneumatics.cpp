@@ -1,9 +1,11 @@
 #include "pneumatics.h"
 
+//constructor
 Pneumatics::Pneumatics(uint8_t port) : piston(port) {
     // turnOff();
 }
 
+//handle function for buttons
 void Pneumatics::handle(int count) {
   if(count%2 == 0 && count!= prevCount) {
     turnOff();
@@ -13,12 +15,15 @@ void Pneumatics::handle(int count) {
   }
 }
 
+
+//actuates pneums down
 void Pneumatics::turnOn() {
     printf("pleaseturnon");
     piston.set_value(4095);
     state = true;
 }
 
+//actuates pneums up
 void Pneumatics::turnOff() {
     printf("isthisrunning\n");
     piston.set_value(0);
@@ -26,6 +31,7 @@ void Pneumatics::turnOff() {
     state = false;
 }
 
+//testing function
 void Pneumatics::onThenOff(int delay) {
     turnOn();
     pros::delay(1000);

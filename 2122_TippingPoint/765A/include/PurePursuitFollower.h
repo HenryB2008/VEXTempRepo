@@ -12,10 +12,14 @@
 #include <array>
 
 
+//structure for point storage
+
 struct followPoint {
 	double x, y, vel;
 };
 
+
+//experimental pure pursuit follower class
 class PurePursuitFollower {
 public:
 	std::vector<followPoint> points;

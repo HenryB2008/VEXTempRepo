@@ -2,11 +2,12 @@
 #define _PID_
 
 
+//generic constants structure
 struct PIDConst {
   double kp, ki, kd;
 };
 
-
+//generic PID class for all PID movements
 class PID {
 private:
   double kp;

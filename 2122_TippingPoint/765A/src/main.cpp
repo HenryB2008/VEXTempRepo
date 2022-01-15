@@ -1,6 +1,8 @@
 #include "includes.h"
 #include <array>
 
+
+//subsystem objects
 Drive *drive = new Drive();
 Pneumatics *fourbarpneum = new Pneumatics('G');
 Effectors effectors;
@@ -43,10 +45,14 @@ void on_center_button() {
  * to keep execution time for this mode under a few seconds.
  */
 void initialize() {
+	//make sure four bar can't go higher/lower than the mechanical stops
 	fourbar1->setLimits(2200, 0);
 	fourbar2->setLimits(2200, 0);
+
 	pros::lcd::initialize();
 	pros::lcd::set_text(1, "Hello PROS User!");
+
+	//calibrate imu
 	imu.reset();
 
 	int time = pros::millis();
@@ -61,6 +67,8 @@ void initialize() {
 	pros::lcd::register_btn1_cb(on_center_button);
 }
 
+
+//x-drive math to find difference between two odomstates
 OdomState transform(OdomState curr, OdomState target) {
 	OdomState diff;
 	diff.x = target.x - curr.x;
@@ -75,17 +83,19 @@ OdomState transform(OdomState curr, OdomState target) {
 	return diff;
 }
 
+
+//slew limiter for PID
 double limiter(double prevOutput, double currOutput, double step) {
 	double output;
 	if(currOutput > 0){ // positive rawOutput case
 
         output = std::clamp(currOutput, prevOutput - step, std::min(1.0, prevOutput + step)); // clamped for slew and so finalOutput does not exceed maxOutput
-		output = std::max(0.2, output);
+		output = std::max(0.2, output); //make sure output above min power
 
     } else if (currOutput < 0){ // negative rawOutput case
 
         output = std::clamp(currOutput, std::max(-1.0, prevOutput - step), prevOutput + step); // clamped for slew and so finalOutput does not exceed -maxOutput
-		output = std::min(-0.2, output);
+		output = std::min(-0.2, output); //make sure output above min power
 
     } else { // rawOutput is 0
 
@@ -94,6 +104,8 @@ double limiter(double prevOutput, double currOutput, double step) {
 	return output;
 }
 
+
+//PID move function that can handle turns and forward movements
 void moveTank(OdomState target, PIDConst forwardConstants = forwardDefault, PIDConst turnConstants = headingDefault, bool turning = false) {
 	double forward, turn, prevForward, prevTurn;
 	QLength magerr;
@@ -101,19 +113,19 @@ void moveTank(OdomState target, PIDConst forwardConstants = forwardDefault, PIDC
 	QAngle targetAngle;
 	OdomState currState;
 	QLength xDiff, yDiff;
-	double currHeading;
 	prevForward = 0;
 	prevTurn = 0;
+
+	//forward and turn objects for PID
 	PID forwardObj = PID(forwardConstants);
 	PID turnObj = PID(turnConstants);
 
-	printf("DONE\n");
-
 	do {
-		//currHeading = imu.get_heading();
 		currState = drive->getState();
 		xDiff = target.x-currState.x;
 		yDiff = target.y-currState.y;
+
+		//calculate target thetas differently depending on forward or turn
 		if(!turning) {
 			targetAngle = okapi::OdomMath::constrainAngle180((PI/2 - atan2(xDiff.convert(meter), yDiff.convert(meter)))*1_rad);
 			targetAngle = 1_deg * targetAngle.convert(degree);
@@ -121,6 +133,8 @@ void moveTank(OdomState target, PIDConst forwardConstants = forwardDefault, PIDC
 		else {
 			targetAngle = target.theta;
 		}
+
+		//calculate errors
 		QAngle curr = okapi::OdomMath::constrainAngle180(imu.get_heading()*1_deg);
 		headerr = okapi::OdomMath::constrainAngle180(curr-targetAngle);
 		magerr = sqrt((xDiff * xDiff) + (yDiff * yDiff));
@@ -134,18 +148,17 @@ void moveTank(OdomState target, PIDConst forwardConstants = forwardDefault, PIDC
 		//limit and set motors
 		forward = limiter(prevForward, forwardObj.step(magerr.convert(inch)), 0.11);
 		turn = limiter(prevTurn, turnObj.step(headerr.convert(degree)), 0.11);
-		//pros::lcd::print(2, "%f", drive->getState().theta.convert(degree));
-		//printf("Errors: %f %f %f %f\n", magerr.convert(inch), targetAngle.convert(degree), headerr.convert(degree), curr.convert(degree));
 		printf("%f %f %f\n", drive->getX(), drive->getY(), drive->getHeading());
-		//printf("forward: %f turn: %f\n", forward, turn);
 		drive->runTankArcade(forward, turn);
 		prevForward = forward;
 		prevTurn = turn;
 		pros::delay(30);
-	} while((abs(magerr.convert(inch)) > 3 && !turning) || (abs(headerr.convert(degree))>3 && turning));
+	} while((abs(magerr.convert(inch)) > 3 && !turning) || (abs(headerr.convert(degree))>3 && turning)); //tolerances checked differently depending on turning or forward
 	drive->runTankArcade(0, 0);
 }
 
+
+//use odometry magnitude error to move a set distance
 void distanceMove(double distance, double speed) {
 	OdomState initial = drive->getState();
 	double error = 0;
@@ -174,12 +187,15 @@ void speedMove(double time, double speed) {
 }
 
 void setEffectorPositions() {
-
+	//set all effector positions
 	effectors.addPosition();
 }
 
+
+//drag turn function
 void dragTurn(double heading, double direction, double side) {
 	while(abs(heading-imu.get_heading())>4) {
+		//handle side and direction logic
 		if(side == 0) {
 			drive->runTank(0.5*direction, 0.1*direction*-1);
 		}
@@ -191,6 +207,8 @@ void dragTurn(double heading, double direction, double side) {
 	drive->runTank(0, 0);
 }
 
+
+//experimental autonSelector function
 void autonSelector(okapi::Controller controller) {
 	while(1) {
 		if(controller.getDigital(okapi::ControllerDigital::A)) {
@@ -258,7 +276,7 @@ void competition_initialize() {}
 void opcontrol() {
 
 	okapi::Controller controller (okapi::ControllerId::master);
-
+	//initialize variables and set effector positions
 	setEffectorPositions();
 	int parking = 0;
 	double forward;
@@ -268,6 +286,7 @@ void opcontrol() {
 	bool fourbarpneumstate = true;
 	bool auxilclampstate = false;
 	while(true) {
+		//toggle between coast and hold brake modes
 		if (buttons->getPressed(okapi::ControllerDigital::B)) {
 			if (parking == 1) {
 				drive->setMode(okapi::AbstractMotor::brakeMode::coast);
@@ -277,38 +296,38 @@ void opcontrol() {
 				parking = 1;
 			}
 		}
+
+		//get controller and drive chassis base
 		forward = controller.getAnalog(okapi::ControllerAnalog::leftY);
 		turn = controller.getAnalog(okapi::ControllerAnalog::rightX);
-		//strafe = controller.getAnalog(okapi::ControllerAnalog::rightX);
-		//printf("%f, %f", forward, turn);
 		drive->runTankArcade(forward*-1, turn*-1);
 		printf("%f %f %f\n", drive->getX(), drive->getY(), drive->getHeading());
-
+		//update all button values
 		buttons->handleButtons(controller);
-			//printf("%d\n", buttons->getCount(x));
 		int buttonCounts[8];
 		for(int i = 0; i < 8; i++) {
 			buttonCounts[i] = buttons->getCount(buttons->buttonList[i]);
 		}
-    //printf("%d", buttonCounts[7]%2);
-    //printf("\n");
-		effectors.step(buttonCounts, speeds);
-		intake->run(false, buttons->getPressed(okapi::ControllerDigital::right), 175);
+		
+		effectors.step(buttonCounts, speeds); //handle two bar
+		
+		intake->run(false, buttons->getPressed(okapi::ControllerDigital::right), 175); //handle intake
+
+		//handle four bar
 		fourbar1->run(buttons->getPressed(okapi::ControllerDigital::R1), buttons->getPressed(okapi::ControllerDigital::R2), 175);
 		fourbar2->run(buttons->getPressed(okapi::ControllerDigital::R1), buttons->getPressed(okapi::ControllerDigital::R2), 175);
+
+		//handle clamp
 		fourbarpneum->handle(buttonCounts[5]);
-		//drive->reverseOrientation(buttonCounts[7]%2);
 		pros::delay(30);
 		pros::lcd::clear_line(2);
 	}
 }
 
 void right() {
-  setEffectorPositions();
-	//pros::lcd::initialize();
+  	setEffectorPositions();
 	printf("done\n");
-	//moveTank(x);
-	effectors.runOne(GOAL_LIFT, 1);
+	effectors.runOne(GOAL_LIFT, 1); //lower two-bar
 
 	distanceMove(43, -1);	//move towards side neutral at full speed
 	fourbarpneum->turnOn(); //clamp it
@@ -318,7 +337,7 @@ void right() {
 
 
 
-	OdomState goal = drive->getState();  //
+	OdomState goal = drive->getState(); 
 	goal.theta = 310_deg;  //turn backside towards alliance goal
 	moveTank(goal, {0, 0, 0}, turnDefault, true);  //make the turn
 
@@ -327,18 +346,21 @@ void right() {
 	effectors.runOne(GOAL_LIFT, 0);
 	fourbar1->moveTarget(500);
   	fourbar2->moveTarget(500);
-	intake->run(true, false, -175); //start intake
+	
 	goal = drive->getState();
 	goal.theta = 180_deg; //
 	moveTank(goal, {0, 0, 0}, {0.01, 0.000005, 0}, true); //turn to dump goal
+	intake->run(true, false, -175); //start intake
 	fourbarpneum->turnOff(); //dump goal
 	pros::delay(750); //wait
-	intake->run(true, false, 0); //end intake
-	fourbar1->moveTarget(0); //lower four bar
-  	fourbar2->moveTarget(0); //lower four bar
+	
 	goal = drive->getState();
 	goal.theta = 295_deg; 
 	moveTank(goal, {0, 0, 0}, {0.01, 0.000005, 0}, true); //turn towards center goal
+
+	intake->run(true, false, 0); //end intake
+	fourbar1->moveTarget(0); //lower four bar
+  	fourbar2->moveTarget(0); //lower four bar
 	pros::delay(200);
 	distanceMove(54, -1); //move towards center goal
 	fourbarpneum->turnOn(); //clamp
@@ -352,10 +374,8 @@ void right() {
 
 void skills() {
 	setEffectorPositions();
-	//pros::lcd::initialize();
 	printf("done\n");
-	//moveTank(x);
-	effectors.runOne(GOAL_LIFT, 1);
+	effectors.runOne(GOAL_LIFT, 1); //lower two-bar
 
 	distanceMove(43, -1);	//move towards side neutral at full speed
 	fourbarpneum->turnOn(); //clamp it
@@ -365,7 +385,7 @@ void skills() {
 
 
 
-	OdomState goal = drive->getState();  //
+	OdomState goal = drive->getState();  
 	goal.theta = 310_deg;  //turn backside towards alliance goal
 	moveTank(goal, {0, 0, 0}, turnDefault, true);  //make the turn
 
@@ -397,6 +417,7 @@ void skills() {
 	// goal.theta = 225_deg;
 	// moveTank(goal, {0, 0, 0}, {0.02, 0.000005, 0}, true); //drop neutral
 	fourbarpneum->turnOff();
+	distanceMove(5, 1);
 	goal.theta = 225_deg;
 	moveTank(goal, {0, 0, 0}, {0.02, 0.000005, 0}, true); //turn towards other neutral
 	distanceMove(30, -1);
@@ -409,16 +430,17 @@ void skills() {
 
 void rightrings() {
 	setEffectorPositions();
-	fourbar1->moveTarget(500);
+	fourbar1->moveTarget(500); //lift four bar to intake
   	fourbar2->moveTarget(500);
-	effectors.runOne(GOAL_LIFT, 1);
+	effectors.runOne(GOAL_LIFT, 1); //lower two bar
 	pros::delay(1500);
-	distanceMove(20, 1);
-	effectors.runOne(GOAL_LIFT, 0);
-	distanceMove(12, -1);
-	intake->run(true, false, -175);
+	distanceMove(20, 1); //pick up alliance
+	effectors.runOne(GOAL_LIFT, 0); //raise two bar
+	distanceMove(12, -1); //move back
+	intake->run(true, false, -175); //turn on intake
 	while(1) {
-		distanceMove(7, -0.5);
+		//oscillate to pick up rings
+		distanceMove(7, -0.5); 
 		pros::delay(500);
 		distanceMove(7, 0.5);
 	}
@@ -428,83 +450,32 @@ void rightrings() {
 
 void left() {
 	setEffectorPositions();
-  effectors.runOne(GOAL_LIFT, 1); //lower goal lift
-  fourbar1->moveTarget(500);
-  fourbar2->moveTarget(500);
-  pros::delay(2000);
-  	speedMove(750, 0.5); // move forwards and get goal
-	effectors.runOne(GOAL_LIFT, 0); // raise goal lift
-	pros::delay(500);
-	speedMove(500, -0.5); // forwards
-	OdomState goal = drive->getState();
-  goal.theta = 90_deg;
-	//moveTank(goal, {0, 0, 0}, {0.01, 0.00001, 0}, true); // turn towards central mogo
-	dragTurn(100, -1, 0);
-   intake->run(true, false, -175);  //run intake to deposit rings
-   pros::delay(500);
-   intake->run(true, false, 0);
-   fourbar1->moveTarget(0);
-  fourbar2->moveTarget(0);
-   distanceMove(46, -1);  //move towards
-
-   fourbarpneum->turnOn();
-	 pros::delay(300);
-   distanceMove(46, 1);  //move towards
-	//   intake->run(true, false, 0);  //stop intake
-
-}
-
-void leftmiddle() {
-	setEffectorPositions();
-	effectors.runOne(GOAL_LIFT, 1);
+  	effectors.runOne(GOAL_LIFT, 1); //lower goal lift
 	fourbar1->moveTarget(500);
 	fourbar2->moveTarget(500);
-	pros::delay(2000);
+  	pros::delay(2000);
   	speedMove(750, 0.5); // move forwards and get goal
 	effectors.runOne(GOAL_LIFT, 0); // raise goal lift
 	pros::delay(500);
 	speedMove(500, -0.5); // forwards
 	OdomState goal = drive->getState();
   	goal.theta = 90_deg;
+	dragTurn(100, -1, 0);// turn towards central mogo
+   	intake->run(true, false, -175);  //run intake to deposit rings
+   	pros::delay(500);
+   	intake->run(true, false, 0);
+   	fourbar1->moveTarget(0);
+  	fourbar2->moveTarget(0);
+   	distanceMove(46, -1);  //move towards
+
+   	fourbarpneum->turnOn();
+	pros::delay(300);
+   	distanceMove(46, 1);  //move towards
+	//   intake->run(true, false, 0);  //stop intake
+
 }
 
-void rightmiddle() {
-	setEffectorPositions();
-	OdomState goal = drive->getState();
-	goal.theta = -27_deg;
-	moveTank(goal, {0, 0, 0}, {0.03, 0.00003, 0}, true);
-//	pros::delay(1000);
-	speedMove(1400, 1);
-	fourbarpneum->turnOn();
-	goal.theta = -60_deg;
-	moveTank(goal, {0, 0, 0}, {0.03, 0.00006, 0}, true);
-	effectors.runOne(GOAL_LIFT, 1); //lower goal lift
-	distanceMove(48, -0.5);
-	effectors.runOne(GOAL_LIFT, 0); // raise goal lift
-	pros::delay(1000);
-	intake->run(true, false, 150);
-	pros::delay(3000);
-	intake->run(true, false, 0);
-}
 
-void leftWithLeft() {
-	setEffectorPositions();
-	effectors.runOne(GOAL_LIFT, 1); //lower goal lift
-	pros::delay(2000);
-	speedMove(1300, -0.5); // move forwards and get goal
-	effectors.runOne(GOAL_LIFT, 0); // raise goal lift
-	pros::delay(500);
-	speedMove(1000, 0.5); // forwards
-	OdomState goal = drive->getState();
-	goal.theta = 105_deg;
-	moveTank(goal, {0, 0, 0}, {0.016, 0.00002, 0}, true); // turn towards central mogo
-   intake->run(true, false, 150);  //run intake to deposit rings
-   speedMove(1400, 1);  //move towards
-
-   fourbarpneum->turnOn();
-	 pros::delay(300);
-   speedMove(800, -1);  //move towards
-}
 void esbensOdom() {
 	// jank, Esben-coded odom that involves taking the current angle at the middle of an interval of 50 ms and after 50 ms,
 	// calculating a linear distance in x and y even if the movement is a curve
@@ -542,6 +513,13 @@ void esbensOdom() {
 
 void autonomous() {
 	drive->setMode(okapi::AbstractMotor::brakeMode::hold);
+	skills();
+	drive->setMode(okapi::AbstractMotor::brakeMode::coast);
+}
+
+
+//experimental pure pursuit handler
+void PurePursuitHandler() {
 	/*
 	std::vector<point> points;
 	points.push_back({0, 0, 0, 0, 0});
@@ -571,11 +549,5 @@ void autonomous() {
 	} while(vels[0] != 0 && vels[1] != 0 &&vels[2] != 0 &&vels[3] != 0);
 	drive->runTank(0, 0);
 */
-	skills();
-	// esbensOdom();
-	drive->setMode(okapi::AbstractMotor::brakeMode::coast);
-	// esbensOdom();
 }
-
-
 

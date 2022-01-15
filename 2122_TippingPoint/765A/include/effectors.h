@@ -3,10 +3,10 @@
 
 #include "main.h"
 
+//class for two-bar actuation
 class Effectors {
 private:
-  //two bar, then two four bar motor ports
-  //one four bar port must be negative because the motors are facing each other
+  //two bar port
   okapi::Motor motors[1] = {okapi::Motor(9)};
   int encPositions[3][3];
   int prevCounts[3];

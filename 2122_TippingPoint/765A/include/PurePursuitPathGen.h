@@ -12,6 +12,8 @@
 struct point {
         double x, y, curve, vel, distance;
 };
+
+//experimental path generation class
 class PurePursuitPathGen {
     public:
 

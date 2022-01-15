@@ -3,6 +3,8 @@
 
 #include "main.h"
 
+
+//Class for intake and four bar actuation
 class Intake {
 private:
   okapi::Motor m;

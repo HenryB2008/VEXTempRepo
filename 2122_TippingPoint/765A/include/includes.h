@@ -11,6 +11,8 @@
 #include "PurePursuitPathGen.h"
 #include "PurePursuitFollower.h"
 
+//extern definition of global objects
+
 extern Drive *drive;
 extern Pneumatics *pneum;
 extern Effectors effectors;

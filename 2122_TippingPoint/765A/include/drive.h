@@ -7,6 +7,7 @@
 #include "main.h"
 #include "ports.h"
 
+//chassis controller wrapper with drive utilities
 class Drive {
 private:
   std::shared_ptr<okapi::OdomChassisController> chassis;

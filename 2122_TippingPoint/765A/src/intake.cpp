@@ -10,16 +10,22 @@ void Intake::addPosition(int pos) {
   encPositions.push_back(pos);
 }
 
+
+//move four bar at full speed to position
 void Intake::moveTarget(double enc) {
   m.moveAbsolute(enc, 200);
 }
 
+
+//set limits of four bar 
 void Intake::setLimits(int upper, int lower) {
   this->upper = upper;
   this->lower = lower;
   limits = true;
 }
 
+
+//run intake at speed while obeying limits
 void Intake::run(bool left, bool right, double speed) {
   if(limits && ((m.getPosition()>upper && left) || (m.getPosition()<lower && right))) {
     m.moveVelocity(0);
@@ -47,36 +53,3 @@ void Intake::stepAbsolute(int count, double speed) {
 }
 
 
-
-/*
-void Intake::step() {
-  if(moving) {
-    if(dir) {
-      if(e.get()<target)
-        run(200);
-      else
-        moving = false;
-    }
-    else {
-      if(e.get()>target)
-        run(-200);
-      else
-        moving = false;
-    }
-  }
-  else {
-    run(0);
-  }
-}
-
-void Intake::setTarget(double enc) {
-  if(target>enc) {
-    dir = true;
-  }
-  else {
-    dir = false;
-  }
-  target = enc;
-  moving = true;
-}
-*/

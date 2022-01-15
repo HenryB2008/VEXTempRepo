@@ -4,6 +4,7 @@
 #include "main.h"
 #include "ports.h"
 
+//class for pneumatics actuation
 class Pneumatics {
     private:
         pros::ADIDigitalOut piston;
