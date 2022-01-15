@@ -260,7 +260,7 @@ void opcontrol() {
 	okapi::Controller controller (okapi::ControllerId::master);
 
 	setEffectorPositions();
-
+	int parking = 0;
 	double forward;
 	double turn;
 	double strafe;
@@ -268,6 +268,15 @@ void opcontrol() {
 	bool fourbarpneumstate = true;
 	bool auxilclampstate = false;
 	while(true) {
+		if (buttons->getPressed(okapi::ControllerDigital::B)) {
+			if (parking == 1) {
+				drive->setMode(okapi::AbstractMotor::brakeMode::coast);
+				parking = 0;
+			} else {
+				drive->setMode(okapi::AbstractMotor::brakeMode::hold);
+				parking = 1;
+			}
+		}
 		forward = controller.getAnalog(okapi::ControllerAnalog::leftY);
 		turn = controller.getAnalog(okapi::ControllerAnalog::rightX);
 		//strafe = controller.getAnalog(okapi::ControllerAnalog::rightX);
@@ -487,44 +496,6 @@ void leftWithLeft() {
 	 pros::delay(300);
    speedMove(800, -1);  //move towards
 }
-
-
-void autonomous() {
-	drive->setMode(okapi::AbstractMotor::brakeMode::hold);
-	/*
-	std::vector<point> points;
-	points.push_back({0, 0, 0, 0, 0});
-	points.push_back({0, 24, 0, 0, 0});
-	points.push_back({-15, 40, 0, 0, 0});
-	PurePursuitPathGen path = PurePursuitPathGen(3, 0.25, 0.75,0.001, points,10.0, 10.0, 2);
-	path.interpolate();
-  path.smooth();
-  path.calc_distances();
-	path.calc_curvature();
-	path.calc_velocities();
-	path.print_path();
-	PurePursuitFollower follow = PurePursuitFollower(8);
-	follow.read(path);
-	std::array<double, 4> vels = {0, 0, 0, 0};
-	double x, y, theta;
-	do {
-		theta = 90-imu.get_heading();
-		x = drive->getX();
-		y = drive->getY();
-		vels = follow.follow(y, x, theta);
-		printf("POS: %f %f %f\n", y, x, theta);
-		printf("%f %f %f %f\n", vels[0], vels[1], vels[2], vels[3]);
-		drive->runTankArcade(vels[0], vels[1]);
-		pros::delay(30);
-
-	} while(vels[0] != 0 && vels[1] != 0 &&vels[2] != 0 &&vels[3] != 0);
-	drive->runTank(0, 0);
-*/
-	right();
-	drive->setMode(okapi::AbstractMotor::brakeMode::coast);
-}
-
-
 void esbensOdom() {
 	// jank, Esben-coded odom that involves taking the current angle at the middle of an interval of 50 ms and after 50 ms,
 	// calculating a linear distance in x and y even if the movement is a curve
@@ -559,3 +530,43 @@ void esbensOdom() {
 	}
 	
 }
+
+void autonomous() {
+	drive->setMode(okapi::AbstractMotor::brakeMode::hold);
+	/*
+	std::vector<point> points;
+	points.push_back({0, 0, 0, 0, 0});
+	points.push_back({0, 24, 0, 0, 0});
+	points.push_back({-15, 40, 0, 0, 0});
+	PurePursuitPathGen path = PurePursuitPathGen(3, 0.25, 0.75,0.001, points,10.0, 10.0, 2);
+	path.interpolate();
+  path.smooth();
+  path.calc_distances();
+	path.calc_curvature();
+	path.calc_velocities();
+	path.print_path();
+	PurePursuitFollower follow = PurePursuitFollower(8);
+	follow.read(path);
+	std::array<double, 4> vels = {0, 0, 0, 0};
+	double x, y, theta;
+	do {
+		theta = 90-imu.get_heading();
+		x = drive->getX();
+		y = drive->getY();
+		vels = follow.follow(y, x, theta);
+		printf("POS: %f %f %f\n", y, x, theta);
+		printf("%f %f %f %f\n", vels[0], vels[1], vels[2], vels[3]);
+		drive->runTankArcade(vels[0], vels[1]);
+		pros::delay(30);
+
+	} while(vels[0] != 0 && vels[1] != 0 &&vels[2] != 0 &&vels[3] != 0);
+	drive->runTank(0, 0);
+*/
+	right();
+	// esbensOdom();
+	drive->setMode(okapi::AbstractMotor::brakeMode::coast);
+	// esbensOdom();
+}
+
+
+
