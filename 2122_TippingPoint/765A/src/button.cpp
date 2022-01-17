@@ -15,6 +15,7 @@ void Button::handleButtons(Controller controller) {
     if(controller.getDigital(key) && !value.state) {
       value.state = true;
       value.count++;
+    }
     else if(!controller.getDigital(key) && value.state) {
       value.state = false;
     }
