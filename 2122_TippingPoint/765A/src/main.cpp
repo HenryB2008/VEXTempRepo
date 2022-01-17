@@ -288,20 +288,14 @@ void opcontrol() {
 	while(true) {
 		//toggle between coast and hold brake modes
 		if (buttons->getPressed(okapi::ControllerDigital::B)) {
-			if (parking == 1) {
-				drive->setMode(okapi::AbstractMotor::brakeMode::coast);
-				parking = 0;
-			} else {
-				drive->setMode(okapi::AbstractMotor::brakeMode::hold);
-				parking = 1;
-			}
+
 		}
 
 		//get controller and drive chassis base
 		forward = controller.getAnalog(okapi::ControllerAnalog::leftY);
 		turn = controller.getAnalog(okapi::ControllerAnalog::rightX);
 		drive->runTankArcade(forward*-1, turn*-1);
-		printf("%f %f %f\n", drive->getX(), drive->getY(), drive->getHeading());
+	//	printf("%f %f %f\n", drive->getX(), drive->getY(), drive->getHeading());
 		//update all button values
 		buttons->handleButtons(controller);
 		int buttonCounts[8];
@@ -319,6 +313,14 @@ void opcontrol() {
 
 		//handle clamp
 		fourbarpneum->handle(buttonCounts[5]);
+
+		parking = buttonCounts[7] % 2;
+		if (parking == 1) {
+			drive->setMode(okapi::AbstractMotor::brakeMode::hold);
+		} else {
+			drive->setMode(okapi::AbstractMotor::brakeMode::coast);
+		}
+		printf("%d\n", parking);
 		pros::delay(30);
 		pros::lcd::clear_line(2);
 	}
