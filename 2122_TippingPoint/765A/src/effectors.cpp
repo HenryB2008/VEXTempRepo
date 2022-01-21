@@ -9,7 +9,7 @@ Effectors::Effectors() {
 
 //set all encoder positions for two bar
 void Effectors::addPosition() {
-  encPositions[0][0] = 1450; // Two bar upper position
+  encPositions[0][0] = 1350; // Two bar upper position
   encPositions[0][1] = 2175; // Two bar lower position
   prevCounts[0] = 0;
   prevCounts[1] = 0;
