@@ -6,7 +6,7 @@
 Drive *drive = new Drive();
 Pneumatics *fourbarpneum = new Pneumatics('G');
 Effectors effectors;
-Intake *intake = new Intake(5);
+Intake *intake = new Intake(8);
 Intake *fourbar1 = new Intake(-1);
 Intake *fourbar2 = new Intake(10);
 Button *buttons = new Button();
@@ -46,8 +46,8 @@ void on_center_button() {
  */
 void initialize() {
 	//make sure four bar can't go higher/lower than the mechanical stops
-	fourbar1->setLimits(2200, 0);
-	fourbar2->setLimits(2200, 0);
+	fourbar1->setLimits(2300, 0);
+	fourbar2->setLimits(2300, 0);
 
 	pros::lcd::initialize();
 	pros::lcd::set_text(1, "Hello PROS User!");
@@ -305,7 +305,7 @@ void opcontrol() {
 
 		effectors.step(buttonCounts, speeds); //handle two bar
 
-		intake->run(false, buttons->getPressed(okapi::ControllerDigital::right), 175); //handle intake
+		intake->run(false, buttons->getPressed(okapi::ControllerDigital::right), 150); //handle intake
 
 		//handle four bar
 		fourbar1->run(buttons->getPressed(okapi::ControllerDigital::R1), buttons->getPressed(okapi::ControllerDigital::R2), 175);
