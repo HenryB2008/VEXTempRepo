@@ -46,8 +46,8 @@ void on_center_button() {
  */
 void initialize() {
 	//make sure four bar can't go higher/lower than the mechanical stops
-	fourbar1->setLimits(2300, 0);
-	fourbar2->setLimits(2300, 0);
+	fourbar1->setLimits(2400, 0);
+	fourbar2->setLimits(2400, 0);
 
 	pros::lcd::initialize();
 	pros::lcd::set_text(1, "Hello PROS User!");
@@ -331,11 +331,11 @@ void right() {
 	printf("done\n");
 	effectors.runOne(GOAL_LIFT, 1); //lower two-bar
 
-	distanceMove(43, -1);	//move towards side neutral at full speed
+	distanceMove(39, -1);	//move towards side neutral at full speed
 	fourbarpneum->turnOn(); //clamp it
 	pros::delay(300); //delay 300 ms
 	printf("Finished\n");
-	distanceMove(9, 1); //move back
+	distanceMove(5, 1); //move back
 
 
 
