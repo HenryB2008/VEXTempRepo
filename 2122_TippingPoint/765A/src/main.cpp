@@ -63,10 +63,9 @@ void initialize() {
 		iter += 10;
 		pros::delay(10);
 	}
-
+	imu.set_data_rate(5);
 	pros::lcd::register_btn1_cb(on_center_button);
 }
-
 
 //x-drive math to find difference between two odomstates
 OdomState transform(OdomState curr, OdomState target) {
@@ -90,12 +89,12 @@ double limiter(double prevOutput, double currOutput, double step) {
 	if(currOutput > 0){ // positive rawOutput case
 
         output = std::clamp(currOutput, prevOutput - step, std::min(1.0, prevOutput + step)); // clamped for slew and so finalOutput does not exceed maxOutput
-		output = std::max(0.2, output); //make sure output above min power
+		output = std::max(0.3, output); //make sure output above min power
 
     } else if (currOutput < 0){ // negative rawOutput case
 
         output = std::clamp(currOutput, std::max(-1.0, prevOutput - step), prevOutput + step); // clamped for slew and so finalOutput does not exceed -maxOutput
-		output = std::min(-0.2, output); //make sure output above min power
+		output = std::min(-0.3, output); //make sure output above min power
 
     } else { // rawOutput is 0
 
@@ -152,7 +151,7 @@ void moveTank(OdomState target, PIDConst forwardConstants = forwardDefault, PIDC
 		drive->runTankArcade(forward, turn);
 		prevForward = forward;
 		prevTurn = turn;
-		pros::delay(30);
+		pros::delay(15);
 	} while((abs(magerr.convert(inch)) > 3 && !turning) || (abs(headerr.convert(degree))>3 && turning)); //tolerances checked differently depending on turning or forward
 	drive->runTankArcade(0, 0);
 }
@@ -194,7 +193,7 @@ void setEffectorPositions() {
 
 //drag turn function
 void dragTurn(double heading, double direction, double side) {
-	while(abs(heading-imu.get_heading())>4) {
+	while(abs(heading-imu.get_heading())>2) {
 		//handle side and direction logic
 		if(side == 0) {
 			drive->runTank(0.5*direction, 0.1*direction*-1);
@@ -202,7 +201,7 @@ void dragTurn(double heading, double direction, double side) {
 		if(side == 1) {
 			drive->runTank(0.1*direction*-1, 0.5*direction);
 		}
-		pros::delay(30);
+		pros::delay(5);
 	}
 	drive->runTank(0, 0);
 }
@@ -273,6 +272,11 @@ void competition_initialize() {}
  * operator control task will be stopped. Re-enabling the robot will restart the
  * task, not resume it from where it left off.
  */
+
+void seesaw() {
+
+}
+
 void opcontrol() {
 
 	okapi::Controller controller (okapi::ControllerId::master);
@@ -344,11 +348,12 @@ void right() {
 	moveTank(goal, {0, 0, 0}, turnDefault, true);  //make the turn
 
 	pros::delay(300);
-	distanceMove(12, 1); //move towards alliance goal
+	distanceMove(18, 1); //move towards alliance goal
 	effectors.runOne(GOAL_LIFT, 0);
 	fourbar1->moveTarget(500);
   	fourbar2->moveTarget(500);
 
+	pros::delay(500);
 	goal = drive->getState();
 	goal.theta = 180_deg; //
 	moveTank(goal, {0, 0, 0}, {0.01, 0.000005, 0}, true); //turn to dump goal
@@ -357,7 +362,7 @@ void right() {
 	pros::delay(750); //wait
 
 	goal = drive->getState();
-	goal.theta = 295_deg;
+	goal.theta = 290_deg;
 	moveTank(goal, {0, 0, 0}, {0.01, 0.000005, 0}, true); //turn towards center goal
 
 	intake->run(true, false, 0); //end intake
@@ -428,6 +433,79 @@ void skills() {
 	// goal.theta = 0_deg;
 	// moveTank(goal, {0, 0, 0}, {0.02, 0.000005, 0}, true); //turn towards other zone
 	distanceMove(35, 1);
+}
+
+void leftskills() {
+	setEffectorPositions();
+  	effectors.runOne(GOAL_LIFT, 1); //lower goal lift
+	fourbar1->moveTarget(500);
+	fourbar2->moveTarget(500);
+  	pros::delay(1500);
+  	distanceMove(15, 0.5); // move forwards and get goal
+	effectors.runOne(GOAL_LIFT, 0); // raise goal lift
+	pros::delay(500);
+	distanceMove(10, -0.5); // forwards
+	OdomState goal = drive->getState();
+  	goal.theta = 90_deg;
+	dragTurn(105, -1, 0);// turn towards central mogo
+   	intake->run(true, false, -150);  //run intake to deposit rings
+   	pros::delay(500);
+   	intake->run(true, false, 0);
+   	fourbar1->moveTarget(0);
+  	fourbar2->moveTarget(0);
+   	distanceMove(55, -1);  //move towards
+
+   	fourbarpneum->turnOn();
+	pros::delay(300);
+	fourbar1->moveTarget(2400);
+	fourbar2->moveTarget(2400);
+	goal = drive->getState();
+  	goal.theta = 120_deg;
+	moveTank(goal, {0, 0, 0}, {0.01, 0.000005, 0}, true);
+   	distanceMove(33, -0.5);  //move towards
+	fourbar1->moveTarget(1800);
+	fourbar2->moveTarget(1800);
+	pros::delay(500);
+	distanceMove(3, -1);
+	fourbarpneum->turnOff();
+	pros::delay(500);
+	distanceMove(8, 1);
+	goal = drive->getState();
+  	goal.theta = 195_deg;
+	moveTank(goal, {0, 0, 0}, {0.01, 0.000005, 0}, true);
+	intake->run(true, false, -150);
+	fourbar1->moveTarget(400);
+	fourbar2->moveTarget(400);
+	distanceMove(55, -0.4);
+	intake->run(true, false, 0);
+	fourbar1->moveTarget(0);
+	fourbar2->moveTarget(0);
+	distanceMove(10, -0.4);
+	fourbarpneum->turnOn();
+	distanceMove(15, 0.4);
+	pros::delay(500);
+	fourbar1->moveTarget(2400);
+	fourbar2->moveTarget(2400);
+	goal = drive->getState();
+  	goal.theta = 85_deg;
+	moveTank(goal, {0, 0, 0}, {0.012, 0.000008, 0}, true);
+	distanceMove(45, -1);
+	fourbar1->moveTarget(2000);
+	fourbar2->moveTarget(2000);
+	pros::delay(500);
+	fourbarpneum->turnOff();
+	
+	pros::delay(500);
+	distanceMove(30, 1);
+	effectors.runOne(GOAL_LIFT, 1);
+	fourbar1->moveTarget(0);
+	fourbar2->moveTarget(0);
+	distanceMove(12, -1);
+	effectors.runOne(GOAL_LIFT, 0);
+	goal.theta = 260_deg;
+	moveTank(goal, {0, 0, 0}, {0.08, 0.00000, 0}, true);
+	distanceMove(15, -1);
+	fourbarpneum->turnOn();
 }
 
 void rightrings() {
@@ -527,7 +605,7 @@ void esbensOdom() {
 
 void autonomous() {
 	drive->setMode(okapi::AbstractMotor::brakeMode::hold);
-	right();
+	leftskills();
 	drive->setMode(okapi::AbstractMotor::brakeMode::coast);
 }
 

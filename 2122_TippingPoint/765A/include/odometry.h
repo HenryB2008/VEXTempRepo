@@ -6,11 +6,11 @@
 
 class IMUOdometry {
 public:
-  Odometry(ADIEncoder left, ADIEncoder right, ADIEncoder back, pros::IMU imu, double backdistance, double track);
+  //Odometry(ADIEncoder left, ADIEncoder right, ADIEncoder back, pros::IMU imu, double backdistance, double track);
   OdomState step();
 private:
   pros::IMU imu;
-  ADIEncoder left, right, back;
+  //ADIEncoder left, right, back;
   int prevleft, prevright, prevback;
   OdomState prevState;
 

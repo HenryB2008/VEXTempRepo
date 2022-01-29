@@ -1,6 +1,6 @@
 #include "odometry.h"
 
-
+/*
 Odometry::Odometry(ADIEncoder left, ADIEncoder right, ADIEncoder back) {
   this->left = left;
   this->right = right;
@@ -50,3 +50,4 @@ OdomState Odometry::step() {
   OdomState currState = {prevState.x + (localXOffset*1_in), prevState.y + (localYOffset*1_in), }
 
 }
+*/
