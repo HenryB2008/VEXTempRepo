@@ -509,14 +509,18 @@ void esbensOdom() {
 		pros::delay(25);
 		currangle = imu.get_heading();
 		pros::delay(25);
-		int rightencchange = righttrack.get() - right;
-		int leftencchange = lefttrack.get() - left;
+		int currright = righttrack.get();
+		int currleft = lefttrack.get();
+		int rightencchange = currright - right;
+		int leftencchange = currleft - left;
 		float average = (rightencchange + leftencchange)/2 / 360 * 2.75 * PI;
 		x += average * cos(currangle);
 		y += average * sin(currangle);
 		pros::c::lcd_print(0, "OdomX: %f\n", x);		//display on lcd screen
 		pros::c::lcd_print(1, "OdomY: %f\n", y);
 		pros::c::lcd_print(2, "OdomH: %d\n", currangle);
+		right = currright;
+		left = currleft;
 	}
 
 }
