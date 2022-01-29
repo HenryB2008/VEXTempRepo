@@ -17,7 +17,12 @@ Drive::Drive() {
               ADIEncoder( // right encoder
                   RIGHT_TRACKING_WHEEL_TOP,
                   RIGHT_TRACKING_WHEEL_BOTTOM
-                  
+
+              ),
+              ADIEncoder( // back  encoder
+                  BACK_TRACKING_WHEEL_TOP,
+                  BACK_TRACKING_WHEEL_BOTTOM
+
               )
           )
           .withOdometry(
