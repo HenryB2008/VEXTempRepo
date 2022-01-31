@@ -309,7 +309,9 @@ void opcontrol() {
 
 		effectors.step(buttonCounts, speeds); //handle two bar
 
-		intake->run(false, buttons->getPressed(okapi::ControllerDigital::right), 150); //handle intake
+		//intake->run(false, buttons->getPressed(okapi::ControllerDigital::right), 150); //handle intake
+
+		intake->handle(buttonCounts[3], 150); //handle intake (toggle)
 
 		//handle four bar
 		fourbar1->run(buttons->getPressed(okapi::ControllerDigital::R1), buttons->getPressed(okapi::ControllerDigital::R2), 175);
@@ -460,9 +462,13 @@ void leftskills() {
 	fourbar1->moveTarget(2400);
 	fourbar2->moveTarget(2400);
 	goal = drive->getState();
-  	goal.theta = 120_deg;
+  	goal.theta = 140_deg;
 	moveTank(goal, {0, 0, 0}, {0.01, 0.000005, 0}, true);
-   	distanceMove(33, -0.5);  //move towards
+   	distanceMove(27, -0.5);  //move towards
+	goal = drive->getState();
+  	goal.theta = 90_deg;
+	moveTank(goal, {0, 0, 0}, {0.01, 0.000005, 0}, true);
+	distanceMove(10, 0.5);
 	fourbar1->moveTarget(1800);
 	fourbar2->moveTarget(1800);
 	pros::delay(500);
@@ -474,8 +480,8 @@ void leftskills() {
   	goal.theta = 195_deg;
 	moveTank(goal, {0, 0, 0}, {0.01, 0.000005, 0}, true);
 	intake->run(true, false, -150);
-	fourbar1->moveTarget(400);
-	fourbar2->moveTarget(400);
+	fourbar1->moveTarget(0);
+	fourbar2->moveTarget(0);
 	distanceMove(55, -0.4);
 	intake->run(true, false, 0);
 	fourbar1->moveTarget(0);
@@ -487,7 +493,7 @@ void leftskills() {
 	fourbar1->moveTarget(2400);
 	fourbar2->moveTarget(2400);
 	goal = drive->getState();
-  	goal.theta = 85_deg;
+  	goal.theta = 75_deg;
 	moveTank(goal, {0, 0, 0}, {0.012, 0.000008, 0}, true);
 	distanceMove(45, -1);
 	fourbar1->moveTarget(2000);
@@ -503,8 +509,8 @@ void leftskills() {
 	distanceMove(12, -1);
 	effectors.runOne(GOAL_LIFT, 0);
 	goal.theta = 260_deg;
-	moveTank(goal, {0, 0, 0}, {0.08, 0.00000, 0}, true);
-	distanceMove(15, -1);
+	moveTank(goal, {0, 0, 0}, {0.03, 0.00000, 0}, true);
+	distanceMove(20, -1);
 	fourbarpneum->turnOn();
 }
 

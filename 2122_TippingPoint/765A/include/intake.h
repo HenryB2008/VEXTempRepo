@@ -24,6 +24,7 @@ public:
   void addPosition(int pos);
   void step();
   void setLimits(int upper, int lower);
+  void handle(int count, double speed);
 };
 
 
