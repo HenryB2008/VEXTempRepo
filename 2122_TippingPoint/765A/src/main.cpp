@@ -229,6 +229,33 @@ void autonSelector(okapi::Controller controller) {
 	}
 }
 
+void autobalancer(double tolerance) {
+	drive->runTankArcade(1, 0);
+	double curr_pitch = imu.get_pitch();
+	double last_pitch = curr_pitch;
+	while(curr_pitch > tolerance || curr_pitch-last_pitch>=0) {
+		pros::delay(30);
+		last_pitch = curr_pitch;
+		curr_pitch = imu.get_pitch();
+	}
+	drive->runTankArcade(0, 0);
+}
+
+void testBalancing() {
+	setEffectorPositions();
+	fourbarpneum->turnOn();
+  effectors.runOne(GOAL_LIFT, 1); //lower goal lift
+  pros::delay(1500);
+  distanceMove(15, 0.5); // move forwards and get goal
+	fourbar1->moveTarget(2400);
+	fourbar2->moveTarget(2400);
+	effectors.runOne(GOAL_LIFT, 1); //lower goal lift
+	distanceMove(16, -0.5); // move forwards and get goal
+	fourbar1->moveTarget(0);
+	fourbar2->moveTarget(0);
+	autobalancer(20);
+}
+
 /**
  * Runs while the robot is in the disabled state of Field Management System or
  * the VEX Competition Switch, following either autonomous or opcontrol. When
@@ -605,7 +632,7 @@ void esbensOdom() {
 
 void autonomous() {
 	drive->setMode(okapi::AbstractMotor::brakeMode::hold);
-	leftskills();
+	testBalancing();
 	drive->setMode(okapi::AbstractMotor::brakeMode::coast);
 }
 
