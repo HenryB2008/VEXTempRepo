@@ -452,7 +452,6 @@ void leftskills() {
 	dragTurn(105, -1, 0);// turn towards central mogo
    	intake->run(true, false, -150);  //run intake to deposit rings
    	pros::delay(500);
-   	intake->run(true, false, 0);
    	fourbar1->moveTarget(0);
   	fourbar2->moveTarget(0);
    	distanceMove(55, -1);  //move towards
@@ -462,17 +461,16 @@ void leftskills() {
 	fourbar1->moveTarget(2400);
 	fourbar2->moveTarget(2400);
 	goal = drive->getState();
-  	goal.theta = 140_deg;
+  	goal.theta = 145_deg;
 	moveTank(goal, {0, 0, 0}, {0.01, 0.000005, 0}, true);
    	distanceMove(27, -0.5);  //move towards
 	goal = drive->getState();
-  	goal.theta = 90_deg;
+  	goal.theta = 85_deg;
 	moveTank(goal, {0, 0, 0}, {0.01, 0.000005, 0}, true);
-	distanceMove(10, 0.5);
+	distanceMove(15, -0.5);
 	fourbar1->moveTarget(1800);
 	fourbar2->moveTarget(1800);
 	pros::delay(500);
-	distanceMove(3, -1);
 	fourbarpneum->turnOff();
 	pros::delay(500);
 	distanceMove(8, 1);
@@ -482,34 +480,30 @@ void leftskills() {
 	intake->run(true, false, -150);
 	fourbar1->moveTarget(0);
 	fourbar2->moveTarget(0);
-	distanceMove(55, -0.4);
-	intake->run(true, false, 0);
-	fourbar1->moveTarget(0);
-	fourbar2->moveTarget(0);
-	distanceMove(10, -0.4);
+	distanceMove(40, -0.4);
 	fourbarpneum->turnOn();
 	distanceMove(15, 0.4);
 	pros::delay(500);
 	fourbar1->moveTarget(2400);
 	fourbar2->moveTarget(2400);
 	goal = drive->getState();
-  	goal.theta = 75_deg;
+  	goal.theta = 95_deg;
 	moveTank(goal, {0, 0, 0}, {0.012, 0.000008, 0}, true);
-	distanceMove(45, -1);
+	distanceMove(34, -0.8);
 	fourbar1->moveTarget(2000);
 	fourbar2->moveTarget(2000);
 	pros::delay(500);
 	fourbarpneum->turnOff();
-	
+
 	pros::delay(500);
-	distanceMove(30, 1);
+	distanceMove(30, 0.8);
 	effectors.runOne(GOAL_LIFT, 1);
 	fourbar1->moveTarget(0);
 	fourbar2->moveTarget(0);
-	distanceMove(12, -1);
+	distanceMove(12, -0.8);
 	effectors.runOne(GOAL_LIFT, 0);
 	goal.theta = 260_deg;
-	moveTank(goal, {0, 0, 0}, {0.03, 0.00000, 0}, true);
+	moveTank(goal, {0, 0, 0}, {0.007, 0.00000, 0}, true);
 	distanceMove(20, -1);
 	fourbarpneum->turnOn();
 }
