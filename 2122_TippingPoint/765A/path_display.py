@@ -71,9 +71,11 @@ with open("src/main.cpp", "r+") as texthandle:
         if movement.startswith("dragTurn"):
             drawing.arc([(oldx, oldy),(oldx + 120, oldy + 120)], 180, 285, "black", 2)
             currentheading = (90-105)*math.pi / 180
-            oldx = oldx + 60 + (60*math.cos(75))
-            oldy = oldy + math.sin(75)
+            oldx = oldx + 60 + (60*math.cos(75/180*math.pi))
+            oldy = oldy + (math.sin(75/180*math.pi))
+            drawing.ellipse([(oldx-5,oldy-5),(oldx+5,oldy+5)], "black", "black")
+
         n+= 1
-        # if n > 6:
-            # break
+        if n > 8:
+            break
     base_image.show()
