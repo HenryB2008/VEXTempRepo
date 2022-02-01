@@ -50,13 +50,13 @@ with open("src/main.cpp", "r+") as texthandle:
             if direction > 0:
                 currentmovement = -1
                 # currentheading = (math.pi) + currentheading
-                print("Backwards " + str(distance) + " pixels at " + str(math.pi + currentheading))
+                print("Backwards " + str(distance) + " pixels at " + str(currentheading*180 / math.pi) + "->" + str(math.pi + currentheading))
                 newx = oldx + (distance * 4.4 * math.cos(math.pi + currentheading))
                 newy = oldy - (distance * 4.4 * math.sin(math.pi + currentheading)) 
                 print(newx, newy) 
             else:
                 currentmovement = 1
-                print("Forwards " + str(distance) + " pixels at " + str(currentheading))
+                print("Forwards " + str(distance) + " pixels at " + str(currentheading*180 / math.pi) + "->" + str(currentheading))
                 newx = oldx + (distance * 4.4 * math.cos(currentheading))
                 newy = oldy - (distance * 4.4 * math.sin(currentheading))
                 print(newx, newy)
@@ -67,15 +67,15 @@ with open("src/main.cpp", "r+") as texthandle:
             # direction = int(arguments[1])
 
         if movement.startswith("goal.theta"):
-            currentheading = (math.pi / 2) - (int(movement[movement.index("=")+2:movement.index("_")].replace(" ", "")) * math.pi / 180)
+            currentheading = (math.pi / 2) - (int(movement[movement.index("=")+1:movement.index("_")].replace(" ", "")) * math.pi / 180)
         if movement.startswith("dragTurn"):
-            drawing.arc([(oldx, oldy),(oldx + 120, oldy + 120)], 180, 285, "black", 2)
+            drawing.arc([(oldx, oldy),(oldx + 90, oldy + 90)], 180, 285, "black", 2)
             currentheading = (90-105)*math.pi / 180
-            oldx = oldx + 60 + (60*math.cos(75/180*math.pi))
+            oldx = oldx + 45 + (45*math.cos(75/180*math.pi))
             oldy = oldy + (math.sin(75/180*math.pi))
-            drawing.ellipse([(oldx-5,oldy-5),(oldx+5,oldy+5)], "black", "black")
-
+        drawing.ellipse([(oldx-5,oldy-5),(oldx+5,oldy+5)], "black", "black")
+        # drawing.ellipse
         n+= 1
-        if n > 8:
-            break
+        # if n > 9:
+            # break
     base_image.show()
