@@ -474,73 +474,103 @@ void leftskills() {
 	distanceMove(10, -0.5); // forwards
 	OdomState goal = drive->getState();
   	goal.theta = 90_deg;
-	dragTurn(105, -1, 0);// turn towards central mogo
+	dragTurn(105, -1, 0);// turn towards side neutral mogo
    	intake->run(true, false, -150);  //run intake to deposit rings
    	pros::delay(500);
-   	fourbar1->moveTarget(0);
+   	fourbar1->moveTarget(0); //four bar down
   	fourbar2->moveTarget(0);
-   	distanceMove(55, -1);  //move towards
+   	distanceMove(55, -1);  //move towards side neutral mogo
 
-   	fourbarpneum->turnOn();
+   	fourbarpneum->turnOn(); //clamp
 	pros::delay(300);
-	fourbar1->moveTarget(2400);
+	fourbar1->moveTarget(2400);  //four bar up
 	fourbar2->moveTarget(2400);
 	goal = drive->getState();
-  	goal.theta = 145_deg;
+  	goal.theta = 145_deg;   //turn towards ring cross
 	moveTank(goal, {0, 0, 0}, {0.01, 0.000005, 0}, true);
-   	distanceMove(27, -0.5);  //move towards
+   	distanceMove(27, -0.5);  //move towards ring cross
 	goal = drive->getState();
-  	goal.theta = 85_deg;
+  	goal.theta = 85_deg;  //turn towards platform
 	moveTank(goal, {0, 0, 0}, {0.01, 0.000005, 0}, true);
-	distanceMove(15, -0.5);
-	fourbar1->moveTarget(1800);
+	distanceMove(15, -0.5);  //move to platform
+	fourbar1->moveTarget(1800);  //four bar down to balance platform
 	fourbar2->moveTarget(1800);
 	pros::delay(500);
-	fourbarpneum->turnOff();
+	fourbarpneum->turnOff();  //release clamp
 	pros::delay(500);
-	distanceMove(8, 1);
+	distanceMove(8, 1);  //move away from platform
 	goal = drive->getState();
-  	goal.theta = 195_deg;
+  	goal.theta = 195_deg;  //turn towards other side neutral
 	moveTank(goal, {0, 0, 0}, {0.01, 0.000005, 0}, true);
 	intake->run(true, false, -150);
-	fourbar1->moveTarget(0);
+	fourbar1->moveTarget(0);  //four bar down
 	fourbar2->moveTarget(0);
-	distanceMove(40, -0.4);
-	fourbarpneum->turnOn();
-	distanceMove(15, 0.4);
+	distanceMove(40, -0.4);  //move towards side neutral
+	fourbarpneum->turnOn();  //clamp
+	distanceMove(15, 0.75);   //move backwards
 	pros::delay(500);
-	fourbar1->moveTarget(2400);
+	fourbar1->moveTarget(2400);  //four bar up
 	fourbar2->moveTarget(2400);
 	goal = drive->getState();
-  	goal.theta = 90_deg;
+  	goal.theta = 90_deg;		//turn towards platform
 	moveTank(goal, {0, 0, 0}, {0.012, 0.000008, 0}, true);
-	distanceMove(34, -0.8);
-	fourbar1->moveTarget(2000);
+	distanceMove(34, -0.8);     //move forwards to platform
+	fourbar1->moveTarget(2000); //lower four bar
 	fourbar2->moveTarget(2000);
 	pros::delay(500);
-	fourbarpneum->turnOff();
+	fourbarpneum->turnOff();    //release clamp
 
 	pros::delay(500);
-	distanceMove(30, 0.8);
-	effectors.runOne(GOAL_LIFT, 1);
-	fourbar1->moveTarget(0);
+	distanceMove(20, 0.8);		//backwards from platform
+	effectors.runOne(GOAL_LIFT, 1);  //drop two bar
+	fourbar1->moveTarget(0);		//four bar down
 	fourbar2->moveTarget(0);
-	distanceMove(12, -0.8);
-	effectors.runOne(GOAL_LIFT, 0);
-	goal.theta = 240_deg;
+	distanceMove(5, 0.8);			//move backwards to push the alliance goal further away
+	distanceMove(12, -0.8);			//move forwards
+	effectors.runOne(GOAL_LIFT, 0);	//two bar up
+	goal.theta = 240_deg;			//turn around to go back towards the dropped alliance goal
 	moveTank(goal, {0, 0, 0}, {0.007, 0.00000, 0}, true);
-	distanceMove(25, -0.5);
-	pros::delay(500);
-	fourbarpneum->turnOn();
+	distanceMove(25, -0.5);			//move towards alliance goal
+	pros::delay(500);				
+	fourbarpneum->turnOn();			//clamp
 	goal = drive->getState();
-  	goal.theta = 80_deg;
+  	goal.theta = 80_deg;			//turn back towards platform with alliance goal
 	moveTank(goal, {0, 0, 0}, {0.007, 0.000008, 0}, true);
-	fourbar1->moveTarget(2400);
+	fourbar1->moveTarget(2400);		//four bar up
 	fourbar2->moveTarget(2400);
-	distanceMove(34, -0.7);
-	fourbar1->moveTarget(2000);
+	distanceMove(34, -0.7);			//forwards to platform
+	fourbar1->moveTarget(2000);		//four bar down to deposit
 	fourbar2->moveTarget(2000);
-	fourbarpneum->turnOff();
+	fourbarpneum->turnOff();		//release clamp
+	distanceMove(18, 0.8);			//backwards from platform
+	fourbar1->moveTarget(0);		//lower four bar
+	fourbar2->moveTarget(0);
+	goal.theta = 180_deg;			//turn towards alliance goal that fell off the seesaw
+	moveTank(goal, {0, 0, 0}, {0.007, 0.000008, 0}, true);
+	distanceMove(48, -1);			//moving forwards towards the other alliance goal that came off the seesaw
+	goal.theta = 45_deg;			//turn towards alliance goal
+	moveTank(goal, {0, 0, 0}, {0.007, 0.000008, 0}, true);
+	distanceMove(20, -0.8);			//move towards alliance goal
+	fourbarpneum->turnOn();			//clamp
+	distanceMove(20, 1);			//Move away from alliance goal
+	goal.theta = 180_deg;			//turn so that we can move backwards to the other alliance goal
+	moveTank(goal, {0, 0, 0}, {0.007, 0.000008, 0}, true);
+	effectors.runOne(GOAL_LIFT, 1);	//drop two bar
+	distanceMove(100, 1);			//move quickly to the alliance goal
+	effectors.runOne(GOAL_LIFT, 0); //raise two bar
+	goal.theta = 270_deg;			//turn to face the rings
+	moveTank(goal, {0, 0, 0}, {0.007, 0.000008, 0}, true);
+	fourbar1->moveTarget(200);		//four bar up a bit
+	fourbar2->moveTarget(200);		
+	intake->run(true, false, -150);	//start intake
+	distanceMove(96, -0.6);			//move along the rings
+	goal.theta = 180_deg;			//turn to climb on the seesaw
+	moveTank(goal, {0, 0, 0}, {0.007, 0.000008, 0}, true);
+	fourbar1->moveTarget(2000);		//four bar up to put the seesaw down
+	fourbar2->moveTarget(2000);
+	fourbar1->moveTarget(100);		//four bar down to put the seesaw down
+	fourbar2->moveTarget(100);
+	autobalancer(22);				//autobalance
 }
 
 void rightrings() {
