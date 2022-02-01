@@ -34,7 +34,7 @@ with open("src/main.cpp", "r+") as texthandle:
     base_image = Image.open("skills_field.PNG")
     drawing = ImageDraw.Draw(base_image)
     drawing.ellipse([(70,70),(100,100)], "black", "black")
-    currentheading = 0
+    currentheading = math.pi/2
     currentmovement = 1
     oldx = 85
     oldy = 85
@@ -47,14 +47,19 @@ with open("src/main.cpp", "r+") as texthandle:
             # print(arguments)
             distance = int(arguments[0])
             direction = float(arguments[1])
-            if direction < 0:
+            if direction > 0:
                 currentmovement = -1
-                newx = oldx + (distance * 4.4 * math.cos(math.pi / 2 + ((90-currentheading) * math.pi / 180)))
-                newy = oldy + (distance * 4.4 * math.sin(math.pi / 2 + ((90-currentheading) * math.pi / 180)))  
+                # currentheading = (math.pi) + currentheading
+                print("Backwards " + str(distance) + " pixels at " + str(math.pi + currentheading))
+                newx = oldx + (distance * 4.4 * math.cos(math.pi + currentheading))
+                newy = oldy - (distance * 4.4 * math.sin(math.pi + currentheading)) 
+                print(newx, newy) 
             else:
                 currentmovement = 1
-                newx = oldx + (distance * 4.4 * math.cos((90-currentheading) * math.pi / 180))
-                newy = oldy + (distance * 4.4 * math.sin((90-currentheading) * math.pi / 180))
+                print("Forwards " + str(distance) + " pixels at " + str(currentheading))
+                newx = oldx + (distance * 4.4 * math.cos(currentheading))
+                newy = oldy - (distance * 4.4 * math.sin(currentheading))
+                print(newx, newy)
             
             drawing.line([(oldx, oldy),(newx,newy)], "black", 2)
             oldx = newx
@@ -62,8 +67,13 @@ with open("src/main.cpp", "r+") as texthandle:
             # direction = int(arguments[1])
 
         if movement.startswith("goal.theta"):
-            currentheading = int(movement[movement.index("=")+2:movement.index("_")].replace(" ", ""))
-        n += 1
-        if n > 2:
-            break
+            currentheading = (math.pi / 2) - (int(movement[movement.index("=")+2:movement.index("_")].replace(" ", "")) * math.pi / 180)
+        if movement.startswith("dragTurn"):
+            drawing.arc([(oldx, oldy),(oldx + 120, oldy + 120)], 180, 285, "black", 2)
+            currentheading = (90-105)*math.pi / 180
+            oldx = oldx + 60 + (60*math.cos(75))
+            oldy = oldy + math.sin(75)
+        n+= 1
+        # if n > 6:
+            # break
     base_image.show()
