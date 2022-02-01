@@ -230,11 +230,13 @@ void autonSelector(okapi::Controller controller) {
 }
 
 void autobalancer(double tolerance) {
-	drive->runTankArcade(1, 0);
+	drive->runTankArcade(-1, 0);
+	pros::delay(750);
 	double curr_pitch = imu.get_pitch();
 	double last_pitch = curr_pitch;
 	while(curr_pitch > tolerance || curr_pitch-last_pitch>=0) {
 		pros::delay(30);
+		printf("Current pitch: %f\n", curr_pitch);
 		last_pitch = curr_pitch;
 		curr_pitch = imu.get_pitch();
 	}
@@ -243,17 +245,16 @@ void autobalancer(double tolerance) {
 
 void testBalancing() {
 	setEffectorPositions();
-	fourbarpneum->turnOn();
-  effectors.runOne(GOAL_LIFT, 1); //lower goal lift
-  pros::delay(1500);
-  distanceMove(15, 0.5); // move forwards and get goal
+	
+	fourbarpneum->turnOn();		
 	fourbar1->moveTarget(2400);
 	fourbar2->moveTarget(2400);
-	effectors.runOne(GOAL_LIFT, 1); //lower goal lift
-	distanceMove(16, -0.5); // move forwards and get goal
+	pros::delay(2000);
 	fourbar1->moveTarget(0);
 	fourbar2->moveTarget(0);
-	autobalancer(20);
+	
+	pros::delay(2000);
+	autobalancer(22);
 }
 
 /**
@@ -300,9 +301,6 @@ void competition_initialize() {}
  * task, not resume it from where it left off.
  */
 
-void seesaw() {
-
-}
 
 void opcontrol() {
 
@@ -514,7 +512,7 @@ void leftskills() {
 	fourbar1->moveTarget(2400);
 	fourbar2->moveTarget(2400);
 	goal = drive->getState();
-  	goal.theta = 95_deg;
+  	goal.theta = 90_deg;
 	moveTank(goal, {0, 0, 0}, {0.012, 0.000008, 0}, true);
 	distanceMove(34, -0.8);
 	fourbar1->moveTarget(2000);
@@ -529,10 +527,20 @@ void leftskills() {
 	fourbar2->moveTarget(0);
 	distanceMove(12, -0.8);
 	effectors.runOne(GOAL_LIFT, 0);
-	goal.theta = 260_deg;
+	goal.theta = 240_deg;
 	moveTank(goal, {0, 0, 0}, {0.007, 0.00000, 0}, true);
-	distanceMove(20, -1);
+	distanceMove(25, -0.5);
+	pros::delay(500);
 	fourbarpneum->turnOn();
+	goal = drive->getState();
+  	goal.theta = 80_deg;
+	moveTank(goal, {0, 0, 0}, {0.007, 0.000008, 0}, true);
+	fourbar1->moveTarget(2400);
+	fourbar2->moveTarget(2400);
+	distanceMove(34, -0.7);
+	fourbar1->moveTarget(2000);
+	fourbar2->moveTarget(2000);
+	fourbarpneum->turnOff();
 }
 
 void rightrings() {
@@ -631,8 +639,9 @@ void esbensOdom() {
 }
 
 void autonomous() {
+	
 	drive->setMode(okapi::AbstractMotor::brakeMode::hold);
-	testBalancing();
+	leftskills();
 	drive->setMode(okapi::AbstractMotor::brakeMode::coast);
 }
 
