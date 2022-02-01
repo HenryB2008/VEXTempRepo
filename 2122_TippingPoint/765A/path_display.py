@@ -51,14 +51,14 @@ with open("src/main.cpp", "r+") as texthandle:
                 currentmovement = -1
                 # currentheading = (math.pi) + currentheading
                 print("Backwards " + str(distance) + " pixels at " + str(currentheading*180 / math.pi) + "->" + str(math.pi + currentheading))
-                newx = oldx + (distance * 4.4 * math.cos(math.pi + currentheading))
-                newy = oldy - (distance * 4.4 * math.sin(math.pi + currentheading)) 
+                newx = oldx + (distance * 4 * math.cos(math.pi + currentheading))
+                newy = oldy - (distance * 4 * math.sin(math.pi + currentheading)) 
                 print(newx, newy) 
             else:
                 currentmovement = 1
                 print("Forwards " + str(distance) + " pixels at " + str(currentheading*180 / math.pi) + "->" + str(currentheading))
-                newx = oldx + (distance * 4.4 * math.cos(currentheading))
-                newy = oldy - (distance * 4.4 * math.sin(currentheading))
+                newx = oldx + (distance * 4 * math.cos(currentheading))
+                newy = oldy - (distance * 4 * math.sin(currentheading))
                 print(newx, newy)
             
             drawing.line([(oldx, oldy),(newx,newy)], "black", 2)

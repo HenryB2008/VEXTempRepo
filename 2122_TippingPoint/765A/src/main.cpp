@@ -241,6 +241,7 @@ void autobalancer(double tolerance) {
 		curr_pitch = imu.get_pitch();
 	}
 	drive->runTankArcade(0, 0);
+	pros::delay(2000);
 }
 
 void testBalancing() {
