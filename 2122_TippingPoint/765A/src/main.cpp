@@ -506,7 +506,7 @@ void leftskills() {
 	intake->run(true, false, -150);
 	fourbar1->moveTarget(0);  //four bar down
 	fourbar2->moveTarget(0);
-	distanceMove(40, -0.4);  //move towards side neutral
+	distanceMove(40, -0.65);  //move towards side neutral
 	fourbarpneum->turnOn();  //clamp
 	distanceMove(15, 0.75);   //move backwards
 	pros::delay(500);
@@ -527,39 +527,51 @@ void leftskills() {
 	fourbar1->moveTarget(0);		//four bar down
 	fourbar2->moveTarget(0);
 	distanceMove(5, 0.8);			//move backwards to push the alliance goal further away
-	distanceMove(12, -0.8);			//move forwards
+	distanceMove(8, -0.8);			//move forwards
 	effectors.runOne(GOAL_LIFT, 0);	//two bar up
-	goal.theta = 240_deg;			//turn around to go back towards the dropped alliance goal
+	goal.theta = 235_deg;			//turn around to go back towards the dropped alliance goal
 	moveTank(goal, {0, 0, 0}, {0.007, 0.00000, 0}, true);
-	distanceMove(25, -0.5);			//move towards alliance goal
+	distanceMove(27, -0.8);			//move towards alliance goal
 	pros::delay(500);				
 	fourbarpneum->turnOn();			//clamp
-	goal = drive->getState();
-  	goal.theta = 80_deg;			//turn back towards platform with alliance goal
-	moveTank(goal, {0, 0, 0}, {0.007, 0.000008, 0}, true);
-	fourbar1->moveTarget(2400);		//four bar up
+	pros::delay(500);
+	fourbar1->moveTarget(2400);		//four bar up		
 	fourbar2->moveTarget(2400);
-	distanceMove(34, -0.7);			//forwards to platform
-	fourbar1->moveTarget(2000);		//four bar down to deposit
+	goal = drive->getState();
+  	goal.theta = 70_deg;			//turn back towards platform with alliance goal
+	moveTank(goal, {0, 0, 0}, {0.007, 0.000008, 0}, true);
+	// fourbar1->moveTarget(2400);		//four bar up
+	// fourbar2->moveTarget(2400);
+	pros::delay(500);
+	fourbar1->moveTarget(2000);
 	fourbar2->moveTarget(2000);
+	distanceMove(48, -0.6);			//forwards to platform
+	// fourbar1->moveTarget(2000);		//four bar down to deposit
+	// fourbar2->moveTarget(2000);
 	fourbarpneum->turnOff();		//release clamp
-	distanceMove(18, 0.8);			//backwards from platform
+	distanceMove(7, 0.8);			//backwards from platform
+	goal.theta = 165_deg;			//turn towards alliance goal that fell off the seesaw
+	moveTank(goal, {0, 0, 0}, {0.007, 0.000008, 0}, true);
 	fourbar1->moveTarget(0);		//lower four bar
 	fourbar2->moveTarget(0);
-	goal.theta = 180_deg;			//turn towards alliance goal that fell off the seesaw
+	distanceMove(34, -1);			//moving forwards towards the other alliance goal that came off the seesaw
+	goal.theta = 55_deg;			//turn towards alliance goal
 	moveTank(goal, {0, 0, 0}, {0.007, 0.000008, 0}, true);
-	distanceMove(48, -1);			//moving forwards towards the other alliance goal that came off the seesaw
-	goal.theta = 45_deg;			//turn towards alliance goal
-	moveTank(goal, {0, 0, 0}, {0.007, 0.000008, 0}, true);
-	distanceMove(20, -0.8);			//move towards alliance goal
+	distanceMove(33, -0.5);			//move towards alliance goal
 	fourbarpneum->turnOn();			//clamp
-	distanceMove(20, 1);			//Move away from alliance goal
-	goal.theta = 180_deg;			//turn so that we can move backwards to the other alliance goal
+	distanceMove(15, 1);			//Move away from alliance goal
+	fourbar1->moveTarget(500);		//four bar slightly up
+	fourbar2->moveTarget(500);
+	goal.theta = 85_deg;
+	moveTank(goal, {0, 0, 0}, {0.007, 0.000008, 0}, true);
+	distanceMove(6, 1);
+	pros::delay(250);
+	goal.theta = 167_deg;			//turn so that we can move backwards to the other alliance goal
 	moveTank(goal, {0, 0, 0}, {0.007, 0.000008, 0}, true);
 	effectors.runOne(GOAL_LIFT, 1);	//drop two bar
 	distanceMove(100, 1);			//move quickly to the alliance goal
 	effectors.runOne(GOAL_LIFT, 0); //raise two bar
-	goal.theta = 270_deg;			//turn to face the rings
+	goal.theta = 265_deg;			//turn to face the rings
 	moveTank(goal, {0, 0, 0}, {0.007, 0.000008, 0}, true);
 	fourbar1->moveTarget(2000);		//four bar up a bit
 	fourbar2->moveTarget(2000);		
@@ -567,6 +579,7 @@ void leftskills() {
 	distanceMove(96, -0.6);			//move along the rings
 	goal.theta = 180_deg;			//turn to climb on the seesaw
 	moveTank(goal, {0, 0, 0}, {0.007, 0.000008, 0}, true);
+	distanceMove(12, -0.8);
 	// fourbar1->moveTarget(2000);		//four bar up to put the seesaw down
 	// fourbar2->moveTarget(2000);
 	fourbar1->moveTarget(100);		//four bar down to put the seesaw down
