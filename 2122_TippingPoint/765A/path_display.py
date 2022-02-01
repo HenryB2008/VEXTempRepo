@@ -37,7 +37,7 @@ with open("src/main.cpp", "r+") as texthandle:
     currentheading = math.pi/2
     currentmovement = 1
     oldx = 85
-    oldy = 85
+    oldy = 105
     n = 1
     for movement in movements:
         if movement.startswith("distanceMove"):

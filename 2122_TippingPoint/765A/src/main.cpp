@@ -560,14 +560,14 @@ void leftskills() {
 	effectors.runOne(GOAL_LIFT, 0); //raise two bar
 	goal.theta = 270_deg;			//turn to face the rings
 	moveTank(goal, {0, 0, 0}, {0.007, 0.000008, 0}, true);
-	fourbar1->moveTarget(200);		//four bar up a bit
-	fourbar2->moveTarget(200);		
+	fourbar1->moveTarget(2000);		//four bar up a bit
+	fourbar2->moveTarget(2000);		
 	intake->run(true, false, -150);	//start intake
 	distanceMove(96, -0.6);			//move along the rings
 	goal.theta = 180_deg;			//turn to climb on the seesaw
 	moveTank(goal, {0, 0, 0}, {0.007, 0.000008, 0}, true);
-	fourbar1->moveTarget(2000);		//four bar up to put the seesaw down
-	fourbar2->moveTarget(2000);
+	// fourbar1->moveTarget(2000);		//four bar up to put the seesaw down
+	// fourbar2->moveTarget(2000);
 	fourbar1->moveTarget(100);		//four bar down to put the seesaw down
 	fourbar2->moveTarget(100);
 	autobalancer(22);				//autobalance
