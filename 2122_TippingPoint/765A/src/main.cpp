@@ -513,7 +513,7 @@ void leftskills() {
 	fourbar1->moveTarget(2400);  //four bar up
 	fourbar2->moveTarget(2400);
 	goal = drive->getState();
-  	goal.theta = 90_deg;		//turn towards platform
+  	goal.theta = 95_deg;		//turn towards platform
 	moveTank(goal, {0, 0, 0}, {0.012, 0.000008, 0}, true);
 	distanceMove(34, -0.8);     //move forwards to platform
 	fourbar1->moveTarget(2000); //lower four bar
@@ -555,7 +555,7 @@ void leftskills() {
 	fourbar1->moveTarget(0);		//lower four bar
 	fourbar2->moveTarget(0);
 	distanceMove(34, -1);			//moving forwards towards the other alliance goal that came off the seesaw
-	goal.theta = 55_deg;			//turn towards alliance goal
+	goal.theta = 52_deg;			//turn towards alliance goal
 	moveTank(goal, {0, 0, 0}, {0.007, 0.000008, 0}, true);
 	distanceMove(33, -0.5);			//move towards alliance goal
 	fourbarpneum->turnOn();			//clamp
@@ -569,8 +569,9 @@ void leftskills() {
 	goal.theta = 167_deg;			//turn so that we can move backwards to the other alliance goal
 	moveTank(goal, {0, 0, 0}, {0.007, 0.000008, 0}, true);
 	effectors.runOne(GOAL_LIFT, 1);	//drop two bar
-	distanceMove(100, 1);			//move quickly to the alliance goal
+	distanceMove(95, 1);			//move quickly to the alliance goal
 	effectors.runOne(GOAL_LIFT, 0); //raise two bar
+	distanceMove(15, 0.6);
 	goal.theta = 265_deg;			//turn to face the rings
 	moveTank(goal, {0, 0, 0}, {0.007, 0.000008, 0}, true);
 	fourbar1->moveTarget(2000);		//four bar up a bit
