@@ -11,6 +11,7 @@ Intake *fourbar1 = new Intake(-1);
 Intake *fourbar2 = new Intake(10);
 Button *buttons = new Button();
 pros::Imu imu(16);
+pros::ADIDigitalIn but('H');
 
 double speeds[3] = {150, 150, 150};
 
@@ -231,7 +232,7 @@ void autonSelector(okapi::Controller controller) {
 
 void autobalancer(double tolerance) {
 	drive->runTankArcade(-1, 0);
-	pros::delay(1000);
+	pros::delay(1400);
 	double curr_pitch = imu.get_pitch();
 	double last_pitch = curr_pitch;
 	while(curr_pitch > tolerance || curr_pitch-last_pitch>=0) {
@@ -241,23 +242,30 @@ void autobalancer(double tolerance) {
 		curr_pitch = imu.get_pitch();
 	}
 	drive->runTankArcade(0, 0);
-	pros::delay(2000);
+	pros::delay(10000);
 }
 
 void testBalancing() {
 	setEffectorPositions();
-	
-	fourbarpneum->turnOn();		
+
+	fourbarpneum->turnOn();
 	fourbar1->moveTarget(2400);
 	fourbar2->moveTarget(2400);
 	pros::delay(2000);
 	fourbar1->moveTarget(0);
 	fourbar2->moveTarget(0);
-	
+
 	pros::delay(2000);
 	autobalancer(22);
 }
 
+void moveUntilButton(double speed) {
+	drive->runTankArcade(speed, 0);
+	while(!but.get_value()) {
+		pros::delay(10);
+	}
+	drive->runTankArcade(0, 0);
+}
 /**
  * Runs while the robot is in the disabled state of Field Management System or
  * the VEX Competition Switch, following either autonomous or opcontrol. When
@@ -427,8 +435,7 @@ void skills() {
 	pros::delay(300);
 	distanceMove(12, 1); //move towards alliance goal
 	effectors.runOne(GOAL_LIFT, 0);
-	fourbar1->moveTarget(500);
-  	fourbar2->moveTarget(500);
+
 
 	goal = drive->getState();
 	goal.theta = 180_deg; //
@@ -491,9 +498,9 @@ void leftskills() {
 	moveTank(goal, {0, 0, 0}, {0.01, 0.000005, 0}, true);
    	distanceMove(27, -0.5);  //move towards ring cross
 	goal = drive->getState();
-  	goal.theta = 88_deg;  //turn towards platform
+  	goal.theta = 84_deg;  //turn towards platform
 	moveTank(goal, {0, 0, 0}, {0.009, 0.000005, 0}, true);
-	distanceMove(15, -0.5);  //move to platform
+	distanceMove(14, -0.5);  //move to platform
 	fourbar1->moveTarget(1800);  //four bar down to balance platform
 	fourbar2->moveTarget(1800);
 	pros::delay(500);
@@ -510,16 +517,18 @@ void leftskills() {
 	fourbarpneum->turnOn();  //clamp
 	distanceMove(15, 0.75);   //move backwards
 	pros::delay(500);
-	fourbar1->moveTarget(2400);  //four bar up
+	fourbar1->moveTarget(2400);  //four bar upy
 	fourbar2->moveTarget(2400);
 	goal = drive->getState();
-  	goal.theta = 95_deg;		//turn towards platform
+  	goal.theta = 93_deg;		//turn towards platform
 	moveTank(goal, {0, 0, 0}, {0.012, 0.000008, 0}, true);
 	distanceMove(34, -0.8);     //move forwards to platform
-	fourbar1->moveTarget(2000); //lower four bar
-	fourbar2->moveTarget(2000);
+	fourbar1->moveTarget(1900); //lower four bar
+	fourbar2->moveTarget(1900);
 	pros::delay(500);
 	fourbarpneum->turnOff();    //release clamp
+	fourbar1->moveTarget(2400); //lower four bar
+	fourbar2->moveTarget(2400);
 
 	pros::delay(500);
 	distanceMove(20, 0.8);		//backwards from platform
@@ -531,11 +540,11 @@ void leftskills() {
 	effectors.runOne(GOAL_LIFT, 0);	//two bar up
 	goal.theta = 235_deg;			//turn around to go back towards the dropped alliance goal
 	moveTank(goal, {0, 0, 0}, {0.007, 0.00000, 0}, true);
-	distanceMove(27, -0.8);			//move towards alliance goal
-	pros::delay(500);				
+	distanceMove(29, -0.8);			//move towards alliance goal
+	pros::delay(500);
 	fourbarpneum->turnOn();			//clamp
 	pros::delay(500);
-	fourbar1->moveTarget(2400);		//four bar up		
+	fourbar1->moveTarget(2400);		//four bar up
 	fourbar2->moveTarget(2400);
 	goal = drive->getState();
   	goal.theta = 70_deg;			//turn back towards platform with alliance goal
@@ -545,7 +554,7 @@ void leftskills() {
 	pros::delay(500);
 	fourbar1->moveTarget(2000);
 	fourbar2->moveTarget(2000);
-	distanceMove(48, -0.6);			//forwards to platform
+	distanceMove(50, -0.6);			//forwards to platform
 	// fourbar1->moveTarget(2000);		//four bar down to deposit
 	// fourbar2->moveTarget(2000);
 	fourbarpneum->turnOff();		//release clamp
@@ -555,12 +564,12 @@ void leftskills() {
 	fourbar1->moveTarget(0);		//lower four bar
 	fourbar2->moveTarget(0);
 	distanceMove(22, -1);			//moving forwards towards the first alliance goal that came off the seesaw
-	goal.theta = 50_deg;			//turn towards alliance goal
+	goal.theta = 54_deg;			//turn towards alliance goal
 	pros::delay(500);
 	moveTank(goal, {0, 0, 0}, {0.007, 0.000008, 0}, true);
-	distanceMove(29, -0.5);			//move towards alliance goal
+	distanceMove(27, -0.5);			//move towards alliance goal
 	fourbarpneum->turnOn();			//clamp
-	distanceMove(15, 1);			//Move away from alliance goal
+	distanceMove(14, 1);			//Move away from alliance goal
 	fourbar1->moveTarget(500);		//four bar slightly up
 	fourbar2->moveTarget(500);
 	// goal.theta = 85_deg;
@@ -573,24 +582,27 @@ void leftskills() {
 	distanceMove(90, 0.5);			//move quickly to the alliance goal
 	pros::delay(750);
 	effectors.runOne(GOAL_LIFT, 0); //raise two bar
-	distanceMove(3, -0.6);
-	goal.theta = 265_deg;			//turn to face the rings
+	pros::delay(1000);
+	goal.theta = 261_deg;			//turn to face the rings
 	moveTank(goal, {0, 0, 0}, {0.007, 0.000008, 0}, true);
 	fourbar1->moveTarget(2400);		//four bar up a bit
-	fourbar2->moveTarget(2400);		
+	fourbar2->moveTarget(2400);
 	intake->run(true, false, -150);	//start intake
-	distanceMove(85, -0.6);			//move along the rings
+	moveUntilButton(-0.5);
+	distanceMove(1, 0.5);
+	//distanceMove(86, -0.6);			//move along the rings
 	goal.theta = 185_deg;			//turn to climb on the seesaw
 	moveTank(goal, {0, 0, 0}, {0.007, 0.000008, 0}, true);
-	distanceMove(3, -0.8);
 	// fourbar1->moveTarget(2000);		//four bar up to put the seesaw down
 	// fourbar2->moveTarget(2000);
+	distanceMove(1, -0.5);
 	fourbar1->moveTarget(0);		//four bar down to put the seesaw down
 	fourbar2->moveTarget(0);
 	pros::delay(2000);
 	fourbar1->moveTarget(200);
 	fourbar2->moveTarget(200);
-	autobalancer(24);				//autobalance
+	distanceMove(40, -1.0);				//autobalance
+	pros::delay(10000);
 }
 
 void rightrings() {
@@ -689,7 +701,7 @@ void esbensOdom() {
 }
 
 void autonomous() {
-	
+
 	drive->setMode(okapi::AbstractMotor::brakeMode::hold);
 	leftskills();
 	drive->setMode(okapi::AbstractMotor::brakeMode::coast);
