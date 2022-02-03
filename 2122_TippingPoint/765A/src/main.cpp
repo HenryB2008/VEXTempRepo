@@ -231,7 +231,7 @@ void autonSelector(okapi::Controller controller) {
 
 void autobalancer(double tolerance) {
 	drive->runTankArcade(-1, 0);
-	pros::delay(750);
+	pros::delay(1000);
 	double curr_pitch = imu.get_pitch();
 	double last_pitch = curr_pitch;
 	while(curr_pitch > tolerance || curr_pitch-last_pitch>=0) {
@@ -491,8 +491,8 @@ void leftskills() {
 	moveTank(goal, {0, 0, 0}, {0.01, 0.000005, 0}, true);
    	distanceMove(27, -0.5);  //move towards ring cross
 	goal = drive->getState();
-  	goal.theta = 85_deg;  //turn towards platform
-	moveTank(goal, {0, 0, 0}, {0.01, 0.000005, 0}, true);
+  	goal.theta = 88_deg;  //turn towards platform
+	moveTank(goal, {0, 0, 0}, {0.009, 0.000005, 0}, true);
 	distanceMove(15, -0.5);  //move to platform
 	fourbar1->moveTarget(1800);  //four bar down to balance platform
 	fourbar2->moveTarget(1800);
@@ -554,38 +554,43 @@ void leftskills() {
 	moveTank(goal, {0, 0, 0}, {0.007, 0.000008, 0}, true);
 	fourbar1->moveTarget(0);		//lower four bar
 	fourbar2->moveTarget(0);
-	distanceMove(34, -1);			//moving forwards towards the other alliance goal that came off the seesaw
-	goal.theta = 52_deg;			//turn towards alliance goal
+	distanceMove(22, -1);			//moving forwards towards the first alliance goal that came off the seesaw
+	goal.theta = 50_deg;			//turn towards alliance goal
+	pros::delay(500);
 	moveTank(goal, {0, 0, 0}, {0.007, 0.000008, 0}, true);
-	distanceMove(33, -0.5);			//move towards alliance goal
+	distanceMove(29, -0.5);			//move towards alliance goal
 	fourbarpneum->turnOn();			//clamp
 	distanceMove(15, 1);			//Move away from alliance goal
 	fourbar1->moveTarget(500);		//four bar slightly up
 	fourbar2->moveTarget(500);
-	goal.theta = 85_deg;
-	moveTank(goal, {0, 0, 0}, {0.007, 0.000008, 0}, true);
-	distanceMove(6, 1);
-	pros::delay(250);
-	goal.theta = 167_deg;			//turn so that we can move backwards to the other alliance goal
+	// goal.theta = 85_deg;
+	// moveTank(goal, {0, 0, 0}, {0.007, 0.000008, 0}, true);
+	// distanceMove(6, 1);
+	// pros::delay(250);
+	goal.theta = 168_deg;			//turn so that we can move backwards to the other alliance goal
 	moveTank(goal, {0, 0, 0}, {0.007, 0.000008, 0}, true);
 	effectors.runOne(GOAL_LIFT, 1);	//drop two bar
-	distanceMove(95, 1);			//move quickly to the alliance goal
+	distanceMove(90, 0.5);			//move quickly to the alliance goal
+	pros::delay(750);
 	effectors.runOne(GOAL_LIFT, 0); //raise two bar
-	distanceMove(15, 0.6);
+	distanceMove(3, -0.6);
 	goal.theta = 265_deg;			//turn to face the rings
 	moveTank(goal, {0, 0, 0}, {0.007, 0.000008, 0}, true);
-	fourbar1->moveTarget(2000);		//four bar up a bit
-	fourbar2->moveTarget(2000);		
+	fourbar1->moveTarget(2400);		//four bar up a bit
+	fourbar2->moveTarget(2400);		
 	intake->run(true, false, -150);	//start intake
-	distanceMove(96, -0.6);			//move along the rings
-	goal.theta = 180_deg;			//turn to climb on the seesaw
+	distanceMove(85, -0.6);			//move along the rings
+	goal.theta = 185_deg;			//turn to climb on the seesaw
 	moveTank(goal, {0, 0, 0}, {0.007, 0.000008, 0}, true);
-	distanceMove(12, -0.8);
+	distanceMove(3, -0.8);
 	// fourbar1->moveTarget(2000);		//four bar up to put the seesaw down
 	// fourbar2->moveTarget(2000);
-	fourbar1->moveTarget(100);		//four bar down to put the seesaw down
-	fourbar2->moveTarget(100);
-	autobalancer(22);				//autobalance
+	fourbar1->moveTarget(0);		//four bar down to put the seesaw down
+	fourbar2->moveTarget(0);
+	pros::delay(2000);
+	fourbar1->moveTarget(200);
+	fourbar2->moveTarget(200);
+	autobalancer(24);				//autobalance
 }
 
 void rightrings() {
