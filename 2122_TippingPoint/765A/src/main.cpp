@@ -232,7 +232,7 @@ void autonSelector(okapi::Controller controller) {
 
 void autobalancer(double tolerance) {
 	drive->runTankArcade(-1, 0);
-	pros::delay(1400);
+	pros::delay(2000);
 	double curr_pitch = imu.get_pitch();
 	double last_pitch = curr_pitch;
 	while(curr_pitch > tolerance || curr_pitch-last_pitch>=0) {
@@ -242,6 +242,7 @@ void autobalancer(double tolerance) {
 		curr_pitch = imu.get_pitch();
 	}
 	drive->runTankArcade(0, 0);
+	drive->setMode(okapi::AbstractMotor::brakeMode::hold);
 	pros::delay(10000);
 }
 
@@ -599,9 +600,10 @@ void leftskills() {
 	fourbar1->moveTarget(0);		//four bar down to put the seesaw down
 	fourbar2->moveTarget(0);
 	pros::delay(2000);
-	fourbar1->moveTarget(200);
-	fourbar2->moveTarget(200);
-	distanceMove(40, -1.0);				//autobalance
+	fourbar1->moveTarget(150);
+	fourbar2->moveTarget(150);
+	// distanceMove(40, -1.0);				//autobalance
+	autobalancer(24);
 	pros::delay(10000);
 }
 
