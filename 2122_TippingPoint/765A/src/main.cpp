@@ -152,7 +152,7 @@ void moveTank(OdomState target, PIDConst forwardConstants = forwardDefault, PIDC
 		drive->runTankArcade(forward, turn);
 		prevForward = forward;
 		prevTurn = turn;
-		pros::delay(15);
+		pros::delay(5);
 	} while((abs(magerr.convert(inch)) > 3 && !turning) || (abs(headerr.convert(degree))>3 && turning)); //tolerances checked differently depending on turning or forward
 	drive->runTankArcade(0, 0);
 }
@@ -236,7 +236,7 @@ void autobalancer(double tolerance) {
 	double curr_pitch = imu.get_pitch();
 	double last_pitch = curr_pitch;
 	while(curr_pitch > tolerance || curr_pitch-last_pitch>=0) {
-		pros::delay(30);
+		pros::delay(5);
 		printf("Current pitch: %f\n", curr_pitch);
 		last_pitch = curr_pitch;
 		curr_pitch = imu.get_pitch();
@@ -410,7 +410,7 @@ void right() {
 	fourbarpneum->turnOn(); //clamp
 	pros::delay(300); //wait
 	goal.theta = 315_deg;
-	moveTank(goal, {0, 0, 0}, {0.025, 0.000005, 0}, true); //turn slightly to be able to get back into home zone
+	moveTank(goal, {0, 0, 0}, {0.03, 0.000005, 0}, true); //turn slightly to be able to get back into home zone
 	distanceMove(40, 1); //move backwards into homezone
 
 
@@ -470,6 +470,8 @@ void skills() {
 	// moveTank(goal, {0, 0, 0}, {0.02, 0.000005, 0}, true); //turn towards other zone
 	distanceMove(35, 1);
 }
+
+
 
 void leftskills() {
 	setEffectorPositions();
@@ -603,7 +605,7 @@ void leftskills() {
 	fourbar1->moveTarget(150);
 	fourbar2->moveTarget(150);
 	// distanceMove(40, -1.0);				//autobalance
-	autobalancer(24);
+	autobalancer(23.);
 	pros::delay(10000);
 }
 
@@ -705,7 +707,7 @@ void esbensOdom() {
 void autonomous() {
 
 	drive->setMode(okapi::AbstractMotor::brakeMode::hold);
-	leftskills();
+	right();
 	drive->setMode(okapi::AbstractMotor::brakeMode::coast);
 }
 
