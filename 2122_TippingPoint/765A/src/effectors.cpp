@@ -11,6 +11,7 @@ Effectors::Effectors() {
 void Effectors::addPosition() {
   encPositions[0][0] = 1275; // Two bar upper position
   encPositions[0][1] = 2175; // Two bar lower position
+  encPositions[0][2] = 0;     //two bar starting position
   prevCounts[0] = 0;
   prevCounts[1] = 0;
   prevCounts[2] = 0;

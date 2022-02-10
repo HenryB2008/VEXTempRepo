@@ -13,8 +13,8 @@ with open("src/main.cpp", "r+") as texthandle:
         file += line
     # searchstring = "void " + function + "(.*)\}void"
     searchstring = "void leftskills"
-    match = file.index("leftskills")
-    match2 = file.index("void rightrings")
+    match = file.index("newSkills")
+    match2 = file.index("void leftskills")
     function = file[match + 15:match2-4]
     function = function.replace(" ", "")
     # function = function.replace("\n", "")

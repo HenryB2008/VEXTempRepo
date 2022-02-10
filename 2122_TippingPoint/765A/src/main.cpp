@@ -471,7 +471,132 @@ void skills() {
 	distanceMove(35, 1);
 }
 
+void newSkills() {
+	setEffectorPositions();
+	effectors.runOne(GOAL_LIFT, 1);	//two bar down
+	pros::delay(750);				//wait
+	distanceMove(16, 0.7);			//Move backwards to grab alliance goal
+	effectors.runOne(GOAL_LIFT, 0);	//two bar up
+	distanceMove(2, -0.4);			//moving away from seesaw
+	OdomState goal = drive->getState();
+	goal.theta = 270_deg;
+	pidMoveTank(goal, {0, 0, 0}, {0.01, 0.000005, 0}, true);	//turn to 90 deg
+//---------------------------------------------------------------
+//FIRST NEUTRAL 
 
+	distanceMove(24, 1);			//moving towards goal
+	goal.theta = 90_deg;			//stop and turn
+	pidMoveTank(goal, {0, 0, 0}, {0.01, 0.000005, 0}, true);	//turn 180 to face goal with four bar
+	distanceMove(30, -1);			//move the rest of the distance to the goal
+	fourbarpneum->turnOn();			//clamp
+	fourbar1->moveTarget(500);		//raise four bar
+	fourbar2->moveTarget(500);		//raise four bar
+	intake->run(true, false, -150);	//start intake
+	distanceMove(30, -0.9);			//move the rest of the way towards the ring line
+//---------------------------------------------------------------
+//RINGS ON ALLIANCE GOAL
+	goal.theta = 180_deg;			//make the turn towards 180 deg
+	pidMoveTank(goal, {0, 0, 0}, {0.01, 0.000005, 0}, true);
+	distanceMove(24, -1);			//move quickly to the rings
+	distanceMove(48, -0.5);			//then move slowly to intake the rings
+//-----------------------------------------------------------------
+//FIRST NEUTRAL ON PLATFORM
+
+	distanceMove(36, 0.8);			//backwards to orient for the platform
+	goal.theta = 90_deg;			//turn towards platform
+	pidMoveTank(goal, {0, 0, 0}, {0.01, 0.000005, 0}, true);
+	fourbar1->moveTarget(2400);		//four bar up
+	fourbar2->moveTarget(2400);		
+	pros::delay(300);
+	distanceMove(12, -0.4);			//move towards platform
+	fourbar1->moveTarget(2000);
+	fourbar2->moveTarget(2000);
+	fourbarpneum->turnOff();		//release clamp
+	distanceMove(12, 0.4);			//back away from seesaw
+	fourbar1->moveTarget(0);		//four bar down
+	fourbar2->moveTarget(0);
+
+// -------------------------------------------------------------------------
+// ALLIANCE GOAL MANIPULATION
+
+	goal.theta = 0_deg;				//turn towards forwards
+	pidMoveTank(goal, {0, 0, 0}, {0.01, 0.000005, 0}, true);
+	effectors.runOne(GOAL_LIFT, 1);	//drop two bar
+	distanceMove(12, 0.8);			//move forwards
+	effectors.runOne(GOAL_LIFT, 2);	//bring two bar all the way up
+	pros::delay(1000);				//wait for that to happen before turning
+	goal.theta = 180_deg;			//turn around
+	pidMoveTank(goal, {0, 0, 0}, {0.01, 0.000005, 0}, true);
+	distanceMove(12, -1);			//Move forwards back towards the alliance goal
+	fourbarpneum->turnOn();			//clamp
+	fourbar1->moveTarget(2400);		//four bar up
+	fourbar2->moveTarget(2400);
+	pros::delay(1000);
+	goal.theta = 90_deg;			//turn towards platform
+	pidMoveTank(goal, {0, 0, 0}, {0.01, 0.000005, 0}, true);
+	fourbar1->moveTarget(2000);		//four bar slightly down
+	fourbar2->moveTarget(2000);
+	distanceMove(12, -0.4);			//move towards platform
+	fourbarpneum->turnOff();		//release clamp
+	distanceMove(12, 0.4);			//backwards movement
+	fourbar1->moveTarget(0);		//four bar down
+	fourbar2->moveTarget(0);
+
+//-------------------------------------------------------------------------
+// SECOND SIDE NEUTRAL MANIPULATION
+
+	goal.theta = 180_deg;
+	pidMoveTank(goal, {0, 0, 0}, {0.01, 0.000005, 0}, true);
+	distanceMove(36, -0.9);			//moving towards the side neutral
+	goal.theta = 270_deg;			//turn towards it
+	pidMoveTank(goal, {0, 0, 0}, {0.01, 0.000005, 0}, true);
+	distanceMove(36, -1);			//move quickly towards it
+	fourbarpneum->turnOn();			//clamp
+	fourbar1->moveTarget(500);		//four bar up
+	fourbar1->moveTarget(500);
+	distanceMove(36, 0.9);			//move backwards to retrace steps
+	goal.theta = 0_deg;				//turn to 0
+	pidMoveTank(goal, {0, 0, 0}, {0.01, 0.000005, 0}, true);
+	fourbar1->moveTarget(2100);
+	fourbar2->moveTarget(2100);
+	distanceMove(36, -1);			//moving forwards to platform
+	goal.theta = 90_deg;
+	pidMoveTank(goal, {0, 0, 0}, {0.01, 0.000005, 0}, true);
+	distanceMove(12, -0.4);
+	fourbarpneum->turnOff();
+	distanceMove(12, 0.4);			//backwards from seesaw
+	fourbar1->moveTarget(0);		//four bar down
+	fourbar2->moveTarget(0);
+
+//-------------------------------------------------------------------
+//MOVEMENT FOR FIRST RED ALLIANCE GOAL
+
+	goal.theta = 180_deg;			//turning towards back wall
+	pidMoveTank(goal, {0, 0, 0}, {0.01, 0.000005, 0}, true);
+	distanceMove(48, -1);			//moving towards the turn location
+	goal.theta = 48_deg;			//turning towards alliance goal
+	pidMoveTank(goal, {0, 0, 0}, {0.01, 0.000005, 0}, true);
+	distanceMove(30, -0.6);			//move towards the goal
+	fourbarpneum->turnOn();			//clamp
+	distanceMove(30, 0.6);			//move away from the goal
+	fourbar1->moveTarget(500);		//four bar slightly up
+	fourbar2->moveTarget(500);		//four bar slightly up
+	pros::delay(500);
+	goal.theta = 0_deg;				//turning towards other alliance goal
+	pidMoveTank(goal, {0, 0, 0}, {0.01, 0.000005, 0}, true);
+//-------------------------------------------------------------------
+//MOVEMENT FOR SECOND RED ALLIANCE GOAL
+
+	distanceMove(80, -1);
+	effectors.runOne(GOAL_LIFT, 1);
+	pros::delay(1500);
+	distanceMove(15, -0.7);
+	pros::delay(500);
+	effectors.runOne(GOAL_LIFT, 0);
+	
+
+
+}
 
 void leftskills() {
 	setEffectorPositions();
