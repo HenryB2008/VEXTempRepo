@@ -588,14 +588,26 @@ void newSkills() {
 //MOVEMENT FOR SECOND RED ALLIANCE GOAL
 
 	distanceMove(80, -1);
-	effectors.runOne(GOAL_LIFT, 1);
+	effectors.runOne(GOAL_LIFT, 1);	//lower two bar
 	pros::delay(1500);
-	distanceMove(15, -0.7);
+	distanceMove(15, -0.7);			//move the rest of the distance
 	pros::delay(500);
-	effectors.runOne(GOAL_LIFT, 0);
-	
+	effectors.runOne(GOAL_LIFT, 0);	// two bar up
+	distanceMove(1, 0.8);
+	goal.theta = 270_deg;
+	pidMoveTank(goal, {0, 0, 0}, {0.01, 0.000005, 0}, true);
 
-
+//------------------------------------------------------------------
+//RINGS
+	fourbar1->moveTarget(2400);
+	fourbar2->moveTarget(2400);
+	distanceMove(96, -0.7);
+	goal.theta = 180_deg;
+	pidMoveTank(goal, {0, 0, 0}, {0.01, 0.000005, 0}, true);
+	distanceMove(3, -0.6);
+	fourbar1->moveTarget(100);
+	fourbar2->moveTarget(100);
+	autobalancer(23.5);
 }
 
 void leftskills() {
