@@ -135,7 +135,7 @@ void pidMoveTank(OdomState target, PIDConst forwardConstants = forwardDefault, P
 		}
 
 		//calculate errors
-		QAngle curr = okapi::OdomMath::constrainAngle180(imu.get_heading()*1_deg);
+		QAngle curr = okapi::OdomMath::constrainAngle180(currState.theta);
 		headerr = okapi::OdomMath::constrainAngle180(curr-targetAngle);
 		magerr = sqrt((xDiff * xDiff) + (yDiff * yDiff));
 
@@ -189,6 +189,20 @@ void speedMove(double time, double speed) {
 void setEffectorPositions() {
 	//set all effector positions
 	effectors.addPosition();
+}
+
+void turnTest() {
+	OdomState goal = drive->getState();
+	goal.theta = 90_deg;
+	pidMoveTank(goal, {0, 0, 0}, {0.01, 0.000005, 0}, true);
+	pros::delay(1000);
+	goal = drive->getState();
+	goal.theta = 180_deg;
+	pidMoveTank(goal, {0, 0, 0}, {0.01, 0.000005, 0}, true);
+	pros::delay(1000);
+	goal = drive->getState();
+	goal.theta = 270_deg;
+	pidMoveTank(goal, {0, 0, 0}, {0.01, 0.000005, 0}, true);
 }
 
 
@@ -310,6 +324,7 @@ void competition_initialize() {}
  * operator control task will be stopped. Re-enabling the robot will restart the
  * task, not resume it from where it left off.
  */
+
 
 
 void opcontrol() {
@@ -482,7 +497,7 @@ void newSkills() {
 	goal.theta = 270_deg;
 	pidMoveTank(goal, {0, 0, 0}, {0.01, 0.000005, 0}, true);	//turn to 90 deg
 //---------------------------------------------------------------
-//FIRST NEUTRAL 
+//FIRST NEUTRAL
 
 	distanceMove(24, 1);			//moving towards goal
 	goal.theta = 90_deg;			//stop and turn
@@ -506,7 +521,7 @@ void newSkills() {
 	goal.theta = 90_deg;			//turn towards platform
 	pidMoveTank(goal, {0, 0, 0}, {0.01, 0.000005, 0}, true);
 	fourbar1->moveTarget(2400);		//four bar up
-	fourbar2->moveTarget(2400);		
+	fourbar2->moveTarget(2400);
 	pros::delay(300);
 	distanceMove(12, -0.4);			//move towards platform
 	fourbar1->moveTarget(2000);
@@ -842,7 +857,7 @@ void esbensOdom() {
 }
 
 void autonomous() {
-	
+
 	//okapi::Controller controller (okapi::ControllerId::master);
 	drive->setMode(okapi::AbstractMotor::brakeMode::hold);
 	//autonSelector(okapi::Controller controller);
@@ -858,7 +873,7 @@ void autonomous() {
 	//if (route == 4) {
 	//	left();
 	//}
-	right();
+	turnTest();
 	drive->setMode(okapi::AbstractMotor::brakeMode::coast);
 }
 
