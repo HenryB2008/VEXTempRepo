@@ -4,13 +4,13 @@
 
 //subsystem objects
 Drive *drive = new Drive();
-Pneumatics *fourbarpneum = new Pneumatics('G');
+Pneumatics *fourbarpneum = new Pneumatics(PNEUM);
 Effectors effectors;
-Intake *intake = new Intake(8);
-Intake *fourbar1 = new Intake(-1);
-Intake *fourbar2 = new Intake(10);
+Intake *intake = new Intake(INTAKE);
+Intake *fourbar1 = new Intake(FOUR_BAR_FIRST);
+Intake *fourbar2 = new Intake(FOUR_BAR_SECOND);
 Button *buttons = new Button();
-pros::Imu imu(16);
+pros::Imu imu(IMUPORT);
 pros::ADIDigitalIn but('H');
 
 double speeds[3] = {150, 150, 150};

@@ -29,6 +29,13 @@
 #define SPIKE 2
 #define INTAKE 3
 
+#define INTAKE_PORT 8
+#define FOUR_BAR_FIRST -1
+#define FOUR_BAR_SECOND 10
+#define IMUPORT 16
+
+#define PNEUM 'G'
+
 #define TRACK 6.875
 
 #endif
