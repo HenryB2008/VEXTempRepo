@@ -5,8 +5,8 @@
 //motor ports
 #define BOTTOM_RIGHT_MOTOR 2
 #define BOTTOM_LEFT_MOTOR 12
-#define TOP_RIGHT_MOTOR 6
-#define TOP_LEFT_MOTOR 14
+#define TOP_RIGHT_MOTOR -6
+#define TOP_LEFT_MOTOR -14
 
 //tracking wheel ports
 #define LEFT_TRACKING_WHEEL_TOP 'C'
@@ -18,7 +18,7 @@
 
 
 //odom distances between wheels
-#define ODOMTRACK 6.875_in
+#define ODOMTRACK 6.8_in
 #define ODOMWHEELDIM 2.75_in
 #define ODOMBACKDISTANCE 6.5_in
 
