@@ -6,7 +6,7 @@
 Drive *drive = new Drive();
 Pneumatics *fourbarpneum = new Pneumatics(PNEUM);
 Effectors effectors;
-Intake *intake = new Intake(INTAKE);
+Intake *intake = new Intake(INTAKE_PORT);
 Intake *fourbar1 = new Intake(FOUR_BAR_FIRST);
 Intake *fourbar2 = new Intake(FOUR_BAR_SECOND);
 Button *buttons = new Button();
