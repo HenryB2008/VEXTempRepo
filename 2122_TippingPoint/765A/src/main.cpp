@@ -193,16 +193,18 @@ void setEffectorPositions() {
 
 void turnTest() {
 	OdomState goal = drive->getState();
-	goal.theta = 90_deg;
-	pidMoveTank(goal, {0, 0, 0}, {0.007, 0.000005, 0}, true);
-	pros::delay(1000);
-	goal = drive->getState();
-	goal.theta = 180_deg;
-	pidMoveTank(goal, {0, 0, 0}, {0.007, 0.000005, 0}, true);
-	pros::delay(1000);
-	goal = drive->getState();
-	goal.theta = 270_deg;
-	pidMoveTank(goal, {0, 0, 0}, {0.007, 0.000005, 0}, true);
+  while(1) {
+  	goal.theta = 90_deg;
+  	pidMoveTank(goal, {0, 0, 0}, {0.007, 0.000005, 0}, true);
+  	pros::delay(1000);
+  	goal = drive->getState();
+  	goal.theta = 180_deg;
+  	pidMoveTank(goal, {0, 0, 0}, {0.007, 0.000005, 0}, true);
+  	pros::delay(1000);
+  	goal = drive->getState();
+  	goal.theta = 270_deg;
+  	pidMoveTank(goal, {0, 0, 0}, {0.007, 0.000005, 0}, true);
+  }
 }
 
 
