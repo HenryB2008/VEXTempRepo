@@ -64,7 +64,7 @@ void initialize() {
 		iter += 10;
 		pros::delay(10);
 	}
-	imu.set_data_rate(5);
+	imu.set_data_rate(10);
 	pros::lcd::register_btn1_cb(on_center_button);
 }
 
@@ -135,7 +135,7 @@ void pidMoveTank(OdomState target, PIDConst forwardConstants = forwardDefault, P
 		}
 
 		//calculate errors
-		QAngle curr = okapi::OdomMath::constrainAngle180(currState.theta);
+		QAngle curr = okapi::OdomMath::constrainAngle180(imu.get_heading()*1_deg);
 		headerr = okapi::OdomMath::constrainAngle180(curr-targetAngle);
 		magerr = sqrt((xDiff * xDiff) + (yDiff * yDiff));
 
@@ -194,15 +194,15 @@ void setEffectorPositions() {
 void turnTest() {
 	OdomState goal = drive->getState();
 	goal.theta = 90_deg;
-	pidMoveTank(goal, {0, 0, 0}, {0.01, 0.000005, 0}, true);
+	pidMoveTank(goal, {0, 0, 0}, {0.007, 0.000005, 0}, true);
 	pros::delay(1000);
 	goal = drive->getState();
 	goal.theta = 180_deg;
-	pidMoveTank(goal, {0, 0, 0}, {0.01, 0.000005, 0}, true);
+	pidMoveTank(goal, {0, 0, 0}, {0.007, 0.000005, 0}, true);
 	pros::delay(1000);
 	goal = drive->getState();
 	goal.theta = 270_deg;
-	pidMoveTank(goal, {0, 0, 0}, {0.01, 0.000005, 0}, true);
+	pidMoveTank(goal, {0, 0, 0}, {0.007, 0.000005, 0}, true);
 }
 
 
