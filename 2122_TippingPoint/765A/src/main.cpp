@@ -12,6 +12,7 @@ Intake *fourbar2 = new Intake(FOUR_BAR_SECOND);
 Button *buttons = new Button();
 pros::Imu imu(IMUPORT);
 pros::ADIDigitalIn but('H');
+okapi::Controller controller (okapi::ControllerId::master);
 
 double speeds[3] = {150, 150, 150};
 
@@ -37,7 +38,27 @@ void on_center_button() {
 	}
 }
 
-
+void autonSelector() {
+	while(1) {
+		if(controller.getDigital(okapi::ControllerDigital::A)) {
+			route = 1;
+			break;
+		}
+		if(controller.getDigital(okapi::ControllerDigital::B)) {
+			route = 2;
+			break;
+		}
+		if(controller.getDigital(okapi::ControllerDigital::X)) {
+			route = 3;
+			break;
+		}
+		if(controller.getDigital(okapi::ControllerDigital::Y)) {
+			route = 4;
+			break;
+		}
+		pros::delay(15);
+	}
+}
 
 /**
  * Runs initialization code. This occurs as soon as the program is started.
@@ -45,6 +66,8 @@ void on_center_button() {
  * All other competition modes are blocked by initialize; it is recommended
  * to keep execution time for this mode under a few seconds.
  */
+
+
 void initialize() {
 	//make sure four bar can't go higher/lower than the mechanical stops
 	fourbar1->setLimits(2400, 0);
@@ -52,6 +75,8 @@ void initialize() {
 
 	pros::lcd::initialize();
 	pros::lcd::set_text(1, "Hello PROS User!");
+
+	autonSelector();
 
 	//calibrate imu
 	imu.reset();
@@ -225,26 +250,7 @@ void dragTurn(double heading, double direction, double side) {
 
 
 //experimental autonSelector function
-void autonSelector(okapi::Controller controller) {
-	while(1) {
-		if(controller.getDigital(okapi::ControllerDigital::A)) {
-			route = 1;
-			break;
-		}
-		if(controller.getDigital(okapi::ControllerDigital::B)) {
-			route = 2;
-			break;
-		}
-		if(controller.getDigital(okapi::ControllerDigital::X)) {
-			route = 3;
-			break;
-		}
-		if(controller.getDigital(okapi::ControllerDigital::Y)) {
-			route = 4;
-			break;
-		}
-	}
-}
+
 
 void autobalancer(double tolerance) {
 	drive->runTankArcade(-1, 0);
@@ -331,7 +337,7 @@ void competition_initialize() {}
 
 void opcontrol() {
 
-	okapi::Controller controller (okapi::ControllerId::master);
+
 	//initialize variables and set effector positions
 	setEffectorPositions();
 	int parking = 0;
@@ -881,7 +887,18 @@ void autonomous() {
 	//if (route == 4) {
 	//	left();
 	//}
-	leftskills();
+	if(route == 1) {
+		leftskills();
+	}
+	else if(route == 2) {
+		right();
+	}
+	else if(route == 3) {
+		left();
+	}
+	else {
+		right();
+	}
 	drive->setMode(okapi::AbstractMotor::brakeMode::coast);
 }
 
