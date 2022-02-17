@@ -738,29 +738,31 @@ void leftskills() {
 	pidMoveTank(goal, {0, 0, 0}, {0.007, 0.000008, 0}, true);
 	distanceMove(27, -0.5);						//move towards alliance goal
 	fourbarpneum->turnOn();						//clamp
-	distanceMove(14, 1);						//Move away from alliance goal
+	distanceMove(20, 0.7);						//Move away from alliance goal
 	fourbar1->moveTarget(500);					//four bar slightly up
 	fourbar2->moveTarget(500);
 	// goal.theta = 85_deg;
 	// pidMoveTank(goal, {0, 0, 0}, {0.007, 0.000008, 0}, true);
 	// distanceMove(6, 1);
 	// pros::delay(250);
-	goal.theta = 168_deg;						//turn so that we can move backwards to the other alliance goal
-	pidMoveTank(goal, {0, 0, 0}, {0.007, 0.000008, 0}, true);
+	goal.theta = 180_deg;						//turn so that we can move backwards to the other alliance goal
+	pidMoveTank(goal, {0, 0, 0}, {0.006, 0.000008, 0}, true);
 	effectors.runOne(GOAL_LIFT, 1);				//drop two bar
 	distanceMove(90, 0.5);						//move quickly to the alliance goal
 	pros::delay(750);
 	effectors.runOne(GOAL_LIFT, 0); 			//raise two bar
 	pros::delay(1000);
-	goal.theta = 261_deg;						//turn to face the rings
-	pidMoveTank(goal, {0, 0, 0}, {0.007, 0.000008, 0}, true);
+	goal.theta = 270_deg;						//turn to face the rings
+	pidMoveTank(goal, {0, 0, 0}, {0.006, 0.000008, 0}, true);
 	fourbar1->moveTarget(2400);					//four bar up a bit
 	fourbar2->moveTarget(2400);
 	intake->run(true, false, -150);				//start intake
-	moveUntilButton(-0.5);
+
+
+	speedMove(5000, -0.7);
 	distanceMove(1, 0.5);
 	//distanceMove(86, -0.6);					//move along the rings
-	goal.theta = 185_deg;						//turn to climb on the seesaw
+	goal.theta = 180_deg;						//turn to climb on the seesaw
 	pidMoveTank(goal, {0, 0, 0}, {0.007, 0.000008, 0}, true);
 	// fourbar1->moveTarget(2000);				//four bar up to put the seesaw down
 	// fourbar2->moveTarget(2000);
@@ -874,19 +876,6 @@ void autonomous() {
 
 	//okapi::Controller controller (okapi::ControllerId::master);
 	drive->setMode(okapi::AbstractMotor::brakeMode::hold);
-	//autonSelector(okapi::Controller controller);
-	//if (route == 1) {
-	//	right();
-	//}
-	//if (route == 2) {
-	//	rightrings();
-	//}
-	//if (route == 3) {
-	//	rightMiddle();
-	//}
-	//if (route == 4) {
-	//	left();
-	//}
 	if(route == 1) {
 		leftskills();
 	}
