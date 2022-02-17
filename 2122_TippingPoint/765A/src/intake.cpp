@@ -42,10 +42,10 @@ void Intake::run(bool left, bool right, double speed) {
 }
 
 void Intake::handle(int count, double speed) {
-  if(count%2 == 0 && count!= prevCount) {
+  if(count%2 == 1 && count!= prevCount) {
     m.moveVelocity(-speed);
   }
-  if(count%2 == 1 && count!= prevCount) {
+  if(count%2 == 0 && count!= prevCount) {
     m.moveVelocity(0);
   }
 }
