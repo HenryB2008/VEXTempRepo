@@ -641,8 +641,8 @@ void leftskills() {
    	distanceMove(24, 0.7);  						//move towards side neutral mogo
 	pros::delay(500);
 	goal = drive->getState();
-	goal.theta = 103_deg;
-	pidMoveTank(goal, {0, 0, 0}, {0.006, 0.000005, 0}, true);	//turn to 90 deg
+	goal.theta = 115_deg;
+	pidMoveTank(goal, {0, 0, 0}, {0.005, 0.000005, 0}, true);	//turn to 90 deg
 	distanceMove(34, -1);  						//move towards side neutral mogo
 
    	fourbarpneum->turnOn(); 					//clamp
@@ -881,7 +881,7 @@ void autonomous() {
 	//if (route == 4) {
 	//	left();
 	//}
-	right();
+	leftskills();
 	drive->setMode(okapi::AbstractMotor::brakeMode::coast);
 }
 
