@@ -76,7 +76,7 @@ void initialize() {
 	pros::lcd::initialize();
 	pros::lcd::set_text(1, "Hello PROS User!");
 
-	autonSelector();
+	//autonSelector();
 
 	//calibrate imu
 	imu.reset();
@@ -647,9 +647,9 @@ void leftskills() {
    	distanceMove(24, 0.7);  						//move towards side neutral mogo
 	pros::delay(500);
 	goal = drive->getState();
-	goal.theta = 115_deg;
+	goal.theta = 110_deg;
 	pidMoveTank(goal, {0, 0, 0}, {0.005, 0.000005, 0}, true);	//turn to 90 deg
-	distanceMove(34, -1);  						//move towards side neutral mogo
+	distanceMove(32, -1);  						//move towards side neutral mogo
 
    	fourbarpneum->turnOn(); 					//clamp
 	pros::delay(300);
@@ -659,37 +659,50 @@ void leftskills() {
 	goal = drive->getState();
   	goal.theta = 90_deg;   					//turn towards center
 	pidMoveTank(goal, {0, 0, 0}, {0.01, 0.000005, 0}, true);
-   	distanceMove(7, -0.5);  					//move towards ring cross line
+   	distanceMove(10, -0.5);  					//move towards ring cross line
 	goal = drive->getState();
   	goal.theta = 180_deg;  						//turn towards ring crosses
 	pidMoveTank(goal, {0, 0, 0}, {0.007, 0.000005, 0}, true);
 	intake->run(true, false, -150);
-	distanceMove(70, -0.4);  					//move through rings
-	distanceMove(33, 0.4);						//move back to platform
+	// effectors.runOne(GOAL_LIFT, 1);
+	distanceMove(40, -0.5);  					//move through rings
+	distanceMove(6, 0.8);						//move back to platform
 	goal = drive->getState();
-  goal.theta = 90_deg;  						//turn towards platform
+  goal.theta = 92_deg;  						//turn towards platform
 	pidMoveTank(goal, {0, 0, 0}, {0.007, 0.000005, 0}, true);
-	distanceMove(16, -0.5);
+	distanceMove(14, -0.5);
 	fourbar1->moveTarget(1800);  				//four bar down to balance platform
 	fourbar2->moveTarget(1800);
 	pros::delay(500);
 	fourbarpneum->turnOff();  					//release clamp
 	pros::delay(500);
-	distanceMove(8, 1);  						//move away from platform
+	fourbar1->moveTarget(2400);
+	fourbar2->moveTarget(2400);
+	pros::delay(500);
+	distanceMove(3, 1);  						//move away from platform
 	goal = drive->getState();
-  	goal.theta = 210_deg;  						//turn towards other side neutral
+  	goal.theta = 180_deg;  						//turn towards other side neutral
 	pidMoveTank(goal, {0, 0, 0}, {0.004, 0.000005, 0}, true);
 	intake->run(true, false, -150);
 	fourbar1->moveTarget(0);  					//four bar down
 	fourbar2->moveTarget(0);
-	distanceMove(40, -0.65);  					//move towards side neutral
+	distanceMove(35, -0.65);  					//move towards side neutral
+	goal = drive->getState();
+	goal.theta = 270_deg;  						//turn towards other side neutral
+	pidMoveTank(goal, {0, 0, 0}, {0.004, 0.000005, 0}, true);
+	distanceMove(35, -0.65);
 	fourbarpneum->turnOn();  					//clamp
-	distanceMove(40, 0.75);   					//move backwards
-	pros::delay(500);
-	fourbar1->moveTarget(2400);  				//four bar up
+
+	distanceMove(33, 0.65);   					//move backwards to line
+	fourbar1->moveTarget(2400);  				
 	fourbar2->moveTarget(2400);
 	goal = drive->getState();
-  	goal.theta = 90_deg;						//turn towards platform
+	goal.theta = 359_deg;  						
+	pidMoveTank(goal, {0, 0, 0}, {0.004, 0.000005, 0}, true);
+	distanceMove(35, -0.65);  //move backwards to goal
+	pros::delay(500);
+	goal = drive->getState();
+  	goal.theta = 105_deg;						//turn towards platform
 	pidMoveTank(goal, {0, 0, 0}, {0.006, 0.000008, 0}, true);
 	distanceMove(14, -0.8);     				//move forwards to platform
 	fourbar1->moveTarget(1900); 				//lower four bar
@@ -707,7 +720,7 @@ void leftskills() {
 	distanceMove(8, -0.6);						//move forwards
 	pros::delay(500);
 	effectors.runOne(GOAL_LIFT, 2);				//two bar up
-	goal.theta = 270_deg;						//turn around to go back towards the dropped alliance goal
+	goal.theta = 272_deg;						//turn around to go back towards the dropped alliance goal
 	pidMoveTank(goal, {0, 0, 0}, {0.004, 0.00000, 0}, true);
 	distanceMove(12, -0.8);						//move towards alliance goal
 	pros::delay(500);
@@ -716,7 +729,7 @@ void leftskills() {
 	fourbar1->moveTarget(2400);					//four bar up
 	fourbar2->moveTarget(2400);
 	goal = drive->getState();
-  	goal.theta = 90_deg;						//turn back towards platform with alliance goal
+  	goal.theta = 105_deg;						//turn back towards platform with alliance goal
 	pidMoveTank(goal, {0, 0, 0}, {0.007, 0.000008, 0}, true);
 	// fourbar1->moveTarget(2400);				//four bar up
 	// fourbar2->moveTarget(2400);
@@ -876,18 +889,7 @@ void autonomous() {
 
 	//okapi::Controller controller (okapi::ControllerId::master);
 	drive->setMode(okapi::AbstractMotor::brakeMode::hold);
-	if(route == 1) {
-		leftskills();
-	}
-	else if(route == 2) {
-		right();
-	}
-	else if(route == 3) {
-		left();
-	}
-	else {
-		right();
-	}
+	leftskills();
 	drive->setMode(okapi::AbstractMotor::brakeMode::coast);
 }
 
