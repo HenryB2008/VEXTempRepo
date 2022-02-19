@@ -722,8 +722,8 @@ void leftskills() {
 
 	fourbarpneum->turnOff();    				//release clamp
 	pros::delay(500);
-	fourbar1->moveTarget(2400); 				//lower four bar
-	fourbar2->moveTarget(2400);
+	fourbar1->moveTarget(2200); 				//lower four bar
+	fourbar2->moveTarget(2200);
 
 	pros::delay(500);
 	distanceMove(3, 0.6);						//backwards from platform
@@ -740,7 +740,7 @@ void leftskills() {
 	effectors.runOne(GOAL_LIFT, 2);				//two bar up
 	goal.theta = (imu.get_heading() + 180) * 1_deg;						//turn around to go back towards the dropped alliance goal
 	pidMoveTank(goal, {0, 0, 0}, {0.005, 0.00000, 0}, true);
-	distanceMove(12, -0.8);						//move towards alliance goal
+	distanceMove(14, -0.8);						//move towards alliance goal
 	pros::delay(500);
 	fourbarpneum->turnOn();						//clamp
 	pros::delay(500);
@@ -769,20 +769,20 @@ void leftskills() {
 	goal.theta = 50_deg;						//turn towards alliance goal
 	pros::delay(500);
 	pidMoveTank(goal, {0, 0, 0}, {0.007, 0.000008, 0}, true);
-	distanceMove(27, -0.5);						//move towards alliance goal
+	distanceMove(28, -0.5);						//move towards alliance goal
 	fourbarpneum->turnOn();						//clamp
 	distanceMove(24, 0.7);						//Move away from alliance goal
-	fourbar1->moveTarget(500);					//four bar slightly up
-	fourbar2->moveTarget(500);
+	fourbar1->moveTarget(2400);					//four bar slightly up
+	fourbar2->moveTarget(2400);
 	// goal.theta = 85_deg;
 	// pidMoveTank(goal, {0, 0, 0}, {0.007, 0.000008, 0}, true);
 	// distanceMove(6, 1);
 	// pros::delay(250);
-	goal.theta = 135_deg;						//turn so that we can move backwards to the other alliance goal
+	goal.theta = 141_deg;						//turn so that we can move backwards to the other alliance goal
 	pidMoveTank(goal, {0, 0, 0}, {0.005, 0.000008, 0}, true);
 	effectors.runOne(GOAL_LIFT, 1);				//drop two bar
 	pros::delay(500);
-	distanceMove(100, 0.8);						//move quickly to the alliance goal
+	distanceMove(110, 0.8);						//move quickly to the alliance goal
 	pros::delay(750);
 	effectors.runOne(GOAL_LIFT, 0); 			//raise two bar
 	pros::delay(1000);
@@ -910,7 +910,7 @@ void autonomous() {
 
 	//okapi::Controller controller (okapi::ControllerId::master);
 	drive->setMode(okapi::AbstractMotor::brakeMode::hold);
-	left();
+	leftskills();
 	drive->setMode(okapi::AbstractMotor::brakeMode::coast);
 }
 
