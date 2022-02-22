@@ -130,6 +130,100 @@ double limiter(double prevOutput, double currOutput, double step) {
 }
 
 
+//overhauled move function
+void pidMoveForward(OdomState target, PIDConst forwardConstants, PIDConst headingConstants, double timeout = 5) {
+	double forward, turn, prevForward, prevTurn;
+	QLength magerr;
+	QAngle headerr;
+	QAngle targetAngle;
+	OdomState currState;
+	QLength xDiff, yDiff;
+	prevForward = 0;
+	prevTurn = 0;
+
+	PID forwardObj = PID(forwardConstants);
+	PID turnObj = PID(headingConstants);
+
+	double startTime = pros::millis();
+	do {
+		currState = drive->getState();
+		xDiff = target.x-currState.x;
+		yDiff = target.y-currState.y;
+
+		targetAngle = okapi::OdomMath::constrainAngle180((PI/2 - atan2(xDiff.convert(meter), yDiff.convert(meter)))*1_rad);
+		targetAngle = 1_deg * targetAngle.convert(degree);
+
+		//calculate errors
+		QAngle curr = okapi::OdomMath::constrainAngle180(imu.get_heading()*1_deg);
+		headerr = okapi::OdomMath::constrainAngle180(curr-targetAngle);
+		magerr = sqrt((xDiff * xDiff) + (yDiff * yDiff));
+
+		if(abs(magerr.convert(inch))<10) {
+			headerr = 0_deg;
+		}
+
+		//if overshoot point, reverse direction and target heading
+		if(abs(headerr.convert(degree)) > 100) {
+			headerr = okapi::OdomMath::constrainAngle180(headerr-180_deg);
+			magerr*=-1;
+		}
+
+		//limit and set motors
+		forward = limiter(prevForward, forwardObj.step(magerr.convert(inch)), 0.11);
+		turn = limiter(prevTurn, turnObj.step(headerr.convert(degree)), 0.11);
+		printf("%f %f %f\n", drive->getX(), drive->getY(), drive->getHeading());
+		drive->runTankArcade(forward, turn);
+		prevForward = forward;
+		prevTurn = turn;
+		pros::delay(10);
+	} while((abs(magerr.convert(inch)) > 2) && pros::millis()-startTime > (timeout*1000) ); //timeout and check mag err
+	drive->runTankArcade(0, 0);
+}
+
+//overhauled turn function
+void pidTurn(QAngle targetHeading, PIDConst turnConstants, double timeout = 3) {
+	double turn, prevTurn;
+	QAngle headerr;
+	QAngle targetAngle;
+	OdomState currState;
+	QLength xDiff, yDiff;
+	prevTurn = 0;
+
+	targetAngle = targetHeading;
+
+	PID turnObj = PID(turnConstants);
+	do {
+		currState = drive->getState();
+
+
+		//calculate errors
+		QAngle curr = okapi::OdomMath::constrainAngle180(imu.get_heading()*1_deg);
+		headerr = okapi::OdomMath::constrainAngle180(curr-targetAngle);
+
+
+		//limit and set motors
+		turn = limiter(prevTurn, turnObj.step(headerr.convert(degree)), 0.11);
+		printf("%f %f %f\n", drive->getX(), drive->getY(), drive->getHeading());
+		drive->runTankArcade(0, turn);
+		prevTurn = turn;
+		pros::delay(10);
+	} while(abs(headerr.convert(degree))>3);
+
+}
+
+//move to any point
+void moveToPoint(OdomState target, PIDConst forwardConstants, PIDConst headingConstants, PIDConst turnConstants, double timeoutforward = 5, double timeoutturn = 3) {
+	OdomState currState = drive->getState();
+	QLength xDiff = target.x-currState.x;
+	QLength yDiff = target.y-currState.y;
+
+	QAngle targetAngle = okapi::OdomMath::constrainAngle180((PI/2 - atan2(xDiff.convert(meter), yDiff.convert(meter)))*1_rad);
+	targetAngle = 1_deg * targetAngle.convert(degree);
+
+	pidTurn(targetAngle, turnConstants, timeoutturn);
+	pidMoveForward(target, forwardConstants, headingConstants, timeoutforward);
+}
+
 //PID move function that can handle turns and forward movements
 void pidMoveTank(OdomState target, PIDConst forwardConstants = forwardDefault, PIDConst turnConstants = headingDefault, bool turning = false) {
 	double forward, turn, prevForward, prevTurn;
