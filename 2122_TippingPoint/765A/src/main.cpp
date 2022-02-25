@@ -8,7 +8,7 @@ Pneumatics *fourbarpneum = new Pneumatics(PNEUM);
 Effectors effectors;
 Intake *intake = new Intake(INTAKE_PORT);
 Intake *fourbar1 = new Intake(FOUR_BAR_FIRST);
-Intake *fourbar2 = new Intake(FOUR_BAR_SECOND);
+Intake *fourbar2 = new Intake(FOUR_BAR_FIRST);
 Button *buttons = new Button();
 pros::Imu imu(IMUPORT);
 pros::ADIDigitalIn but('H');
@@ -292,6 +292,20 @@ void distanceMove(double distance, double speed) {
 	drive->runTankArcade(0, 0);
 }
 
+void distancePID(double distance, PIDConst gains) {
+	OdomState initial = drive->getState();
+	double error = 0;
+	PID obj = PID(gains);
+	do {
+		OdomState temp = drive->getState();
+		QLength xdiff = temp.x-initial.x;
+		QLength ydiff = temp.y-initial.y;
+		printf("Odom: %f %f %f\n", temp.x.convert(inch), temp.y.convert(inch), temp.theta.convert(degree));
+		error = okapi::sqrt((xdiff*xdiff) + (ydiff*ydiff)).convert(inch);
+		//drive->runTankArcade(speed, 0);
+	} while(error<distance);
+}
+
 void speedMove(double time, double speed) {
 
 	double start = pros::millis();
@@ -467,7 +481,7 @@ void opcontrol() {
 
 		//handle four bar
 		fourbar1->run(buttons->getPressed(okapi::ControllerDigital::R1), buttons->getPressed(okapi::ControllerDigital::R2), 175);
-		fourbar2->run(buttons->getPressed(okapi::ControllerDigital::R1), buttons->getPressed(okapi::ControllerDigital::R2), 175);
+		//fourbar2->run(buttons->getPressed(okapi::ControllerDigital::R1), buttons->getPressed(okapi::ControllerDigital::R2), 175);
 
 		//handle clamp
 		fourbarpneum->handle(buttonCounts[5]);

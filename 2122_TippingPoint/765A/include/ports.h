@@ -3,12 +3,12 @@
 
 
 //motor ports
-#define BOTTOM_RIGHT_MOTOR 2
-#define BOTTOM_MIDDLE_MOTOR 9
-#define BOTTOM_LEFT_MOTOR 12
-#define TOP_RIGHT_MOTOR -6
-#define TOP_MIDDLE_MOTOR 8
-#define TOP_LEFT_MOTOR -14
+#define BOTTOM_RIGHT_MOTOR 5
+#define LEFT_MIDDLE_MOTOR -2
+#define BOTTOM_LEFT_MOTOR 6
+#define TOP_RIGHT_MOTOR 8
+#define RIGHT_MIDDLE_MOTOR -11
+#define TOP_LEFT_MOTOR 14
 
 //tracking wheel ports
 #define LEFT_TRACKING_WHEEL_TOP 'C'
@@ -32,8 +32,7 @@
 #define INTAKE 3
 
 #define INTAKE_PORT 8
-#define FOUR_BAR_FIRST -1
-#define FOUR_BAR_SECOND 10
+#define FOUR_BAR_FIRST -12
 #define IMUPORT 16
 
 #define PNEUM 'G'
