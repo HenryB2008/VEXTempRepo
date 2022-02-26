@@ -4,7 +4,8 @@
 
 //subsystem objects
 Drive *drive = new Drive();
-Pneumatics *fourbarpneum = new Pneumatics(PNEUM);
+Pneumatics *fourbarpneum = new Pneumatics(FRONT_PNEUM);
+Pneumatics *backclamppneum = new Pneumatics(BACK_PNEUM);
 Effectors effectors;
 Intake *intake = new Intake(INTAKE_PORT);
 Intake *fourbar1 = new Intake(FOUR_BAR_FIRST);

@@ -35,7 +35,8 @@
 #define FOUR_BAR_FIRST 8
 #define IMUPORT 16
 
-#define PNEUM 'G'
+#define FRONT_PNEUM 'G'
+#define BACK_PNEUM 'H'
 
 #define TRACK 6.875
 
