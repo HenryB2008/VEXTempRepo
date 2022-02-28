@@ -36,7 +36,7 @@
 #define IMUPORT 16
 
 #define FRONT_PNEUM 'G'
-#define BACK_PNEUM 'H'
+#define BACK_PNEUM 'F'
 
 #define TRACK 6.875
 

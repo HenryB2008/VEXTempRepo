@@ -296,6 +296,8 @@ void distanceMove(double distance, double speed) {
 void distancePID(double distance, PIDConst gains) {
 	OdomState initial = drive->getState();
 	double error = 0;
+	double speed = 0;
+	double prevSpeed = 0;
 	PID obj = PID(gains);
 	do {
 		OdomState temp = drive->getState();
@@ -303,8 +305,13 @@ void distancePID(double distance, PIDConst gains) {
 		QLength ydiff = temp.y-initial.y;
 		printf("Odom: %f %f %f\n", temp.x.convert(inch), temp.y.convert(inch), temp.theta.convert(degree));
 		error = okapi::sqrt((xdiff*xdiff) + (ydiff*ydiff)).convert(inch);
+		if(distance<0) {
+			error*=-1;
+		}
+		speed = limiter(prevSpeed, obj.step(error), 0.11);
+		prevSpeed = speed;
 		//drive->runTankArcade(speed, 0);
-	} while(error<distance);
+	} while(error<abs(distance));
 }
 
 void speedMove(double time, double speed) {
@@ -456,16 +463,15 @@ void opcontrol() {
 	int i = 0;
 	bool fourbarpneumstate = true;
 	bool auxilclampstate = false;
+	ADIEncoder left('C', 'D');
+	ADIEncoder right('B', 'A');
+  double max = 1;
+  drive->setMode(okapi::AbstractMotor::brakeMode::hold);
 	while(true) {
 		//toggle between coast and hold brake modes
-		if (buttons->getPressed(okapi::ControllerDigital::B)) {
-
-		}
-
+		printf("%f %f\n", left.get(), right.get());
 		//get controller and drive chassis base
-		forward = controller.getAnalog(okapi::ControllerAnalog::leftY);
-		turn = controller.getAnalog(okapi::ControllerAnalog::rightX);
-		drive->runTankArcade(forward*-1, turn*-1);
+
 	//	printf("%f %f %f\n", drive->getX(), drive->getY(), drive->getHeading());
 		//update all button values
 		buttons->handleButtons(controller);
@@ -474,7 +480,23 @@ void opcontrol() {
 			buttonCounts[i] = buttons->getCount(buttons->buttonList[i]);
 		}
 
-		effectors.step(buttonCounts, speeds); //handle two bar
+    if(buttonCounts[7]%2) {
+      max = 5.0/7;
+    }
+    else {
+      max = 1;
+    }
+
+    forward = controller.getAnalog(okapi::ControllerAnalog::leftY);
+		turn = controller.getAnalog(okapi::ControllerAnalog::rightX);
+    if(forward>=0) {
+		    drive->runTankArcade(std::max(forward*-1, max*-1), turn*-1);
+    }
+    else {
+        drive->runTankArcade(std::min(forward*-1, max), turn*-1);
+    }
+
+		// effectors.step(buttonCounts, speeds); //handle two bar
 
 		//intake->run(false, buttons->getPressed(okapi::ControllerDigital::right), 150); //handle intake
 
@@ -486,15 +508,15 @@ void opcontrol() {
 
 		//handle clamp
 		fourbarpneum->handle(buttonCounts[5]);
-
+		backclamppneum->handle(buttonCounts[0]);
 		parking = buttonCounts[7] % 2;
 		if (parking == 1) {
 			drive->setMode(okapi::AbstractMotor::brakeMode::hold);
 		} else {
 			drive->setMode(okapi::AbstractMotor::brakeMode::coast);
 		}
-		printf("%d\n", parking);
-		pros::delay(30);
+		//printf("%d\n", parking);
+		pros::delay(60);
 		pros::lcd::clear_line(2);
 	}
 }
@@ -1019,7 +1041,7 @@ void autonomous() {
 
 	//okapi::Controller controller (okapi::ControllerId::master);
 	drive->setMode(okapi::AbstractMotor::brakeMode::hold);
-	leftskills();
+	right();
 	drive->setMode(okapi::AbstractMotor::brakeMode::coast);
 }
 
