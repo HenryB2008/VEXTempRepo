@@ -204,12 +204,12 @@ void pidTurn(QAngle targetHeading, PIDConst turnConstants, double timeout = 3) {
 
 		//limit and set motors
 		turn = limiter(prevTurn, turnObj.step(headerr.convert(degree)), 0.11);
-		printf("%f %f %f\n", drive->getX(), drive->getY(), drive->getHeading());
+		printf("%f %f %f %f\n", drive->getX(), drive->getY(), drive->getHeading(), abs(headerr.convert(degree))>3);
 		drive->runTankArcade(0, turn);
 		prevTurn = turn;
 		pros::delay(10);
 	} while(abs(headerr.convert(degree))>3);
-
+	drive->runTankArcade(0, 0);
 }
 
 //move to any point
@@ -222,6 +222,7 @@ void moveToPoint(OdomState target, PIDConst forwardConstants, PIDConst headingCo
 	targetAngle = 1_deg * targetAngle.convert(degree);
 
 	pidTurn(targetAngle, turnConstants, timeoutturn);
+	printf("Done turning");
 	pidMoveForward(target, forwardConstants, headingConstants, timeoutforward);
 }
 
@@ -305,13 +306,11 @@ void distancePID(double distance, PIDConst gains) {
 		QLength ydiff = temp.y-initial.y;
 		printf("Odom: %f %f %f\n", temp.x.convert(inch), temp.y.convert(inch), temp.theta.convert(degree));
 		error = okapi::sqrt((xdiff*xdiff) + (ydiff*ydiff)).convert(inch);
-		if(distance<0) {
-			error*=-1;
-		}
-		speed = limiter(prevSpeed, obj.step(error), 0.11);
+		speed = limiter(prevSpeed, obj.step(distance>0 ? distance-error: distance+error), 0.11);
 		prevSpeed = speed;
-		//drive->runTankArcade(speed, 0);
+		drive->runTankArcade(speed, 0);
 	} while(error<abs(distance));
+	drive->runTankArcade(0, 0);
 }
 
 void speedMove(double time, double speed) {
@@ -463,16 +462,14 @@ void opcontrol() {
 	int i = 0;
 	bool fourbarpneumstate = true;
 	bool auxilclampstate = false;
-	ADIEncoder left('C', 'D');
-	ADIEncoder right('B', 'A');
+
   double max = 1;
   drive->setMode(okapi::AbstractMotor::brakeMode::hold);
 	while(true) {
 		//toggle between coast and hold brake modes
-		printf("%f %f\n", left.get(), right.get());
 		//get controller and drive chassis base
 
-	//	printf("%f %f %f\n", drive->getX(), drive->getY(), drive->getHeading());
+		printf("%f %f %d\n", drive->getX(), drive->getY(), (int)drive->getHeading()%360);
 		//update all button values
 		buttons->handleButtons(controller);
 		int buttonCounts[8];
@@ -500,7 +497,7 @@ void opcontrol() {
 
 		//intake->run(false, buttons->getPressed(okapi::ControllerDigital::right), 150); //handle intake
 
-		intake->handle(buttonCounts[3], 150); //handle intake (toggle)
+		intake->handle(buttonCounts[3], 200); //handle intake (toggle)
 
 		//handle four bar
 		fourbar1->run(buttons->getPressed(okapi::ControllerDigital::R1), buttons->getPressed(okapi::ControllerDigital::R2), 175);
@@ -576,6 +573,29 @@ void leftfast() {
 	fourbarpneum->turnOn(); //clamp it
 	printf("Finished\n");
 	distanceMove(30, 1); //move back
+}
+
+void thenewnewskills() {
+	setEffectorPositions();
+	pidTurn(39_deg, {0.007, 0.000008, 0});
+	distanceMove(25, 0.3);
+	pros::delay(300);
+	backclamppneum->turnOn();
+	pros::delay(200);
+	intake->run(true, false, -200); //start intake
+	pidTurn(90_deg, {0.01, 0.000008, 0});
+
+	distancePID(-16, {0.01, 0.0000008, 0});
+	pidTurn(180_deg, {0.006, 0.000008, 0});
+	distancePID(-40, {0.01, 0.0000008, 0});
+	fourbarpneum->turnOn();
+	pros::delay(100);
+	pidTurn(150_deg, {0.023, 0.000009, 0});
+	fourbar1->moveTarget(2400);
+	distancePID(-45, {0.009, 0.0000008, 0});
+	fourbar1->moveTarget(2000);
+	fourbarpneum->turnOff();
+	//moveToPoint({-24_in, -24_in, 0_deg}, {0.06, 0.00008, 0}, {0.01, 0, 0}, {0.004, 0.000008, 0});
 }
 
 void skills() {
@@ -1041,8 +1061,8 @@ void autonomous() {
 
 	//okapi::Controller controller (okapi::ControllerId::master);
 	drive->setMode(okapi::AbstractMotor::brakeMode::hold);
-	right();
-	drive->setMode(okapi::AbstractMotor::brakeMode::coast);
+	thenewnewskills();
+	//drive->setMode(okapi::AbstractMotor::brakeMode::coast);
 }
 
 

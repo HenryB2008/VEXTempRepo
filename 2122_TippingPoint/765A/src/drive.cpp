@@ -13,13 +13,13 @@ Drive::Drive() {
             .withSensors(
               ADIEncoder( // left encoder
                   LEFT_TRACKING_WHEEL_TOP,
-                  LEFT_TRACKING_WHEEL_BOTTOM,
-                  true
+                  LEFT_TRACKING_WHEEL_BOTTOM
+
               ),
               ADIEncoder( // right encoder
                   RIGHT_TRACKING_WHEEL_TOP,
-                  RIGHT_TRACKING_WHEEL_BOTTOM
-
+                  RIGHT_TRACKING_WHEEL_BOTTOM,
+                  true
               )
           )
           .withOdometry(

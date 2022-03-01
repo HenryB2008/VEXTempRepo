@@ -20,8 +20,8 @@
 
 
 //odom distances between wheels
-#define ODOMTRACK 6.8_in
-#define ODOMWHEELDIM 2.75_in
+#define ODOMTRACK 6.9235_in
+#define ODOMWHEELDIM 2.81665_in
 #define ODOMBACKDISTANCE 6.5_in
 
 
