@@ -499,7 +499,7 @@ void opcontrol() {
 
 		//intake->run(false, buttons->getPressed(okapi::ControllerDigital::right), 150); //handle intake
 
-		intake->handle(buttonCounts[3], 200); //handle intake (toggle)
+		intake->handle(buttonCounts[3], 180); //handle intake (toggle)
 
 		//handle four bar
 		fourbar1->run(buttons->getPressed(okapi::ControllerDigital::R1), buttons->getPressed(okapi::ControllerDigital::R2), 175);
