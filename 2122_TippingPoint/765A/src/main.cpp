@@ -601,14 +601,14 @@ void thenewnewskills() {
 	fourbar1->moveTarget(2400);
 
 	//move back and drop alliance
-	distancePID(18, {0.01, 0.0000008, 0});
+	distanceMove(18, 0.6);
 	fourbar1->moveTarget(0);
 	backclamppneum->turnOff();
 	//move forwards and turn 180
-	distancePID(-8, {0.01, 0.0000008, 0});
+	distanceMove(8, -0.6);
 	pidTurn(160_deg, {0.010, 0.000008, 0});
 	//move forwards and clamp on goal
-	distancePID(-13, {0.01, 0.0000008, 0});
+	distanceMove(13, -0.4);
 	fourbarpneum->turnOff();
 	pros::delay(100);
 	//raise four bar
@@ -616,7 +616,7 @@ void thenewnewskills() {
 	//turn back towards seesaw
 	pidTurn(350_deg, {0.009, 0.000008, 0});
 	//forward to seesaw
-	distancePID(-21, {0.008, 0.0000008, 0});
+	distanceMove(21, -0.6);
 	//drop goal
 	fourbarpneum->turnOn();
 	pros::delay(200);
@@ -625,12 +625,12 @@ void thenewnewskills() {
 	distanceMove(12, 0.5);
 	fourbar1->moveTarget(0);
 	pidTurn(272_deg, {0.009, 0.000008, 0});
-	distancePID(30, {0.008, 0.0000008, 0});
+	distanceMove(30, -0.6);
 	pidTurn(310_deg, {0.014, 0.000008, 0});
-	distancePID(-24, {0.008, 0.0000008, 0});
+	distanceMove(24, -0.6);
 	fourbarpneum->turnOff();
 	pros::delay(200);
-	distancePID(20, {0.008, 0.0000008, 0});
+	distanceMove(20, 0.6);
 	fourbar1->moveTarget(2400);
 	pidTurn(225_deg, {0.012, 0.00001, 0});
 	distanceMove(90, -0.7);
