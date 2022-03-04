@@ -11,6 +11,7 @@
 class Drive {
 private:
   std::shared_ptr<okapi::OdomChassisController> chassis;
+  okapi::IntegratedEncoder enc;
   int speedfactor;
 public:
   Drive();
@@ -24,6 +25,7 @@ public:
   void runTank(double left, double right);
   void reverseOrientation(int ori);
   void setMode(okapi::AbstractMotor::brakeMode brakeMode);
+  double getEncoder();
 };
 
 #endif

@@ -283,13 +283,15 @@ void pidMoveTank(OdomState target, PIDConst forwardConstants = forwardDefault, P
 void distanceMove(double distance, double speed) {
 	OdomState initial = drive->getState();
 	double error = 0;
+	double start = drive->getEncoder();
 	drive->runTankArcade(speed, 0);
 	do {
 		OdomState temp = drive->getState();
 		QLength xdiff = temp.x-initial.x;
 		QLength ydiff = temp.y-initial.y;
 		printf("Odom: %f %f %f\n", temp.x.convert(inch), temp.y.convert(inch), temp.theta.convert(degree));
-		error = okapi::sqrt((xdiff*xdiff) + (ydiff*ydiff)).convert(inch);
+		error = ((drive->getEncoder() - start) / 360) * 4 * PI;
+		//error = okapi::sqrt((xdiff*xdiff) + (ydiff*ydiff)).convert(inch);
 	} while(error<distance);
 	drive->runTankArcade(0, 0);
 }
