@@ -474,8 +474,8 @@ void opcontrol() {
 		printf("%f %f %d\n", drive->getX(), drive->getY(), (int)drive->getHeading()%360);
 		//update all button values
 		buttons->handleButtons(controller);
-		int buttonCounts[8];
-		for(int i = 0; i < 8; i++) {
+		int buttonCounts[9];
+		for(int i = 0; i < 9; i++) {
 			buttonCounts[i] = buttons->getCount(buttons->buttonList[i]);
 		}
 
@@ -498,8 +498,12 @@ void opcontrol() {
 		// effectors.step(buttonCounts, speeds); //handle two bar
 
 		//intake->run(false, buttons->getPressed(okapi::ControllerDigital::right), 150); //handle intake
-
-		intake->handle(buttonCounts[3], 180); //handle intake (toggle)
+		if (buttonCounts[8]%2 == 1) {
+			intake->handle(buttonCounts[8], -180);
+		}
+		else {
+			intake->handle(buttonCounts[3], 180); //handle intake (toggle)
+		}
 
 		//handle four bar
 		fourbar1->run(buttons->getPressed(okapi::ControllerDigital::R1), buttons->getPressed(okapi::ControllerDigital::R2), 175);
@@ -529,7 +533,7 @@ void right() {
 	pros::delay(100);
 	printf("Finished\n");
 	distanceMove(10, 1); //move back
-	distanceMove(10, 0.6);
+	distanceMove(7, 0.6);
 
 
 	pidTurn(270_deg, {0.01, 0.000008, 0});  //make the turn
@@ -556,9 +560,9 @@ void thenewnewskills() {
 	//first tilt
 	fourbarpneum->turnOn();
 	setEffectorPositions();
-	distanceMove(25, 0.3);
-	pidTurn(90_deg, {0.007, 0.000008, 0});
-	drive->runTankArcade(0.4, 0);
+	distanceMove(16, -0.3);
+	pidTurn(270_deg, {0.007, 0.000008, 0});
+	drive->runTankArcade(0.5, 0);
 	pros::delay(1400);
 	backclamppneum->turnOn();
 	pros::delay(200);
@@ -567,14 +571,14 @@ void thenewnewskills() {
 
 
 	//first neutral and to goal
-	distancePID(-20, {0.01, 0.0000008, 0});
-	pidTurn(180_deg, {0.006, 0.000008, 0});
+	distancePID(-15, {0.01, 0.0000008, 0});
+	pidTurn(0_deg, {0.006, 0.000008, 0});
 	distancePID(-40, {0.01, 0.0000008, 0});
 	fourbarpneum->turnOff();
 	pros::delay(100);
 	fourbar1->moveTarget(2400);
-	pidTurn(145_deg, {0.020, 0.000009, 0});
-	distancePID(-40, {0.007, 0.0000008, 0});
+	pidTurn(325_deg, {0.020, 0.000009, 0});
+	distancePID(-27, {0.01, 0.0000008, 0});
 
 //drop goal
 	pros::delay(300);
@@ -590,7 +594,7 @@ void thenewnewskills() {
 	backclamppneum->turnOff();
 	//move forwards and turn 180
 	distancePID(-8, {0.01, 0.0000008, 0});
-	pidTurn(340_deg, {0.010, 0.000008, 0});
+	pidTurn(160_deg, {0.010, 0.000008, 0});
 	//move forwards and clamp on goal
 	distancePID(-13, {0.01, 0.0000008, 0});
 	fourbarpneum->turnOff();
@@ -598,7 +602,7 @@ void thenewnewskills() {
 	//raise four bar
 	fourbar1->moveTarget(2100);
 	//turn back towards seesaw
-	pidTurn(170_deg, {0.009, 0.000008, 0});
+	pidTurn(350_deg, {0.009, 0.000008, 0});
 	//forward to seesaw
 	distancePID(-21, {0.008, 0.0000008, 0});
 	//drop goal
@@ -608,15 +612,15 @@ void thenewnewskills() {
 	printf("Moving back\n");
 	distanceMove(12, 0.5);
 	fourbar1->moveTarget(0);
-	pidTurn(92_deg, {0.009, 0.000008, 0});
+	pidTurn(272_deg, {0.009, 0.000008, 0});
 	distancePID(30, {0.008, 0.0000008, 0});
-	pidTurn(130_deg, {0.014, 0.000008, 0});
+	pidTurn(310_deg, {0.014, 0.000008, 0});
 	distancePID(-24, {0.008, 0.0000008, 0});
 	fourbarpneum->turnOff();
 	pros::delay(200);
 	distancePID(20, {0.008, 0.0000008, 0});
 	fourbar1->moveTarget(2400);
-	pidTurn(45_deg, {0.012, 0.00001, 0});
+	pidTurn(225_deg, {0.012, 0.00001, 0});
 	distanceMove(90, -0.7);
 	pros::delay(400);
 	fourbarpneum->turnOn();
@@ -1086,6 +1090,8 @@ void autonomous() {
 	//okapi::Controller controller (okapi::ControllerId::master);
 	drive->setMode(okapi::AbstractMotor::brakeMode::hold);
 	thenewnewskills();
+	// right();
+	//leftfast();
 	//drive->setMode(okapi::AbstractMotor::brakeMode::coast);
 }
 
