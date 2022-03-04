@@ -580,7 +580,7 @@ void thenewnewskills() {
 
 
 	//first neutral and to goal
-	distanceMove(15, -0.8);
+	// distanceMove(15, -0.8);
 	// distancePID(-15, {0.01, 0.0000008, 0});
 	// pidTurn(0_deg, {0.006, 0.000008, 0});
 	distanceMove(38, -0.8);
