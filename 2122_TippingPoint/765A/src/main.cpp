@@ -1107,6 +1107,92 @@ void autonomous() {
 	//drive->setMode(okapi::AbstractMotor::brakeMode::coast);
 }
 
+void driverMovementTrack() {
+	//initialize variables and set effector positions
+	setEffectorPositions();
+	int parking = 0;
+	double forward;
+	double turn;
+	double strafe;
+	int i = 0;
+	bool fourbarpneumstate = true;
+	bool backclampstate = false;
+	ADIEncoder righttrack = ADIEncoder('A', 'B', false);		//encoders because i don't know how to get values
+	ADIEncoder lefttrack = ADIEncoder('C', 'D', true);
+	righttrack.reset();
+	lefttrack.reset();
+	okapi::Motor fourbar(FOUR_BAR_FIRST);
+
+  	double max = 1;
+  	drive->setMode(okapi::AbstractMotor::brakeMode::hold);
+	fourbarpneum->turnOn();
+	backclamppneum->turnOff();
+	while(true) {
+		//toggle between coast and hold brake modes
+		//get controller and drive chassis base
+		// printf("%f %f\n", righttrack.get(), lefttrack.get());
+		// printf("%f %f %d\n", drive->getX(), drive->getY(), (int)drive->getHeading()%360);
+		//update all button values
+		buttons->handleButtons(controller);
+		int buttonCounts[9];
+		for(int i = 0; i < 9; i++) {
+			buttonCounts[i] = buttons->getCount(buttons->buttonList[i]);
+		}
+
+    	if(buttonCounts[7]%2) {
+      		max = 5.0/7;
+			drive->setMode(okapi::AbstractMotor::brakeMode::hold);
+    	}
+    	else {
+      		max = 1;
+			drive->setMode(okapi::AbstractMotor::brakeMode::coast);
+    	}
+
+    	forward = controller.getAnalog(okapi::ControllerAnalog::leftY);
+		turn = controller.getAnalog(okapi::ControllerAnalog::rightX);
+    	if(forward>=0) {
+		    drive->runTankArcade(std::max(forward*-(6.0/7), max*-1), turn*-0.6);
+    	}
+    	else {
+        	drive->runTankArcade(std::min(forward*-(6.0/7), max), turn*-0.6);
+    	}
+
+		// effectors.step(buttonCounts, speeds); //handle two bar
+
+		//intake->run(false, buttons->getPressed(okapi::ControllerDigital::right), 150); //handle intake
+		//runs the intake backwards
+		if (buttonCounts[8]%2 == 1) {
+			intake->handle(buttonCounts[8], -180);
+		}
+		else {
+			intake->handle(buttonCounts[3], 180); //handle intake (toggle)
+		}
+
+		//handle four bar
+		fourbar1->run(buttons->getPressed(okapi::ControllerDigital::R1), buttons->getPressed(okapi::ControllerDigital::R2), 175);
+		//fourbar2->run(buttons->getPressed(okapi::ControllerDigital::R1), buttons->getPressed(okapi::ControllerDigital::R2), 175);
+
+		//handle clamp
+		fourbarpneum->handle(buttonCounts[5]);
+		backclamppneum->handle(buttonCounts[0]);
+		// parking = buttonCounts[7] % 2;
+		// if (parking == 1) {
+		// 	drive->setMode(okapi::AbstractMotor::brakeMode::hold);
+		// } else {
+		// 	drive->setMode(okapi::AbstractMotor::brakeMode::coast);
+		// }
+		//printf("%d\n", parking);
+
+		if (buttonCounts[1]%2) {
+			printf("Heading: %f    Distance from last point: %f inches     Four Bar position: %f\n\n", imu.get_heading(), ((righttrack.get() + lefttrack.get())/2 * 2.81665 * PI / 360), fourbar.getEncoder());
+			righttrack.reset();
+			lefttrack.reset();
+		}
+
+		pros::delay(60);
+		pros::lcd::clear_line(2);
+	}
+}
 
 //experimental pure pursuit handler
 void PurePursuitHandler() {
