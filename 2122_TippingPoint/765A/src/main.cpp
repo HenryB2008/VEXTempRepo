@@ -567,10 +567,9 @@ void thenewnewskills() {
 	fourbarpneum->turnOn();
 	setEffectorPositions();
 	distanceMove(10, -0.5);
-	// pros::delay(100000);
 	pidTurn(270_deg, {0.007, 0.000008, 0});
 	distanceMove(14, 0.5);
-	pros::delay(500);
+	// pros::delay(500);
 	backclamppneum->turnOn();
 	pros::delay(200);
 	distanceMove(15, -0.5);
@@ -579,10 +578,7 @@ void thenewnewskills() {
 	pidTurn(0_deg, {0.007, 0.000008, 0});
 
 
-	//first neutral and to goal
-	// distanceMove(15, -0.8);
-	// distancePID(-15, {0.01, 0.0000008, 0});
-	// pidTurn(0_deg, {0.006, 0.000008, 0});
+	//first neutral and to seesaw
 	distanceMove(38, -0.8);
 	fourbarpneum->turnOff(); //clamp
 	pros::delay(100);
@@ -591,14 +587,14 @@ void thenewnewskills() {
 	distanceMove(27, -0.5); //move to seesaw
 	// distancePID(-27, {0.01, 0.0000008, 0});
 	pros::delay(300);
-	fourbar1->moveTarget(1700);
+	fourbar1->moveTarget(1900);
 	pros::delay(500);
 	fourbarpneum->turnOn();
 	pros::delay(200);
-	fourbar1->moveTarget(2400);
+	// fourbar1->moveTarget(2400);
 
 	//alliance currently in two bar
-	distanceMove(18, 0.6);
+	distanceMove(18, 0.6);		//back away from seesaw
 	fourbar1->moveTarget(0);
 	backclamppneum->turnOff();
 	//move forwards and turn 180
