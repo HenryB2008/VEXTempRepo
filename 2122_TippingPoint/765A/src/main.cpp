@@ -563,7 +563,7 @@ void leftfast() {
 
 void thenewnewskills() {
 
-	//first tilt
+	//first alliance pickup
 	fourbarpneum->turnOn();
 	setEffectorPositions();
 	distanceMove(10, -0.5);
@@ -590,8 +590,6 @@ void thenewnewskills() {
 	pidTurn(323_deg, {0.020, 0.000009, 0}); //turn to seesaw
 	distanceMove(27, -0.5); //move to seesaw
 	// distancePID(-27, {0.01, 0.0000008, 0});
-
-//drop goal
 	pros::delay(300);
 	fourbar1->moveTarget(1700);
 	pros::delay(500);
@@ -599,7 +597,7 @@ void thenewnewskills() {
 	pros::delay(200);
 	fourbar1->moveTarget(2400);
 
-	//move back and drop alliance
+	//alliance currently in two bar
 	distanceMove(18, 0.6);
 	fourbar1->moveTarget(0);
 	backclamppneum->turnOff();
@@ -619,7 +617,8 @@ void thenewnewskills() {
 	//drop goal
 	fourbarpneum->turnOn();
 	pros::delay(200);
-	//move back
+
+	//alliance under first seesaw
 	printf("Moving back\n");
 	distanceMove(12, 0.5); //move back from seesaw
 	fourbar1->moveTarget(0); //lower four bar
@@ -638,7 +637,9 @@ void thenewnewskills() {
 	fourbarpneum->turnOn(); //drop clamp
 	pros::delay(400);
 	fourbar1->moveTarget(2400); //raise four bar
-	distanceMove(13, 0.6);
+
+	//tall neutral
+	distanceMove(13, 0.6);//back from seesaw
 	pidTurn(303_deg, {0.014, 0.000008, 0}); //turn towards tall neutral
 	distanceMove(30, -0.6); //beeline to tall
 	fourbarpneum->turnOff();
@@ -646,6 +647,8 @@ void thenewnewskills() {
 	fourbar1->moveTarget(300);
 	distanceMove(50, -0.6); //beeline to tall
 	fourbarpneum->turnOff(); // drop tall
+
+	//side alliance with back clamp
 	pidTurn(90_deg, {0.014, 0.000008, 0}); //turn towards side alliance
 	drive->runTankArcade(0.5, 0);
 	pros::delay(1400);
@@ -654,6 +657,8 @@ void thenewnewskills() {
 	distanceMove(15, -0.5);
 	fourbar1->moveTarget(0);
 	pidTurn(180_deg, {0.007, 0.000008, 0});
+
+	//last neutral goal
 	distanceMove(38, -0.8);
 	fourbarpneum->turnOff(); //clamp
 	pros::delay(100);
@@ -661,21 +666,20 @@ void thenewnewskills() {
 	pidTurn(143_deg, {0.020, 0.000009, 0}); //turn to seesaw
 	distanceMove(27, -0.5); //move to seesaw
 	pros::delay(300);
-	fourbar1->moveTarget(2000);
+	fourbar1->moveTarget(2100);//drop four bar
 	pros::delay(500);
-	fourbarpneum->turnOn();
+	fourbarpneum->turnOn(); //drop neutral goal
 	pros::delay(200);
-	fourbar1->moveTarget(2400);
+	fourbar1->moveTarget(2400); //four bar back up
 
-
-	distanceMove(18, 0.6);
-	fourbar1->moveTarget(0);
-	backclamppneum->turnOff();
+	//deposit alliance on seesaw
+	distanceMove(18, 0.6); // away from seesaw
+	fourbar1->moveTarget(0);//lower four bar
+	backclamppneum->turnOff(); //let go of alliance goal
 	//move forwards and turn 180
-	distanceMove(8, -0.6);
-	pidTurn(323_deg, {0.010, 0.000008, 0});
-	//move forwards and clamp on goal
-	distanceMove(13, -0.4);
+	distanceMove(8, -0.6); //go forward to lose the goal
+	pidTurn(323_deg, {0.010, 0.000008, 0}); //turn back towards the goal
+	distanceMove(13, -0.4);	//move forwards and clamp on goal
 	fourbarpneum->turnOff();
 	pros::delay(100);
 	//raise four bar
