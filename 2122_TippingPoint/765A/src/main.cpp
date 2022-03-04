@@ -290,7 +290,7 @@ void distanceMove(double distance, double speed) {
 		QLength xdiff = temp.x-initial.x;
 		QLength ydiff = temp.y-initial.y;
 		printf("Odom: %f %f %f\n", temp.x.convert(inch), temp.y.convert(inch), temp.theta.convert(degree));
-		error = ((drive->getEncoder() - start) / 360) * 4 * PI;
+		error = ((drive->getEncoder() - start) / 360) * 4 * PI *(7/5);
 		//error = okapi::sqrt((xdiff*xdiff) + (ydiff*ydiff)).convert(inch);
 	} while(error<distance);
 	drive->runTankArcade(0, 0);
