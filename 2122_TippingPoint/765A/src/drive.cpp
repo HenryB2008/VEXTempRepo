@@ -2,7 +2,7 @@
 
 
 //creates okapi chassis object
-Drive::Drive() : enc(TOP_RIGHT_MOTOR) {
+Drive::Drive() {
   chassis = ChassisControllerBuilder()
             .withMotors(
               {-TOP_LEFT_MOTOR, -LEFT_MIDDLE_MOTOR, -BOTTOM_LEFT_MOTOR},
@@ -93,6 +93,6 @@ void Drive::setMode(okapi::AbstractMotor::brakeMode brakeMode) {
   chassis->getModel()->setBrakeMode(brakeMode);
 }
 
-double Drive::getEncoder() {
-  return enc.get();
-}
+// double Drive::getEncoder() {
+//   return enc.get();
+// }

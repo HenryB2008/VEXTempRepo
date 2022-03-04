@@ -283,15 +283,16 @@ void pidMoveTank(OdomState target, PIDConst forwardConstants = forwardDefault, P
 void distanceMove(double distance, double speed) {
 	OdomState initial = drive->getState();
 	double error = 0;
-	double start = drive->getEncoder();
+	// double start = drive->getEncoder();
 	drive->runTankArcade(speed, 0);
 	do {
 		OdomState temp = drive->getState();
 		QLength xdiff = temp.x-initial.x;
 		QLength ydiff = temp.y-initial.y;
 		printf("Odom: %f %f %f\n", temp.x.convert(inch), temp.y.convert(inch), temp.theta.convert(degree));
-		error = ((drive->getEncoder() - start) / 360) * 4 * PI *(7/5);
-		//error = okapi::sqrt((xdiff*xdiff) + (ydiff*ydiff)).convert(inch);
+		//  error = ((drive->getEncoder() - start) / 360*(7.0/5)) * 4 * PI ;
+		error = okapi::sqrt((xdiff*xdiff) + (ydiff*ydiff)).convert(inch);
+		pros::delay(30);
 	} while(error<distance);
 	drive->runTankArcade(0, 0);
 }
@@ -311,6 +312,7 @@ void distancePID(double distance, PIDConst gains) {
 		speed = limiter(prevSpeed, obj.step(distance>0 ? distance-error: distance+error), 0.11);
 		prevSpeed = speed;
 		drive->runTankArcade(speed, 0);
+		pros::delay(30);
 	} while(error<abs(distance));
 	drive->runTankArcade(0, 0);
 }
@@ -464,6 +466,8 @@ void opcontrol() {
 	int i = 0;
 	bool fourbarpneumstate = true;
 	bool auxilclampstate = false;
+	ADIEncoder righttrack = ADIEncoder('A', 'B', false);		//encoders because i don't know how to get values
+	ADIEncoder lefttrack = ADIEncoder('C', 'D', true);
 
   double max = 1;
   drive->setMode(okapi::AbstractMotor::brakeMode::hold);
@@ -472,8 +476,8 @@ void opcontrol() {
 	while(true) {
 		//toggle between coast and hold brake modes
 		//get controller and drive chassis base
-
-		printf("%f %f %d\n", drive->getX(), drive->getY(), (int)drive->getHeading()%360);
+		printf("%f %f\n", righttrack.get(), lefttrack.get());
+		// printf("%f %f %d\n", drive->getX(), drive->getY(), (int)drive->getHeading()%360);
 		//update all button values
 		buttons->handleButtons(controller);
 		int buttonCounts[9];
@@ -562,25 +566,31 @@ void thenewnewskills() {
 	//first tilt
 	fourbarpneum->turnOn();
 	setEffectorPositions();
-	distanceMove(16, -0.3);
+	distanceMove(10, -0.5);
+	// pros::delay(100000);
 	pidTurn(270_deg, {0.007, 0.000008, 0});
-	drive->runTankArcade(0.5, 0);
-	pros::delay(1400);
+	distanceMove(14, 0.5);
+	pros::delay(500);
 	backclamppneum->turnOn();
 	pros::delay(200);
-	drive->runTankArcade(0, 0);
+	distanceMove(15, -0.5);
+	// drive->runTankArcade(0, 0);
 	intake->run(true, false, 200); //start intake
+	pidTurn(0_deg, {0.007, 0.000008, 0});
 
 
 	//first neutral and to goal
-	distancePID(-15, {0.01, 0.0000008, 0});
-	pidTurn(0_deg, {0.006, 0.000008, 0});
-	distancePID(-40, {0.01, 0.0000008, 0});
+	distanceMove(15, -0.8);
+	// distancePID(-15, {0.01, 0.0000008, 0});
+	// pidTurn(0_deg, {0.006, 0.000008, 0});
+	distanceMove(38, -0.8);
+	// distancePID(-38, {0.01, 0.0000008, 0});
 	fourbarpneum->turnOff();
 	pros::delay(100);
 	fourbar1->moveTarget(2400);
-	pidTurn(325_deg, {0.020, 0.000009, 0});
-	distancePID(-27, {0.01, 0.0000008, 0});
+	pidTurn(323_deg, {0.020, 0.000009, 0});
+	distanceMove(27, -0.5);
+	// distancePID(-27, {0.01, 0.0000008, 0});
 
 //drop goal
 	pros::delay(300);
