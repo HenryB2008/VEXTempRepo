@@ -584,12 +584,11 @@ void thenewnewskills() {
 	// distancePID(-15, {0.01, 0.0000008, 0});
 	// pidTurn(0_deg, {0.006, 0.000008, 0});
 	distanceMove(38, -0.8);
-	// distancePID(-38, {0.01, 0.0000008, 0});
-	fourbarpneum->turnOff();
+	fourbarpneum->turnOff(); //clamp
 	pros::delay(100);
 	fourbar1->moveTarget(2400);
-	pidTurn(323_deg, {0.020, 0.000009, 0});
-	distanceMove(27, -0.5);
+	pidTurn(323_deg, {0.020, 0.000009, 0}); //turn to seesaw
+	distanceMove(27, -0.5); //move to seesaw
 	// distancePID(-27, {0.01, 0.0000008, 0});
 
 //drop goal
@@ -622,20 +621,72 @@ void thenewnewskills() {
 	pros::delay(200);
 	//move back
 	printf("Moving back\n");
-	distanceMove(12, 0.5);
-	fourbar1->moveTarget(0);
-	pidTurn(272_deg, {0.009, 0.000008, 0});
-	distanceMove(30, -0.6);
-	pidTurn(310_deg, {0.014, 0.000008, 0});
-	distanceMove(24, -0.6);
-	fourbarpneum->turnOff();
+	distanceMove(12, 0.5); //move back from seesaw
+	fourbar1->moveTarget(0); //lower four bar
+	pidTurn(272_deg, {0.009, 0.000008, 0}); //turn to the wall
+	distanceMove(30, -0.6); //forward
+	pidTurn(310_deg, {0.014, 0.000008, 0}); //turn towards goal under seesaw
+	distanceMove(24, -0.6); //forwards to that goal
+	fourbarpneum->turnOff(); //clamp
 	pros::delay(200);
-	distanceMove(20, 0.6);
-	fourbar1->moveTarget(2400);
-	pidTurn(225_deg, {0.012, 0.00001, 0});
-	distanceMove(90, -0.7);
+	distanceMove(20, 0.6); //get back out
+	fourbar1->moveTarget(2400); //raise four bar
+	pidTurn(225_deg, {0.012, 0.00001, 0}); //turn towards other side seesaw
+	distanceMove(90, -0.7); //beeline there
 	pros::delay(400);
+	fourbar1->moveTarget(1700); //lower four bar
+	fourbarpneum->turnOn(); //drop clamp
+	pros::delay(400);
+	fourbar1->moveTarget(2400); //raise four bar
+	distanceMove(13, 0.6);
+	pidTurn(303_deg, {0.014, 0.000008, 0}); //turn towards tall neutral
+	distanceMove(30, -0.6); //beeline to tall
+	fourbarpneum->turnOff();
+	pros::delay(400);
+	fourbar1->moveTarget(300);
+	distanceMove(50, -0.6); //beeline to tall
+	fourbarpneum->turnOff(); // drop tall
+	pidTurn(90_deg, {0.014, 0.000008, 0}); //turn towards side alliance
+	drive->runTankArcade(0.5, 0);
+	pros::delay(1400);
+	backclamppneum->turnOn();
+	drive->runTankArcade(0, 0);
+	distanceMove(15, -0.5);
+	fourbar1->moveTarget(0);
+	pidTurn(180_deg, {0.007, 0.000008, 0});
+	distanceMove(38, -0.8);
+	fourbarpneum->turnOff(); //clamp
+	pros::delay(100);
+	fourbar1->moveTarget(2400);
+	pidTurn(143_deg, {0.020, 0.000009, 0}); //turn to seesaw
+	distanceMove(27, -0.5); //move to seesaw
+	pros::delay(300);
+	fourbar1->moveTarget(2000);
+	pros::delay(500);
 	fourbarpneum->turnOn();
+	pros::delay(200);
+	fourbar1->moveTarget(2400);
+
+
+	distanceMove(18, 0.6);
+	fourbar1->moveTarget(0);
+	backclamppneum->turnOff();
+	//move forwards and turn 180
+	distanceMove(8, -0.6);
+	pidTurn(323_deg, {0.010, 0.000008, 0});
+	//move forwards and clamp on goal
+	distanceMove(13, -0.4);
+	fourbarpneum->turnOff();
+	pros::delay(100);
+	//raise four bar
+	fourbar1->moveTarget(2100);
+	//turn back towards seesaw
+	pidTurn(143_deg, {0.009, 0.000008, 0});
+	//forward to seesaw
+	distanceMove(21, -0.6);
+	//drop goal
+	fourbarpneum->turnOn();
+	pros::delay(200);
 }
 
 void skills() {
