@@ -655,7 +655,6 @@ void thenewnewskills() {
 	//first alliance pickup
 	setEffectorPositions();
 	distanceMove(10, -0.5);
-	// pros::delay(100000);
 	pidTurn(270_deg, {0.007, 0.000008, 0});
 	drive->runTankArcade(0.5, 0);
 	pros::delay(1000);
@@ -680,11 +679,11 @@ void thenewnewskills() {
 	distanceMove(41, -0.3); //move to seesaw
 	// distancePID(-27, {0.01, 0.0000008, 0});
 	pros::delay(300);
-	fourbar1->moveTarget(1700);
+	fourbar1->moveTarget(1900);
 	pros::delay(500);
 	fourbarpneum->turnOff();
 	pros::delay(200);
-	fourbar1->moveTarget(2400);
+	// fourbar1->moveTarget(2400);
 
 	//alliance currently in two bar
 	distanceMove(18, 0.4);
