@@ -61,6 +61,7 @@ void autonSelector() {
 	}
 }
 
+
 /**
  * Runs initialization code. This occurs as soon as the program is started.
  *
@@ -285,6 +286,7 @@ void distanceMove(double distance, double speed) {
 	double error = 0;
 	// double start = drive->getEncoder();
 	drive->runTankArcade(speed, 0);
+	double start = pros::millis();
 	do {
 		OdomState temp = drive->getState();
 		QLength xdiff = temp.x-initial.x;
@@ -293,7 +295,7 @@ void distanceMove(double distance, double speed) {
 		//  error = ((drive->getEncoder() - start) / 360*(7.0/5)) * 4 * PI ;
 		error = okapi::sqrt((xdiff*xdiff) + (ydiff*ydiff)).convert(inch);
 		pros::delay(30);
-	} while(error<distance);
+	} while(error<distance && pros::millis()-start<6000);
 	drive->runTankArcade(0, 0);
 }
 
@@ -452,9 +454,95 @@ void competition_initialize() {}
  * task, not resume it from where it left off.
  */
 
+ void driverMovementTrack() {
+ 	//initialize variables and set effector positions
+ 	setEffectorPositions();
+ 	int parking = 0;
+ 	double forward;
+ 	double turn;
+ 	double strafe;
+ 	int i = 0;
+ 	bool fourbarpneumstate = true;
+ 	bool backclampstate = false;
+ 	ADIEncoder righttrack = ADIEncoder('A', 'B', false);		//encoders because i don't know how to get values
+ 	ADIEncoder lefttrack = ADIEncoder('C', 'D', true);
+ 	righttrack.reset();
+ 	lefttrack.reset();
+ 	okapi::Motor fourbar(FOUR_BAR_FIRST);
 
+   	double max = 1;
+   	drive->setMode(okapi::AbstractMotor::brakeMode::hold);
+ 	fourbarpneum->turnOn();
+ 	backclamppneum->turnOff();
+ 	while(true) {
+ 		//toggle between coast and hold brake modes
+ 		//get controller and drive chassis base
+ 		// printf("%f %f\n", righttrack.get(), lefttrack.get());
+ 		// printf("%f %f %d\n", drive->getX(), drive->getY(), (int)drive->getHeading()%360);
+ 		//update all button values
+ 		buttons->handleButtons(controller);
+ 		int buttonCounts[9];
+ 		for(int i = 0; i < 9; i++) {
+ 			buttonCounts[i] = buttons->getCount(buttons->buttonList[i]);
+ 		}
+
+     	if(buttonCounts[7]%2) {
+       		max = 5.0/7;
+ 			drive->setMode(okapi::AbstractMotor::brakeMode::hold);
+     	}
+     	else {
+       		max = 1;
+ 			drive->setMode(okapi::AbstractMotor::brakeMode::coast);
+     	}
+
+     	forward = controller.getAnalog(okapi::ControllerAnalog::leftY);
+ 		turn = controller.getAnalog(okapi::ControllerAnalog::rightX);
+     	if(forward>=0) {
+ 		    drive->runTankArcade(std::max(forward*-(6.0/7), max*-1), turn*-0.6);
+     	}
+     	else {
+         	drive->runTankArcade(std::min(forward*-(6.0/7), max), turn*-0.6);
+     	}
+
+ 		// effectors.step(buttonCounts, speeds); //handle two bar
+
+ 		//intake->run(false, buttons->getPressed(okapi::ControllerDigital::right), 150); //handle intake
+ 		//runs the intake backwards
+ 		if (buttonCounts[8]%2 == 1) {
+ 			intake->handle(buttonCounts[8], -180);
+ 		}
+ 		else {
+ 			intake->handle(buttonCounts[3], 180); //handle intake (toggle)
+ 		}
+
+ 		//handle four bar
+ 		fourbar1->run(buttons->getPressed(okapi::ControllerDigital::R1), buttons->getPressed(okapi::ControllerDigital::R2), 175);
+ 		//fourbar2->run(buttons->getPressed(okapi::ControllerDigital::R1), buttons->getPressed(okapi::ControllerDigital::R2), 175);
+
+ 		//handle clamp
+ 		fourbarpneum->handle(buttonCounts[5]);
+ 		backclamppneum->handle(buttonCounts[0]);
+ 		// parking = buttonCounts[7] % 2;
+ 		// if (parking == 1) {
+ 		// 	drive->setMode(okapi::AbstractMotor::brakeMode::hold);
+ 		// } else {
+ 		// 	drive->setMode(okapi::AbstractMotor::brakeMode::coast);
+ 		// }
+ 		//printf("%d\n", parking);
+
+ 		if (buttonCounts[1]%2) {
+ 			printf("Heading: %f    Distance from last point: %f inches     Four Bar position: %f\n\n", imu.get_heading(), ((righttrack.get() + lefttrack.get())/2 * 2.81665 * PI / 360), fourbar.getEncoder());
+ 			righttrack.reset();
+ 			lefttrack.reset();
+ 		}
+
+ 		pros::delay(60);
+ 		pros::lcd::clear_line(2);
+ 	}
+ }
 
 void opcontrol() {
+
 
 
 	//initialize variables and set effector positions
@@ -471,8 +559,6 @@ void opcontrol() {
 
   double max = 1;
   drive->setMode(okapi::AbstractMotor::brakeMode::hold);
-	fourbarpneum->turnOn();
-	backclamppneum->turnOff();
 	while(true) {
 		//toggle between coast and hold brake modes
 		//get controller and drive chassis base
@@ -533,20 +619,23 @@ void opcontrol() {
 void right() {
   setEffectorPositions();
 	printf("done\n");
-	fourbarpneum->turnOn();
 	distanceMove(39, -1);	//move towards side neutral at full speed
-	fourbarpneum->turnOff(); //clamp it
+	fourbarpneum->turnOn(); //clamp it
 	pros::delay(100);
 	printf("Finished\n");
 	distanceMove(10, 1); //move back
-	distanceMove(7, 0.6);
+	distanceMove(4, 0.6);
 
 
 	pidTurn(270_deg, {0.01, 0.000008, 0});  //make the turn
 
-	distanceMove(18, 0.5); //move towards alliance goal
+	drive->runTankArcade(0.5, 0); //move towards alliance goal
+	pros::delay(1400);
 	backclamppneum->turnOn();
-
+	drive->runTankArcade(-0.5, 0);
+	pros::delay(1000);
+	drive->runTankArcade(0, 0);
+	intake->run(true, false, -180);
 
 
 
@@ -564,18 +653,18 @@ void leftfast() {
 void thenewnewskills() {
 
 	//first alliance pickup
-	fourbarpneum->turnOn();
 	setEffectorPositions();
 	distanceMove(10, -0.5);
 	// pros::delay(100000);
 	pidTurn(270_deg, {0.007, 0.000008, 0});
-	distanceMove(14, 0.5);
-	pros::delay(500);
+	drive->runTankArcade(0.5, 0);
+	pros::delay(1000);
 	backclamppneum->turnOn();
-	pros::delay(200);
+	pidTurn(270_deg, {0.007, 0.000008, 0});
+	drive->runTankArcade(0, 0);
 	distanceMove(15, -0.5);
 	// drive->runTankArcade(0, 0);
-	intake->run(true, false, 200); //start intake
+	intake->run(true, false, -180); //start intake
 	pidTurn(0_deg, {0.007, 0.000008, 0});
 
 
@@ -583,73 +672,85 @@ void thenewnewskills() {
 	// distanceMove(15, -0.8);
 	// distancePID(-15, {0.01, 0.0000008, 0});
 	// pidTurn(0_deg, {0.006, 0.000008, 0});
-	distanceMove(38, -0.8);
-	fourbarpneum->turnOff(); //clamp
+	distanceMove(34, -0.6);
+	fourbarpneum->turnOn(); //clamp
 	pros::delay(100);
 	fourbar1->moveTarget(2400);
-	pidTurn(323_deg, {0.020, 0.000009, 0}); //turn to seesaw
-	distanceMove(27, -0.5); //move to seesaw
+	pidTurn(328_deg, {0.020, 0.000009, 0}); //turn to seesaw
+	distanceMove(41, -0.3); //move to seesaw
 	// distancePID(-27, {0.01, 0.0000008, 0});
 	pros::delay(300);
 	fourbar1->moveTarget(1700);
 	pros::delay(500);
-	fourbarpneum->turnOn();
+	fourbarpneum->turnOff();
 	pros::delay(200);
 	fourbar1->moveTarget(2400);
 
 	//alliance currently in two bar
-	distanceMove(18, 0.6);
+	distanceMove(18, 0.4);
 	fourbar1->moveTarget(0);
 	backclamppneum->turnOff();
 	//move forwards and turn 180
-	distanceMove(8, -0.6);
-	pidTurn(160_deg, {0.010, 0.000008, 0});
+	pros::delay(1000);
+	distanceMove(9, -0.4);
+	double curr = imu.get_heading();
+	pidTurn((curr+175) * 1_deg, {0.005, 0.000008, 0});
 	//move forwards and clamp on goal
-	distanceMove(13, -0.4);
-	fourbarpneum->turnOff();
+	distanceMove(20, -0.4);
+	fourbarpneum->turnOn();
 	pros::delay(100);
 	//raise four bar
 	fourbar1->moveTarget(2100);
 	//turn back towards seesaw
-	pidTurn(350_deg, {0.009, 0.000008, 0});
+	pidTurn(351_deg, {0.006, 0.000008, 0});
 	//forward to seesaw
-	distanceMove(21, -0.6);
+	distanceMove(29, -0.6);
 	//drop goal
-	fourbarpneum->turnOn();
+	fourbar1->moveTarget(1900);
+	pros::delay(700);
+	fourbarpneum->turnOff();
 	pros::delay(200);
 
 	//alliance under first seesaw
 	printf("Moving back\n");
-	distanceMove(12, 0.5); //move back from seesaw
+	distanceMove(12, 0.4); //move back from seesaw
 	fourbar1->moveTarget(0); //lower four bar
 	pidTurn(272_deg, {0.009, 0.000008, 0}); //turn to the wall
-	distanceMove(30, -0.6); //forward
-	pidTurn(310_deg, {0.014, 0.000008, 0}); //turn towards goal under seesaw
-	distanceMove(24, -0.6); //forwards to that goal
-	fourbarpneum->turnOff(); //clamp
+	//distanceMove(33, 0.4); //forward
+	drive->runTankArcade(0.4, 0); //run into wall
+	pros::delay(3500);
+	drive->runTankArcade(0, 0);
+	distanceMove(5, -0.5);
+	pidTurn(318_deg, {0.011, 0.000008, 0}); //turn towards goal under seesaw
+	distanceMove(31, -0.4); //forwards to that goal
+	fourbarpneum->turnOn(); //clamp
 	pros::delay(200);
-	distanceMove(20, 0.6); //get back out
+	distanceMove(20, 0.4); //get back out
 	fourbar1->moveTarget(2400); //raise four bar
-	pidTurn(225_deg, {0.012, 0.00001, 0}); //turn towards other side seesaw
-	distanceMove(90, -0.7); //beeline there
+	pidTurn(226_deg, {0.010, 0.00001, 0}); //turn towards other side seesaw
+	distanceMove(84, -0.6); //beeline there
 	pros::delay(400);
-	fourbar1->moveTarget(1700); //lower four bar
-	fourbarpneum->turnOn(); //drop clamp
-	pros::delay(400);
+	fourbar1->moveTarget(1400); //lower four bar
+	pros::delay(1000);
+	fourbarpneum->turnOff(); //drop clamp
+
 	fourbar1->moveTarget(2400); //raise four bar
 
 	//tall neutral
 	distanceMove(13, 0.6);//back from seesaw
-	pidTurn(303_deg, {0.014, 0.000008, 0}); //turn towards tall neutral
+	fourbar1->moveTarget(0);
+	pidTurn(305_deg, {0.014, 0.000008, 0}); //turn towards tall neutral
 	distanceMove(30, -0.6); //beeline to tall
-	fourbarpneum->turnOff();
+	fourbarpneum->turnOn();
 	pros::delay(400);
 	fourbar1->moveTarget(300);
 	distanceMove(50, -0.6); //beeline to tall
 	fourbarpneum->turnOff(); // drop tall
+	pros::delay(500);
+	distanceMove(6, 0.6);
 
 	//side alliance with back clamp
-	pidTurn(90_deg, {0.014, 0.000008, 0}); //turn towards side alliance
+	pidTurn(89_deg, {0.006, 0.000008, 0}); //turn towards side alliance
 	drive->runTankArcade(0.5, 0);
 	pros::delay(1400);
 	backclamppneum->turnOn();
@@ -660,36 +761,37 @@ void thenewnewskills() {
 
 	//last neutral goal
 	distanceMove(38, -0.8);
-	fourbarpneum->turnOff(); //clamp
+	fourbarpneum->turnOn(); //clamp
 	pros::delay(100);
 	fourbar1->moveTarget(2400);
-	pidTurn(143_deg, {0.020, 0.000009, 0}); //turn to seesaw
-	distanceMove(27, -0.5); //move to seesaw
+	pidTurn(146_deg, {0.01, 0.000009, 0}); //turn to seesaw
+	distanceMove(40, -0.5); //move to seesaw
 	pros::delay(300);
 	fourbar1->moveTarget(2100);//drop four bar
 	pros::delay(500);
-	fourbarpneum->turnOn(); //drop neutral goal
+	fourbarpneum->turnOff(); //drop neutral goal
 	pros::delay(200);
 	fourbar1->moveTarget(2400); //four bar back up
 
 	//deposit alliance on seesaw
-	distanceMove(18, 0.6); // away from seesaw
+	distanceMove(18, 0.4); // away from seesaw
 	fourbar1->moveTarget(0);//lower four bar
 	backclamppneum->turnOff(); //let go of alliance goal
 	//move forwards and turn 180
-	distanceMove(8, -0.6); //go forward to lose the goal
-	pidTurn(323_deg, {0.010, 0.000008, 0}); //turn back towards the goal
+	distanceMove(8, -0.4); //go forward to lose the goal
+	curr = imu.get_heading();
+	pidTurn((curr+170)*1_deg, {0.008, 0.000008, 0}); //turn back towards the goal
 	distanceMove(13, -0.4);	//move forwards and clamp on goal
-	fourbarpneum->turnOff();
+	fourbarpneum->turnOn();
 	pros::delay(100);
 	//raise four bar
 	fourbar1->moveTarget(2100);
 	//turn back towards seesaw
-	pidTurn(143_deg, {0.009, 0.000008, 0});
+	pidTurn(155_deg, {0.009, 0.000008, 0});
 	//forward to seesaw
-	distanceMove(21, -0.6);
+	distanceMove(40, -0.6);
 	//drop goal
-	fourbarpneum->turnOn();
+	fourbarpneum->turnOff();
 	pros::delay(200);
 }
 
@@ -1087,30 +1189,39 @@ void rightMiddle() {
 
 void left() {
 	setEffectorPositions();
-  	effectors.runOne(GOAL_LIFT, 1); //lower goal lift
-	fourbar1->moveTarget(500);
-	fourbar2->moveTarget(500);
-  	pros::delay(2000);
-  	speedMove(750, 0.5); // move forwards and get goal
-	effectors.runOne(GOAL_LIFT, 0); // raise goal lift
-	pros::delay(500);
-	speedMove(500, -0.5); // forwards
-	intake->run(true, false, -175);  //run intake to deposit rings
-	OdomState goal = drive->getState();
-  	goal.theta = 90_deg;
-	dragTurn(130, -1, 0);// turn towards central mogo
-
-   	pros::delay(500);
-   	fourbar1->moveTarget(0);
-  	fourbar2->moveTarget(0);
-   	distanceMove(61, -1);  //move towards
-
-   	fourbarpneum->turnOn();
-	pros::delay(300);
-   	distanceMove(46, 1);  //move towards
-	//   intake->run(true, false, 0);  //stop intake
+  	printf("done\n");
+	distanceMove(43, -1);	//move towards side neutral at full speed
+	fourbarpneum->turnOn(); //clamp it
+	pros::delay(200);
+	printf("Finished\n");
+	distanceMove(10, 1); //move back
+	distanceMove(7, 0.6);
 
 }
+
+void middle() {
+	setEffectorPositions();
+	printf("done\n");
+	distanceMove(50, -1);	//move towards side neutral at full speed
+	fourbarpneum->turnOn(); //clamp it
+	pros::delay(100);
+	printf("Finished\n");
+	distanceMove(10, 1); //move back
+	distanceMove(14, 0.6);
+}
+
+void leftmiddle() {
+	setEffectorPositions();
+	intake->run(true, false, -180);
+	printf("done\n");
+	distanceMove(69, -0.7);	//move towards side neutral at full speed
+	fourbarpneum->turnOn(); //clamp it
+	pros::delay(100);
+	printf("Finished\n");
+	distanceMove(10, 1); //move back
+	distanceMove(20, 0.6);
+}
+
 
 
 void esbensOdom() {
@@ -1152,101 +1263,20 @@ void esbensOdom() {
 
 }
 
+
+
+
+
 void autonomous() {
 
 	//okapi::Controller controller (okapi::ControllerId::master);
 	drive->setMode(okapi::AbstractMotor::brakeMode::hold);
-	thenewnewskills();
-	// right();
+	//left();
+	//right();
+	//middle();
+	leftmiddle();
 	//leftfast();
 	//drive->setMode(okapi::AbstractMotor::brakeMode::coast);
-}
-
-void driverMovementTrack() {
-	//initialize variables and set effector positions
-	setEffectorPositions();
-	int parking = 0;
-	double forward;
-	double turn;
-	double strafe;
-	int i = 0;
-	bool fourbarpneumstate = true;
-	bool backclampstate = false;
-	ADIEncoder righttrack = ADIEncoder('A', 'B', false);		//encoders because i don't know how to get values
-	ADIEncoder lefttrack = ADIEncoder('C', 'D', true);
-	righttrack.reset();
-	lefttrack.reset();
-	okapi::Motor fourbar(FOUR_BAR_FIRST);
-
-  	double max = 1;
-  	drive->setMode(okapi::AbstractMotor::brakeMode::hold);
-	fourbarpneum->turnOn();
-	backclamppneum->turnOff();
-	while(true) {
-		//toggle between coast and hold brake modes
-		//get controller and drive chassis base
-		// printf("%f %f\n", righttrack.get(), lefttrack.get());
-		// printf("%f %f %d\n", drive->getX(), drive->getY(), (int)drive->getHeading()%360);
-		//update all button values
-		buttons->handleButtons(controller);
-		int buttonCounts[9];
-		for(int i = 0; i < 9; i++) {
-			buttonCounts[i] = buttons->getCount(buttons->buttonList[i]);
-		}
-
-    	if(buttonCounts[7]%2) {
-      		max = 5.0/7;
-			drive->setMode(okapi::AbstractMotor::brakeMode::hold);
-    	}
-    	else {
-      		max = 1;
-			drive->setMode(okapi::AbstractMotor::brakeMode::coast);
-    	}
-
-    	forward = controller.getAnalog(okapi::ControllerAnalog::leftY);
-		turn = controller.getAnalog(okapi::ControllerAnalog::rightX);
-    	if(forward>=0) {
-		    drive->runTankArcade(std::max(forward*-(6.0/7), max*-1), turn*-0.6);
-    	}
-    	else {
-        	drive->runTankArcade(std::min(forward*-(6.0/7), max), turn*-0.6);
-    	}
-
-		// effectors.step(buttonCounts, speeds); //handle two bar
-
-		//intake->run(false, buttons->getPressed(okapi::ControllerDigital::right), 150); //handle intake
-		//runs the intake backwards
-		if (buttonCounts[8]%2 == 1) {
-			intake->handle(buttonCounts[8], -180);
-		}
-		else {
-			intake->handle(buttonCounts[3], 180); //handle intake (toggle)
-		}
-
-		//handle four bar
-		fourbar1->run(buttons->getPressed(okapi::ControllerDigital::R1), buttons->getPressed(okapi::ControllerDigital::R2), 175);
-		//fourbar2->run(buttons->getPressed(okapi::ControllerDigital::R1), buttons->getPressed(okapi::ControllerDigital::R2), 175);
-
-		//handle clamp
-		fourbarpneum->handle(buttonCounts[5]);
-		backclamppneum->handle(buttonCounts[0]);
-		// parking = buttonCounts[7] % 2;
-		// if (parking == 1) {
-		// 	drive->setMode(okapi::AbstractMotor::brakeMode::hold);
-		// } else {
-		// 	drive->setMode(okapi::AbstractMotor::brakeMode::coast);
-		// }
-		//printf("%d\n", parking);
-
-		if (buttonCounts[1]%2) {
-			printf("Heading: %f    Distance from last point: %f inches     Four Bar position: %f\n\n", imu.get_heading(), ((righttrack.get() + lefttrack.get())/2 * 2.81665 * PI / 360), fourbar.getEncoder());
-			righttrack.reset();
-			lefttrack.reset();
-		}
-
-		pros::delay(60);
-		pros::lcd::clear_line(2);
-	}
 }
 
 //experimental pure pursuit handler
