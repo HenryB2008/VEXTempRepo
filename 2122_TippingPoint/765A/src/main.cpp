@@ -591,10 +591,10 @@ void opcontrol() {
 
 		//intake->run(false, buttons->getPressed(okapi::ControllerDigital::right), 150); //handle intake
 		if (buttonCounts[8]%2 == 1) {
-			intake->handle(buttonCounts[8], -180);
+			intake->handle(buttonCounts[8], -200);
 		}
 		else {
-			intake->handle(buttonCounts[3], 180); //handle intake (toggle)
+			intake->handle(buttonCounts[3], 200); //handle intake (toggle)
 		}
 
 		//handle four bar
@@ -675,8 +675,8 @@ void thenewnewskills() {
 	fourbarpneum->turnOn(); //clamp
 	pros::delay(100);
 	fourbar1->moveTarget(2400);
-	pidTurn(328_deg, {0.020, 0.000009, 0}); //turn to seesaw
-	distanceMove(41, -0.3); //move to seesaw
+	pidTurn(331_deg, {0.020, 0.000009, 0}); //turn to seesaw
+	distanceMove(51, -0.3); //move to seesaw
 	// distancePID(-27, {0.01, 0.0000008, 0});
 	pros::delay(300);
 	fourbar1->moveTarget(1900);
@@ -701,9 +701,9 @@ void thenewnewskills() {
 	//raise four bar
 	fourbar1->moveTarget(2100);
 	//turn back towards seesaw
-	pidTurn(351_deg, {0.006, 0.000008, 0});
+	pidTurn(345_deg, {0.006, 0.000008, 0});
 	//forward to seesaw
-	distanceMove(29, -0.6);
+	distanceMove(30, -0.6);
 	//drop goal
 	fourbar1->moveTarget(1900);
 	pros::delay(700);
@@ -719,7 +719,7 @@ void thenewnewskills() {
 	drive->runTankArcade(0.4, 0); //run into wall
 	pros::delay(3500);
 	drive->runTankArcade(0, 0);
-	distanceMove(5, -0.5);
+	distanceMove(1, -0.5);
 	pidTurn(318_deg, {0.011, 0.000008, 0}); //turn towards goal under seesaw
 	distanceMove(31, -0.4); //forwards to that goal
 	fourbarpneum->turnOn(); //clamp
@@ -746,12 +746,12 @@ void thenewnewskills() {
 	distanceMove(50, -0.6); //beeline to tall
 	fourbarpneum->turnOff(); // drop tall
 	pros::delay(500);
-	distanceMove(6, 0.6);
+	distanceMove(9, 0.6);
 
 	//side alliance with back clamp
 	pidTurn(89_deg, {0.006, 0.000008, 0}); //turn towards side alliance
 	drive->runTankArcade(0.5, 0);
-	pros::delay(1400);
+	pros::delay(1700);
 	backclamppneum->turnOn();
 	drive->runTankArcade(0, 0);
 	distanceMove(15, -0.5);
@@ -791,6 +791,7 @@ void thenewnewskills() {
 	distanceMove(40, -0.6);
 	//drop goal
 	fourbarpneum->turnOff();
+	distanceMove(15, 0.6);
 	pros::delay(200);
 }
 
@@ -1194,8 +1195,8 @@ void left() {
 	pros::delay(200);
 	printf("Finished\n");
 	distanceMove(10, 1); //move back
+	pidTurn(20_deg, {0.02, 0.000008, 0});
 	distanceMove(7, 0.6);
-
 }
 
 void middle() {
@@ -1207,6 +1208,19 @@ void middle() {
 	printf("Finished\n");
 	distanceMove(10, 1); //move back
 	distanceMove(14, 0.6);
+}
+
+void rightthenmiddle() {
+	setEffectorPositions();
+	printf("done\n");
+	distanceMove(39, -1);	//move towards side neutral at full speed
+	fourbarpneum->turnOn(); //clamp it
+	pros::delay(100);
+	printf("Finished\n");
+	distanceMove(10, 1); //move back
+	pidTurn(270_deg, {0.01, 0.000008, 0});
+	fourbarpneum->turnOff();
+
 }
 
 void leftmiddle() {
@@ -1270,10 +1284,10 @@ void autonomous() {
 
 	//okapi::Controller controller (okapi::ControllerId::master);
 	drive->setMode(okapi::AbstractMotor::brakeMode::hold);
-	//left();
+	left();
 	//right();
 	//middle();
-	leftmiddle();
+	//left();
 	//leftfast();
 	//drive->setMode(okapi::AbstractMotor::brakeMode::coast);
 }
