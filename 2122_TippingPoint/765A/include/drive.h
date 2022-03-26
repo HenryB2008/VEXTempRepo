@@ -1,8 +1,7 @@
 #ifndef _DRIVE_
 #define _DRIVE_
 
-#define WHEELDIM 4_in
-#define WHEELTRACK 10_in
+
 
 #include "main.h"
 #include "ports.h"
@@ -25,6 +24,7 @@ public:
   void runTank(double left, double right);
   void reverseOrientation(int ori);
   void setMode(okapi::AbstractMotor::brakeMode brakeMode);
+  void runTankRPM(double left, double right);
   // double getEncoder();
 };
 

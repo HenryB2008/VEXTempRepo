@@ -93,6 +93,8 @@ void Drive::setMode(okapi::AbstractMotor::brakeMode brakeMode) {
   chassis->getModel()->setBrakeMode(brakeMode);
 }
 
-// double Drive::getEncoder() {
-//   return enc.get();
-// }
+void Drive::runTankRPM(double left, double right) {
+  chassis->getModel()->left(left);
+  chassis->getModel()->right(right);
+}
+

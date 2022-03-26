@@ -1276,37 +1276,22 @@ void esbensOdom() {
 
 }
 
-
-
-
-
-void autonomous() {
-
-	//okapi::Controller controller (okapi::ControllerId::master);
-	drive->setMode(okapi::AbstractMotor::brakeMode::hold);
-	left();
-	//right();
-	//middle();
-	//left();
-	//leftfast();
-	//drive->setMode(okapi::AbstractMotor::brakeMode::coast);
-}
-
 //experimental pure pursuit handler
+
 void PurePursuitHandler() {
-	/*
-	std::vector<point> points;
-	points.push_back({0, 0, 0, 0, 0});
-	points.push_back({0, 24, 0, 0, 0});
-	points.push_back({-15, 40, 0, 0, 0});
-	PurePursuitPathGen path = PurePursuitPathGen(3, 0.25, 0.75,0.001, points,10.0, 10.0, 2);
+
+	std::vector<std::pair<double, double>> points;
+	points.push_back({0, 0});
+	points.push_back({0, 12});
+	points.push_back({-30, 40});
+	PurePursuitPathGen path = PurePursuitPathGen(3, 0.25, 0.75,0.001, points,60.0, 10.0, 2);
 	path.interpolate();
-  path.smooth();
-  path.calc_distances();
+  	path.smooth();
+  	path.calc_distances();
 	path.calc_curvature();
 	path.calc_velocities();
 	path.print_path();
-	PurePursuitFollower follow = PurePursuitFollower(8);
+	PurePursuitFollower follow = PurePursuitFollower(20);
 	follow.read(path);
 	std::array<double, 4> vels = {0, 0, 0, 0};
 	double x, y, theta;
@@ -1316,11 +1301,28 @@ void PurePursuitHandler() {
 		y = drive->getY();
 		vels = follow.follow(y, x, theta);
 		printf("POS: %f %f %f\n", y, x, theta);
-		printf("%f %f %f %f\n", vels[0], vels[1], vels[2], vels[3]);
-		drive->runTankArcade(vels[0], vels[1]);
-		pros::delay(30);
+		printf("speeds: %f %f\n", vels[0], vels[1]);
+		drive->runTankRPM(-vels[0]/200, -vels[1]/200);
+		pros::delay(10);
 
-	} while(vels[0] != 0 && vels[1] != 0 &&vels[2] != 0 &&vels[3] != 0);
-	drive->runTank(0, 0);
-*/
+	} while(vels[0] != 0 || vels[1] != 0);
+	printf("DONE\n");
+	drive->runTankRPM(0, 0);
+
 }
+
+
+
+void autonomous() {
+
+	//okapi::Controller controller (okapi::ControllerId::master);
+	drive->setMode(okapi::AbstractMotor::brakeMode::hold);
+	PurePursuitHandler();
+	//drive->runTankRPM(0.4, 0.4);
+	//right();
+	//middle();
+	//left();
+	//leftfast();
+	//drive->setMode(okapi::AbstractMotor::brakeMode::coast);
+}
+
