@@ -94,6 +94,7 @@ void PurePursuitFollower::calc_lookahead(double x, double y) {
 void PurePursuitFollower::calc_curvature_at_point(double x, double y, double theta) {
 	double xtemp;
 	double a, b, c;
+	theta = theta*(PI/180);
 	a = -tan((theta));
 	b = 1;
 	c = (tan((theta)) * x) - y;

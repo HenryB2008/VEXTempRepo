@@ -1284,7 +1284,7 @@ void PurePursuitHandler() {
 	points.push_back({0, 0});
 	points.push_back({0, 12});
 	points.push_back({-30, 40});
-	PurePursuitPathGen path = PurePursuitPathGen(3, 0.25, 0.75,0.001, points,60.0, 10.0, 2);
+	PurePursuitPathGen path = PurePursuitPathGen(3, 0.25, 0.75,0.001, points,20.0, 10.0, 2);
 	path.interpolate();
   	path.smooth();
   	path.calc_distances();
