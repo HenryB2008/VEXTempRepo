@@ -1,21 +1,18 @@
 #ifndef _PATH_GEN_
 #define _PATH_GEN_
 
-#include "PurePursuitPathGen.h"
-
-
 #include <vector>
 #include <string>
 #include <fstream>
 #include <iostream>
 
 struct point {
-        double x, y, curve, vel, distance;
+    double x, y, curve, vel, distance;
 };
 
 //experimental path generation class
 class PurePursuitPathGen {
-    public:
+public:
 
 
     std::vector<point> initial_points;
@@ -32,8 +29,9 @@ class PurePursuitPathGen {
     void write_to_file();
     void calc_velocities();
     std::vector<point> get_points();
-    PurePursuitPathGen(double spacing, double a, double b, double tolerance, std::vector<point> points, double max_vel, double max_accel, int k);
+    PurePursuitPathGen(double spacing, double a, double b, double tolerance, std::vector<std::pair<double, double>> points, double max_vel, double max_accel, int k);
 
 };
+
 
 #endif

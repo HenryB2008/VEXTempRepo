@@ -1,5 +1,6 @@
 #include "../include/PurePursuitFollower.h"
 #include "PurePursuitPathGen.h"
+#include "ports.h"
 
 #include <vector>
 #include <string>
@@ -93,6 +94,7 @@ void PurePursuitFollower::calc_lookahead(double x, double y) {
 void PurePursuitFollower::calc_curvature_at_point(double x, double y, double theta) {
 	double xtemp;
 	double a, b, c;
+	theta = theta*(PI/180);
 	a = -tan((theta));
 	b = 1;
 	c = (tan((theta)) * x) - y;
@@ -123,6 +125,7 @@ std::array<double, 4> PurePursuitFollower::follow_sim(double x, double y, double
 }
 
 std::array<double, 4> PurePursuitFollower::follow(double x, double y, double theta) {
+	double left, right;
 	calc_closest_point(x, y);
 	calc_lookahead(x, y);
 	calc_curvature_at_point(x, y, theta);
@@ -138,14 +141,13 @@ std::array<double, 4> PurePursuitFollower::follow(double x, double y, double the
 	double vel, ang;
 	vel = (closest_point.vel);
 	vel = prev_vel+(std::clamp(vel-prev_vel, -(time*max_accel), (time*max_accel)));
-	printf("vel: %f curvature: %f\n", vel, curvature);
-	vel = vel/10;
-	ang = vel*curvature;
-	ang = ang/(10/(2*PI));
-	vels[0] = vel;
-	vels[1] = ang;
-	vels[2] = vel;
-	vels[3] = ang;
+	//printf("vel: %f curvature: %f\n", vel, curvature);
+	left = vel * (2 + (curvature*WHEELTRACK.convert(inch)))/2;
+	right = vel * (2 - (curvature*WHEELTRACK.convert(inch)))/2;
+	vels[0] = left * (5.0/7) * 60 * (1.0/(PI*WHEELDIM.convert(inch)));
+	vels[1] = right * (5.0/7) * 60 * (1.0/(PI*WHEELDIM.convert(inch)));
+	vels[2] = 0;
+	vels[3] = 0;
 	prev_time = timer.millis().convert(second);
 	prev_vel = vel;
 	return vels;

@@ -24,6 +24,9 @@
 #define ODOMWHEELDIM 2.81665_in
 #define ODOMBACKDISTANCE 6.5_in
 
+//wheel track for pure pursuit
+#define WHEELDIM 4_in
+#define WHEELTRACK 13.125_in
 
 //These are lift macros for the index of the lift. Do not touch
 #define GOAL_LIFT 0
@@ -38,6 +41,5 @@
 #define FRONT_PNEUM 'G'
 #define BACK_PNEUM 'F'
 
-#define TRACK 6.875
 
 #endif
