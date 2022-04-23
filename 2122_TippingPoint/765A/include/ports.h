@@ -4,11 +4,11 @@
 
 //motor ports
 #define TOP_RIGHT_MOTOR -1
-#define RIGHT_MIDDLE_MOTOR 8
+#define RIGHT_MIDDLE_MOTOR 6
 #define BOTTOM_RIGHT_MOTOR -9
 #define TOP_LEFT_MOTOR -5
 #define LEFT_MIDDLE_MOTOR 2
-#define BOTTOM_LEFT_MOTOR -6
+#define BOTTOM_LEFT_MOTOR -8
 
 
 //tracking wheel ports
