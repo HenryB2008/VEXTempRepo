@@ -593,6 +593,14 @@ void opcontrol() {
 		// effectors.step(buttonCounts, speeds); //handle two bar
 
 		//intake->run(false, buttons->getPressed(okapi::ControllerDigital::right), 150); //handle intake
+		int intakestate = buttonCounts[3]%3;
+		if (intakestate == 0) {
+			intake->run(false, false, 0);
+		} else if (intakestate == 1) {
+			intake->run(true, false, 175);
+		} else {
+			intake->run(false, true, 200);
+		}
 			intake->handleBothDirections(buttonCounts[8]%2, buttonCounts[3]%2, 200, -175);
 
 		//handle four bar
