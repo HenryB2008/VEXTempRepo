@@ -3,18 +3,19 @@
 
 
 //motor ports
-#define BOTTOM_RIGHT_MOTOR -11
-#define LEFT_MIDDLE_MOTOR 9
-#define BOTTOM_LEFT_MOTOR -6
-#define TOP_RIGHT_MOTOR -5
-#define RIGHT_MIDDLE_MOTOR 12
-#define TOP_LEFT_MOTOR -14
+#define TOP_RIGHT_MOTOR -1
+#define RIGHT_MIDDLE_MOTOR 6
+#define BOTTOM_RIGHT_MOTOR -9
+#define TOP_LEFT_MOTOR -5
+#define LEFT_MIDDLE_MOTOR 2
+#define BOTTOM_LEFT_MOTOR -8
+
 
 //tracking wheel ports
-#define LEFT_TRACKING_WHEEL_TOP 'C'
-#define LEFT_TRACKING_WHEEL_BOTTOM 'D'
-#define RIGHT_TRACKING_WHEEL_TOP 'B'
-#define RIGHT_TRACKING_WHEEL_BOTTOM 'A'
+#define LEFT_TRACKING_WHEEL_TOP 'A'
+#define LEFT_TRACKING_WHEEL_BOTTOM 'B'
+#define RIGHT_TRACKING_WHEEL_TOP 'C'
+#define RIGHT_TRACKING_WHEEL_BOTTOM 'D'
 #define BACK_TRACKING_WHEEL_TOP 'E'
 #define BACK_TRACKING_WHEEL_BOTTOM 'F'
 
@@ -34,12 +35,13 @@
 #define SPIKE 2
 #define INTAKE 3
 
-#define INTAKE_PORT 15
-#define FOUR_BAR_FIRST 8
+#define INTAKE_PORT 20
+#define FOUR_BAR_FIRST 19
 #define IMUPORT 16
 
-#define FRONT_PNEUM 'G'
-#define BACK_PNEUM 'F'
+#define FRONT_PNEUM 'H'
+#define BACK_CLAMP 'G'
+#define BACK_TILT 'F'
 
 
 #endif

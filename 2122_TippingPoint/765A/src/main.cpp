@@ -5,14 +5,15 @@
 //subsystem objects
 Drive *drive = new Drive();
 Pneumatics *fourbarpneum = new Pneumatics(FRONT_PNEUM);
-Pneumatics *backclamppneum = new Pneumatics(BACK_PNEUM);
+Pneumatics *backclamppneum = new Pneumatics(BACK_CLAMP);
+Pneumatics *backclamptilt = new Pneumatics(BACK_TILT);
 Effectors effectors;
 Intake *intake = new Intake(INTAKE_PORT);
 Intake *fourbar1 = new Intake(FOUR_BAR_FIRST);
 Intake *fourbar2 = new Intake(FOUR_BAR_FIRST);
 Button *buttons = new Button();
 pros::Imu imu(IMUPORT);
-pros::ADIDigitalIn but('H');
+//pros::ADIDigitalIn but('H');
 okapi::Controller controller (okapi::ControllerId::master);
 
 double speeds[3] = {150, 150, 150};
@@ -405,9 +406,9 @@ void testBalancing() {
 
 void moveUntilButton(double speed) {
 	drive->runTankArcade(speed, 0);
-	while(!but.get_value()) {
-		pros::delay(10);
-	}
+	// while(!but.get_value()) {
+	// 	pros::delay(10);
+	// }
 	drive->runTankArcade(0, 0);
 }
 /**
@@ -566,8 +567,8 @@ void opcontrol() {
 		printf("%f %f %d\n", drive->getX(), drive->getY(), (int)drive->getHeading()%360);
 		//update all button values
 		buttons->handleButtons(controller);
-		int buttonCounts[9];
-		for(int i = 0; i < 9; i++) {
+		int buttonCounts[10];
+		for(int i = 0; i < 10; i++) {
 			buttonCounts[i] = buttons->getCount(buttons->buttonList[i]);
 		}
 
@@ -591,19 +592,20 @@ void opcontrol() {
 
 		//intake->run(false, buttons->getPressed(okapi::ControllerDigital::right), 150); //handle intake
 		if (buttonCounts[8]%2 == 1) {
-			intake->handle(buttonCounts[8], -200);
+			intake->handle(buttonCounts[8], 175);
 		}
 		else {
-			intake->handle(buttonCounts[3], 200); //handle intake (toggle)
+			intake->handle(buttonCounts[3], -200); //handle intake (toggle)
 		}
 
 		//handle four bar
-		fourbar1->run(buttons->getPressed(okapi::ControllerDigital::R1), buttons->getPressed(okapi::ControllerDigital::R2), 175);
+		fourbar1->run(buttons->getPressed(okapi::ControllerDigital::R1), buttons->getPressed(okapi::ControllerDigital::R2), 200);
 		//fourbar2->run(buttons->getPressed(okapi::ControllerDigital::R1), buttons->getPressed(okapi::ControllerDigital::R2), 175);
 
 		//handle clamp
 		fourbarpneum->handle(buttonCounts[5]);
 		backclamppneum->handle(buttonCounts[0]);
+		backclamptilt->handle(buttonCounts[9]);
 		parking = buttonCounts[7] % 2;
 		if (parking == 1) {
 			drive->setMode(okapi::AbstractMotor::brakeMode::hold);
