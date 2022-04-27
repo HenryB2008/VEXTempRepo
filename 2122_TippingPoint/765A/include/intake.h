@@ -11,7 +11,8 @@ private:
   bool dir;
   bool moving;
   std::vector<int> encPositions;
-  int prevCount = 0;
+  double prevForward = 0;
+  double prevBack = 0;
   int upper;
   int lower;
   bool limits = false;
@@ -25,6 +26,7 @@ public:
   void step();
   void setLimits(int upper, int lower);
   void handle(int count, double speed);
+  void handleBothDirections(double forward, double back, double speed1, double speed2);
 };
 
 

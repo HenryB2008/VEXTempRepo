@@ -23,12 +23,12 @@ Drive::Drive() {
 
 //returns X of odometry
 double Drive::getX() {
-  return chassis->getState().x.convert(inch);
+  return chassis->getState().y.convert(inch);
 }
 
 //returns Y of odometry
 double Drive::getY() {
-  return chassis->getState().y.convert(inch);
+  return chassis->getState().x.convert(inch);
 }
 
 //returns odometry heading

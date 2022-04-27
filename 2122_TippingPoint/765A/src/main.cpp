@@ -312,10 +312,11 @@ void distancePID(double distance, PIDConst gains) {
 		QLength ydiff = temp.y-initial.y;
 		printf("Odom: %f %f %f\n", temp.x.convert(inch), temp.y.convert(inch), temp.theta.convert(degree));
 		error = okapi::sqrt((xdiff*xdiff) + (ydiff*ydiff)).convert(inch);
-		speed = limiter(prevSpeed, obj.step(distance>0 ? distance-error: distance+error), 0.11);
+		speed = limiter(prevSpeed, obj.step(distance>0 ? distance-error: distance+error), 1.0);
 		prevSpeed = speed;
 		drive->runTankArcade(speed, 0);
-		pros::delay(30);
+		printf("Error: %f", error);
+		pros::delay(10);
 	} while(error<abs(distance));
 	drive->runTankArcade(0, 0);
 }
@@ -564,12 +565,13 @@ void opcontrol() {
 		//toggle between coast and hold brake modes
 		//get controller and drive chassis base
 	//	printf("%f %f\n", righttrack.get(), lefttrack.get());
-		printf("%f %f %d\n", drive->getX(), drive->getY(), (int)drive->getHeading()%360);
+	//	printf("%f %f %d\n", drive->getX(), drive->getY(), (int)drive->getHeading()%360);
 		//update all button values
 		buttons->handleButtons(controller);
 		int buttonCounts[10];
 		for(int i = 0; i < 10; i++) {
 			buttonCounts[i] = buttons->getCount(buttons->buttonList[i]);
+			printf("button 8: %d button 3: %d\n", buttonCounts[8]%2, buttonCounts[3]%2);
 		}
 
     if(buttonCounts[7]%2) {
@@ -591,12 +593,7 @@ void opcontrol() {
 		// effectors.step(buttonCounts, speeds); //handle two bar
 
 		//intake->run(false, buttons->getPressed(okapi::ControllerDigital::right), 150); //handle intake
-		if (buttonCounts[8]%2 == 1) {
-			intake->handle(buttonCounts[8], 175);
-		}
-		else {
-			intake->handle(buttonCounts[3], -200); //handle intake (toggle)
-		}
+			intake->handleBothDirections(buttonCounts[8]%2, buttonCounts[3]%2, 200, -175);
 
 		//handle four bar
 		fourbar1->run(buttons->getPressed(okapi::ControllerDigital::R1), buttons->getPressed(okapi::ControllerDigital::R2), 200);
@@ -618,19 +615,40 @@ void opcontrol() {
 	}
 }
 
+void goalRush(double distance, PIDConst gains, double clamp) {
+	OdomState initial = drive->getState();
+	double error = 0;
+	double speed = 0;
+	double prevSpeed = 0;
+	PID obj = PID(gains);
+	do {
+		OdomState temp = drive->getState();
+		QLength xdiff = temp.x-initial.x;
+		QLength ydiff = temp.y-initial.y;
+		//printf("Odom: %f %f %f\n", temp.x.convert(inch), temp.y.convert(inch), temp.theta.convert(degree));
+		error = okapi::sqrt((xdiff*xdiff) + (ydiff*ydiff)).convert(inch);
+		speed = limiter(prevSpeed, obj.step(distance>0 ? distance-error: distance+error), 1.0);
+		prevSpeed = speed;
+		drive->runTankArcade(speed, 0);
+		//printf("Error: %f", error);
+		if(error>clamp) {
+			fourbarpneum->turnOn();
+		}
+		pros::delay(10);
+	} while(error<abs(distance));
+	drive->runTankArcade(0, 0);
+}
+
 void right() {
   setEffectorPositions();
 	printf("done\n");
-	distanceMove(39, -1);	//move towards side neutral at full speed
-	fourbarpneum->turnOn(); //clamp it
-	pros::delay(100);
+	goalRush(-60, {0.048, 0.000015, 0}, 58.5);
 	printf("Finished\n");
-	distanceMove(10, 1); //move back
-	distanceMove(4, 0.6);
+	distancePID(30, {0.07, 0.00001, 0}); //move back
 
 
-	pidTurn(270_deg, {0.01, 0.000008, 0});  //make the turn
-
+	pidTurn(270_deg, {0.02, 0.00001, 0});  //make the turn
+	fourbarpneum->turnOff(); //clamp it
 	drive->runTankArcade(0.5, 0); //move towards alliance goal
 	pros::delay(1400);
 	backclamppneum->turnOn();
@@ -1319,9 +1337,9 @@ void autonomous() {
 
 	//okapi::Controller controller (okapi::ControllerId::master);
 	drive->setMode(okapi::AbstractMotor::brakeMode::hold);
-	PurePursuitHandler();
+	//PurePursuitHandler();
 	//drive->runTankRPM(0.4, 0.4);
-	//right();
+	right();
 	//middle();
 	//left();
 	//leftfast();

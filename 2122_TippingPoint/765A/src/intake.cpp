@@ -17,7 +17,7 @@ void Intake::moveTarget(double enc) {
 }
 
 
-//set limits of four bar 
+//set limits of four bar
 void Intake::setLimits(int upper, int lower) {
   this->upper = upper;
   this->lower = lower;
@@ -42,14 +42,32 @@ void Intake::run(bool left, bool right, double speed) {
 }
 
 void Intake::handle(int count, double speed) {
-  if(count%2 == 1 && count!= prevCount) {
+  if(count%2 == 1 ) {
     m.moveVelocity(-speed);
   }
-  if(count%2 == 0 && count!= prevCount) {
+  if(count%2 == 0 ) {
     m.moveVelocity(0);
   }
 }
 
+void Intake::handleBothDirections(double forward, double back, double speed1, double speed2) {
+  if(forward != prevForward && forward == 1 ) {
+    m.moveVelocity(-speed1);
+
+  }
+  if(forward!= prevForward && forward == 0) {
+    m.moveVelocity(0);
+  }
+  if(back != prevBack && back == 1) {
+    m.moveVelocity(-speed2);
+  }
+  if(back!= prevBack && back == 0) {
+    m.moveVelocity(0);
+  }
+  prevForward = forward;
+  prevBack = back;
+}
+/*
 void Intake::stepAbsolute(int count, double speed) {
   printf("count: %d\n", count % encPositions.size());
   if(prevCount != count) {
@@ -58,5 +76,4 @@ void Intake::stepAbsolute(int count, double speed) {
   }
   prevCount = count;
 }
-
-
+*/
