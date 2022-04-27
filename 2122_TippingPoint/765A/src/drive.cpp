@@ -10,20 +10,8 @@ Drive::Drive() {
             .withDimensions(
               AbstractMotor::gearset::green,
 			        ChassisScales({WHEELDIM, WHEELTRACK}, imev5GreenTPR))
-            .withSensors(
-              ADIEncoder( // left encoder
-                  LEFT_TRACKING_WHEEL_TOP,
-                  LEFT_TRACKING_WHEEL_BOTTOM
-
-              ),
-              ADIEncoder( // right encoder
-                  RIGHT_TRACKING_WHEEL_TOP,
-                  RIGHT_TRACKING_WHEEL_BOTTOM,
-                  true
-              )
-          )
           .withOdometry(
-            ChassisScales({ODOMWHEELDIM, ODOMTRACK}, quadEncoderTPR)
+            ChassisScales({WHEELDIM*(5.0/7), WHEELTRACK}, quadEncoderTPR)
           )
 
         .buildOdometry();
@@ -97,4 +85,3 @@ void Drive::runTankRPM(double left, double right) {
   chassis->getModel()->left(left);
   chassis->getModel()->right(right);
 }
-

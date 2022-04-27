@@ -562,8 +562,8 @@ void opcontrol() {
 	while(true) {
 		//toggle between coast and hold brake modes
 		//get controller and drive chassis base
-		printf("%f %f\n", righttrack.get(), lefttrack.get());
-		// printf("%f %f %d\n", drive->getX(), drive->getY(), (int)drive->getHeading()%360);
+	//	printf("%f %f\n", righttrack.get(), lefttrack.get());
+		printf("%f %f %d\n", drive->getX(), drive->getY(), (int)drive->getHeading()%360);
 		//update all button values
 		buttons->handleButtons(controller);
 		int buttonCounts[9];
@@ -1325,4 +1325,3 @@ void autonomous() {
 	//leftfast();
 	//drive->setMode(okapi::AbstractMotor::brakeMode::coast);
 }
-

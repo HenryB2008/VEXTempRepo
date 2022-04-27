@@ -10,11 +10,11 @@ public:
   OdomState step();
 private:
   pros::IMU imu;
-  //ADIEncoder left, right, back;
+  ADIEncoder left, right, back;
   int prevleft, prevright, prevback;
   OdomState prevState;
 
-  
+
 
 };
 

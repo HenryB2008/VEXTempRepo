@@ -1,6 +1,7 @@
+/*
 #include "odometry.h"
 
-/*
+
 Odometry::Odometry(ADIEncoder left, ADIEncoder right, ADIEncoder back) {
   this->left = left;
   this->right = right;
@@ -15,7 +16,7 @@ OdomState Odometry::step() {
   int leftchange = left-prevLeft;
   int rightchange = right-prevRight;
   int backchange = back-prevBack;
-  
+
   double leftDistance = (leftchange / 360) * PI * ODOMWHEELDIM;
   double rightDistance = (rightchange / 360) * PI * ODOMWHEELDIM;
   double backDistance = (backchange / 360) * PI * ODOMWHEELDIM;
@@ -28,7 +29,7 @@ OdomState Odometry::step() {
 
   double anglediff = currHeading - prevHeading;
   prevHeading = currHeading;
-  
+
   double localXOffset;
   double localYOffset;
 
