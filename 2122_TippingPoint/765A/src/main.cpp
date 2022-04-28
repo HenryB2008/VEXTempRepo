@@ -601,7 +601,7 @@ void opcontrol() {
 		} else {
 			intake->run(false, true, 200);
 		}
-			intake->handleBothDirections(buttonCounts[8]%2, buttonCounts[3]%2, 200, -175);
+			// intake->handleBothDirections(buttonCounts[8]%2, buttonCounts[3]%2, 200, -175);
 
 		//handle four bar
 		fourbar1->run(buttons->getPressed(okapi::ControllerDigital::R1), buttons->getPressed(okapi::ControllerDigital::R2), 200);
