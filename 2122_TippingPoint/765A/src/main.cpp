@@ -597,7 +597,7 @@ void opcontrol() {
 		if (intakestate == 0) {
 			intake->run(false, false, 0);
 		} else if (intakestate == 1) {
-			intake->run(true, false, 175);
+			intake->run(true, false, 120);
 		} else {
 			intake->run(false, true, 200);
 		}
