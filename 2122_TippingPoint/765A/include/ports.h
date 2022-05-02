@@ -42,6 +42,7 @@
 #define FRONT_PNEUM 'H'
 #define BACK_CLAMP 'G'
 #define BACK_TILT 'F'
+#define GOAL_COVER 'B'
 
 
 #endif
