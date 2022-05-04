@@ -562,6 +562,10 @@ void opcontrol() {
 
   double max = 1;
   drive->setMode(okapi::AbstractMotor::brakeMode::hold);
+	int tiltstate = 0;
+	int clampstate = 0;
+	int prevTilterState = 0;
+	int prevBothState = 0;
 	while(true) {
 		//toggle between coast and hold brake modes
 		//get controller and drive chassis base
@@ -572,7 +576,6 @@ void opcontrol() {
 		int buttonCounts[10];
 		for(int i = 0; i < 10; i++) {
 			buttonCounts[i] = buttons->getCount(buttons->buttonList[i]);
-			printf("button 8: %d button 3: %d\n", buttonCounts[8]%2, buttonCounts[3]%2);
 		}
 
     if(buttonCounts[7]%2) {
@@ -598,7 +601,7 @@ void opcontrol() {
 		if (intakestate == 0) {
 			intake->run(false, false, 0);
 		} else if (intakestate == 1) {
-			intake->run(true, false, 120);
+			intake->run(true, false, 200);
 		} else {
 			intake->run(false, true, 200);
 		}
@@ -609,9 +612,29 @@ void opcontrol() {
 		//fourbar2->run(buttons->getPressed(okapi::ControllerDigital::R1), buttons->getPressed(okapi::ControllerDigital::R2), 175);
 
 		//handle clamp
-		fourbarpneum->handle(buttonCounts[5]);
-		backclamppneum->handle(buttonCounts[0]);
-		backclamptilt->handle(buttonCounts[9]);
+		fourbarpneum->handle(buttons->getCount(okapi::ControllerDigital::L2));
+		if(buttons->getCount(okapi::ControllerDigital::L1) % 2 != prevBothState) {
+			if(buttons->getCount(okapi::ControllerDigital::L1) % 2 ==1) {
+				backclamppneum->turnOn();
+				pros::delay(300);
+				backclamptilt->turnOn();
+			}
+			else {
+				backclamptilt->turnOff();
+				pros::delay(500);
+				backclamppneum->turnOff();
+			}
+			prevBothState =buttons->getCount(okapi::ControllerDigital::L1) % 2;
+		}
+		if(buttons->getCount(okapi::ControllerDigital::left) % 2 != prevTilterState) {
+			if(buttons->getCount(okapi::ControllerDigital::left) % 2 == 1)
+				backclamptilt->turnOff();
+			else
+				backclamptilt->turnOn();
+			prevTilterState = buttons->getCount(okapi::ControllerDigital::left) % 2;
+		}
+	//	backclamppneum->handle(buttons->getCount(okapi::ControllerDigital::L1));
+//		backclamptilt->handle(buttons->getCount(okapi::ControllerDigital::left));
 		parking = buttonCounts[7] % 2;
 		if (parking == 1) {
 			drive->setMode(okapi::AbstractMotor::brakeMode::hold);
@@ -650,20 +673,38 @@ void goalRush(double distance, PIDConst gains, double clamp) {
 
 void right() {
   setEffectorPositions();
+	//goalcover->turnOn();
 	printf("done\n");
-	goalRush(-60, {0.048, 0.000015, 0}, 58.5);
+	distanceMove(54, -1);
+	fourbarpneum->turnOn();
 	printf("Finished\n");
 	distancePID(30, {0.07, 0.00001, 0}); //move back
 
 
-	pidTurn(270_deg, {0.02, 0.00001, 0});  //make the turn
+	pidTurn(270_deg, {0.017, 0.00001, 0});  //make the turn
 	fourbarpneum->turnOff(); //clamp it
-	drive->runTankArcade(0.5, 0); //move towards alliance goal
-	pros::delay(1400);
-	backclamppneum->turnOn();
-	drive->runTankArcade(-0.5, 0);
+	pros::delay(500);
+	pidTurn(310_deg, {0.01, 0.000008, 0});
+	//drive->runTankArcade(0.5, 0); //move towards alliance goal
+	//pros::delay(1400);
+	distancePID(-56, {0.04, 0.00001, 0});
+	fourbarpneum->turnOn();
+	pros::delay(500);
+	distanceMove(40, 0.7);
+	fourbar1->moveTarget(500);
+	pros::delay(500);
+	pidTurn(350_deg, {0.014, 0.000016, 0});
+	distanceMove(16, 0.6);
+	fourbarpneum->turnOff();
+	pidTurn(270_deg, {0.01, 0.000008, 0});
 	pros::delay(1000);
+	drive->runTankArcade(0.4, 0);
+	pros::delay(3000);
 	drive->runTankArcade(0, 0);
+	backclamppneum->turnOn();
+	pros::delay(1000);
+	backclamptilt->turnOn();
+	pros::delay(500);
 	intake->run(true, false, -180);
 
 
