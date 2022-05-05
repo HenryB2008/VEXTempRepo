@@ -8,11 +8,14 @@ Pneumatics::Pneumatics(uint8_t port) : piston(port) {
 //handle function for buttons
 void Pneumatics::handle(int count) {
   if(count%2 == 0 && count!= prevCount) {
+    printf("TURNING ONNNNN\n");
     turnOn();
   }
   if(count%2 == 1 && count!= prevCount) {
+    printf("TURNING OFFFFF\n");
     turnOff();
   }
+  prevCount = count;
 }
 
 

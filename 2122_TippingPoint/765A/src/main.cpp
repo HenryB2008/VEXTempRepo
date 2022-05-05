@@ -45,20 +45,25 @@ void autonSelector() {
 	while(1) {
 		if(controller.getDigital(okapi::ControllerDigital::A)) {
 			route = 1;
+			printf("breaking with 1");
 			break;
 		}
 		if(controller.getDigital(okapi::ControllerDigital::B)) {
 			route = 2;
+			printf("breaking with 2");
 			break;
 		}
 		if(controller.getDigital(okapi::ControllerDigital::X)) {
 			route = 3;
+			printf("breaking with 3");
 			break;
 		}
 		if(controller.getDigital(okapi::ControllerDigital::Y)) {
 			route = 4;
+			printf("breaking with 4");
 			break;
 		}
+		printf("looping");
 		pros::delay(15);
 	}
 }
@@ -80,7 +85,7 @@ void initialize() {
 	pros::lcd::initialize();
 	pros::lcd::set_text(1, "Hello PROS User!");
 
-	//autonSelector();
+	autonSelector();
 
 	//calibrate imu
 	imu.reset();
@@ -573,8 +578,8 @@ void opcontrol() {
 	//	printf("%f %f %d\n", drive->getX(), drive->getY(), (int)drive->getHeading()%360);
 		//update all button values
 		buttons->handleButtons(controller);
-		int buttonCounts[10];
-		for(int i = 0; i < 10; i++) {
+		int buttonCounts[11];
+		for(int i = 0; i < 11; i++) {
 			buttonCounts[i] = buttons->getCount(buttons->buttonList[i]);
 		}
 
@@ -612,6 +617,8 @@ void opcontrol() {
 		//fourbar2->run(buttons->getPressed(okapi::ControllerDigital::R1), buttons->getPressed(okapi::ControllerDigital::R2), 175);
 
 		//handle clamp
+		printf("%d\n", buttons->getCount(okapi::ControllerDigital::Y));
+		goalcover->handle(buttons->getCount(okapi::ControllerDigital::Y));
 		fourbarpneum->handle(buttons->getCount(okapi::ControllerDigital::L2));
 		if(buttons->getCount(okapi::ControllerDigital::L1) % 2 != prevBothState) {
 			if(buttons->getCount(okapi::ControllerDigital::L1) % 2 ==1) {

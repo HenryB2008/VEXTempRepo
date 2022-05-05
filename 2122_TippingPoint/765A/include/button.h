@@ -15,9 +15,9 @@ private:
   std::unordered_map<okapi::ControllerDigital, But> buttons;
 public:
   Button();
-  okapi::ControllerDigital buttonList[10] = {okapi::ControllerDigital::L1,okapi::ControllerDigital::A, okapi::ControllerDigital::X, 
-    okapi::ControllerDigital::right, okapi::ControllerDigital::R1, okapi::ControllerDigital::L2, okapi::ControllerDigital::R2, 
-    okapi::ControllerDigital::B, okapi::ControllerDigital::left, okapi::ControllerDigital::up};
+  okapi::ControllerDigital buttonList[11] = {okapi::ControllerDigital::L1,okapi::ControllerDigital::A, okapi::ControllerDigital::X,
+    okapi::ControllerDigital::right, okapi::ControllerDigital::R1, okapi::ControllerDigital::L2, okapi::ControllerDigital::R2,
+    okapi::ControllerDigital::B, okapi::ControllerDigital::left, okapi::ControllerDigital::up, okapi::ControllerDigital::Y};
   void handleButtons(okapi::Controller controller);
   int getCount(okapi::ControllerDigital id);
   bool getPressed(okapi::ControllerDigital id);
