@@ -39,10 +39,10 @@
 #define FOUR_BAR_FIRST 19
 #define IMUPORT 16
 
-#define FRONT_PNEUM 'H'
+#define FRONT_PNEUM 'E'
 #define BACK_CLAMP 'G'
 #define BACK_TILT 'F'
-#define GOAL_COVER 'B'
+#define GOAL_COVER 'H'
 
 
 #endif

@@ -618,7 +618,7 @@ void opcontrol() {
 
 		//handle clamp
 		printf("%d\n", buttons->getCount(okapi::ControllerDigital::Y));
-		goalcover->handle(buttons->getCount(okapi::ControllerDigital::Y));
+		goalcover->handle(buttons->getCount(okapi::ControllerDigital::up));
 		fourbarpneum->handle(buttons->getCount(okapi::ControllerDigital::L2));
 		if(buttons->getCount(okapi::ControllerDigital::L1) % 2 != prevBothState) {
 			if(buttons->getCount(okapi::ControllerDigital::L1) % 2 ==1) {
