@@ -64,7 +64,7 @@ void autonSelector() {
 			break;
 		}
 		printf("looping");
-		pros::delay(15);
+		pros::delay(10);
 	}
 }
 
@@ -302,7 +302,7 @@ void distanceMove(double distance, double speed) {
 		//  error = ((drive->getEncoder() - start) / 360*(7.0/5)) * 4 * PI ;
 		error = okapi::sqrt((xdiff*xdiff) + (ydiff*ydiff)).convert(inch);
 		pros::delay(30);
-	} while(error<distance && pros::millis()-start<6000);
+	} while(error<distance && pros::millis()-start<13000);
 	drive->runTankArcade(0, 0);
 }
 
@@ -552,7 +552,7 @@ void competition_initialize() {}
 void opcontrol() {
 
 
-
+	backclamppneum->turnOn();
 	//initialize variables and set effector positions
 	setEffectorPositions();
 	int parking = 0;
@@ -624,10 +624,10 @@ void opcontrol() {
 			if(buttons->getCount(okapi::ControllerDigital::L1) % 2 ==1) {
 				backclamppneum->turnOn();
 				pros::delay(300);
-				backclamptilt->turnOn();
+				backclamptilt->turnOff();
 			}
 			else {
-				backclamptilt->turnOff();
+				backclamptilt->turnOn();
 				pros::delay(500);
 				backclamppneum->turnOff();
 			}
@@ -635,9 +635,9 @@ void opcontrol() {
 		}
 		if(buttons->getCount(okapi::ControllerDigital::left) % 2 != prevTilterState) {
 			if(buttons->getCount(okapi::ControllerDigital::left) % 2 == 1)
-				backclamptilt->turnOff();
-			else
 				backclamptilt->turnOn();
+			else
+				backclamptilt->turnOff();
 			prevTilterState = buttons->getCount(okapi::ControllerDigital::left) % 2;
 		}
 	//	backclamppneum->handle(buttons->getCount(okapi::ControllerDigital::L1));
@@ -658,18 +658,20 @@ void opcontrol() {
 
 void right() {
   setEffectorPositions();
+  fourbarpneum->turnOn();
+  backclamptilt->turnOn();
 	printf("done\n");
 	distanceMove(54, -1);
-	goalcover->turnOn(); 
-	fourbarpneum->turnOn();
+	goalcover->turnOn();
+	fourbarpneum->turnOff();
 	printf("Finished\n");
 	distancePID(46, {0.07, 0.00001, 0}); //move back
 	goalcover->turnOff();
 	fourbar1->moveTarget(500);
-	pidTurn(270_deg, {0.017, 0.00001, 0});  //make the turn
+	pidTurn(280_deg, {0.012, 0.00001, 0});  //make the turn
 	//fourbarpneum->turnOff(); //clamp it
-	
-	
+
+
 	pros::delay(500);
 	//drive->runTankArcade(0.5, 0); //move towards alliance goal
 	//pros::delay(1400);
@@ -678,7 +680,7 @@ void right() {
 	drive->runTankArcade(0, 0);
 	backclamppneum->turnOn();
 	pros::delay(1000);
-	backclamptilt->turnOn();
+	backclamptilt->turnOff();
 	pros::delay(500);
 	intake->run(true, false, 180);
 
@@ -1224,55 +1226,53 @@ void rightrings() {
 
 }
 
-void rightMiddle() {
-	distanceMove(53, -1);	//move towards side neutral at full speed
-	goalcover->turnOn(); 
-	fourbarpneum->turnOn(); //clamp it
-	pros::delay(300); //delay 300 ms
-	printf("Finished\n");
-	distanceMove(53, 1); //move back
-}
 
 void left() {
 	setEffectorPositions();
   	printf("done\n");
-	distanceMove(58, -1);	//move towards side neutral at full speed
-	goalcover->turnOn(); 
-	fourbarpneum->turnOn(); //clamp it
+	fourbarpneum->turnOn();
+	backclamptilt->turnOn();
+	distanceMove(56, -1);	//move towards side neutral at full speed
+	//goalcover->turnOn();
+	fourbarpneum->turnOff(); //clamp it
 	pros::delay(200);
 	printf("Finished\n");
 	distanceMove(45, 1); //move back
-	goalcover->turnOff();
+	//goalcover->turnOff();
 	fourbar1->moveTarget(500);
 	pros::delay(500);
 	drive->runTankArcade(0.4, 0);
 	pros::delay(3000);
 	drive->runTankArcade(0, 0);
-	distanceMove(2, -0.5);
+	distanceMove(1, -0.2);
 	pros::delay(1000);
-	pidTurn(270_deg, {0.02, 0.000008, 0});
+	pidTurn(285_deg, {0.02, 0.00001, 0});
 	distanceMove(18, 0.6);
 	backclamppneum->turnOn();
+	pros::delay(500);
+	backclamptilt->turnOff();
 	intake->run(true, false, 180);
 	pros::delay(2000);
-	distanceMove(10, -0.5);
+	distanceMove(15, -0.5);
 
 }
 
 void middle() {
 	setEffectorPositions();
 	printf("done\n");
-	distanceMove(60, -1);
-	goalcover->turnOn(); 
 	fourbarpneum->turnOn();
+	backclamptilt->turnOn();
+	distanceMove(60,-1);
+	goalcover->turnOn();
+	fourbarpneum->turnOff();
 	printf("Finished\n");
 	distancePID(52, {0.07, 0.00001, 0}); //move back
 	goalcover->turnOff();
 	fourbar1->moveTarget(500);
 	pidTurn(290_deg, {0.016, 0.000007, 0});  //make the turn
 	//fourbarpneum->turnOff(); //clamp it
-	
-	
+
+
 	pros::delay(500);
 	//drive->runTankArcade(0.5, 0); //move towards alliance goal
 	//pros::delay(1400);
@@ -1281,7 +1281,7 @@ void middle() {
 	drive->runTankArcade(0, 0);
 	backclamppneum->turnOn();
 	pros::delay(1000);
-	backclamptilt->turnOn();
+	backclamptilt->turnOff();
 	pros::delay(500);
 	intake->run(true, false, 180);
 }
