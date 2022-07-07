@@ -7,7 +7,7 @@ namespace Controller {
 
     // initialize the map of buttons
     std::unordered_map<okapi::ControllerDigital, ButtonData> map = {
-        { RESET_ODOM_BUTTON, { false, Drive::resetOdometry } }
+        { RESET_ODOM_BUTTON, { false, Odometry::resetOdometry } }
     };
 
     void step() {

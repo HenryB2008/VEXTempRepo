@@ -1,4 +1,5 @@
 #include "drive.h"
+#include "okapi/api/chassis/controller/chassisScales.hpp"
 
 namespace Drive {
     // We define the chassis and IMU only in the source file so that it is essentially "private"
@@ -13,7 +14,6 @@ namespace Drive {
         )
         .build();
 
-    auto imu = pros::Imu(IMU_PORT);
 
     void arcade(const double& forward, const double& yaw) {
         chassis->getModel()->arcade(forward, yaw);
@@ -21,23 +21,5 @@ namespace Drive {
 
     void setBrakeMode(const okapi::AbstractMotor::brakeMode& bm) {
         chassis->getModel()->setBrakeMode(bm);
-    }
-
-    void calibrateIMU() {
-        imu.reset();
-
-        // Loop until the IMU is done calibrating
-        while (imu.get_status() & pros::c::E_IMU_STATUS_CALIBRATING) {
-            pros::lcd::print(1, "IMU calibrating...");
-            pros::delay(10);
-        }
-    }
-
-    void resetOdometry() {
-        imu.set_heading(0);
-    }
-
-    void printPos() {
-        pros::lcd::print(1, "Heading: %f", imu.get_heading());
     }
 };

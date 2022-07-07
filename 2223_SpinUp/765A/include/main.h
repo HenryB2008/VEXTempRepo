@@ -15,6 +15,9 @@
 #ifndef _PROS_MAIN_H_
 #define _PROS_MAIN_H_
 
+// Global delay for the main loops of the bot
+#define DELAY 10
+
 /**
  * If defined, some commonly used enums will have preprocessor macros which give
  * a shorter, more convenient naming pattern. If this isn't desired, simply

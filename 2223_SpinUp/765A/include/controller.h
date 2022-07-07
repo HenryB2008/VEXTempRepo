@@ -2,7 +2,7 @@
 #define CONTROLLER_H
 
 #include "main.h"
-#include "drive.h"
+#include "odometry.h"
 
 #define FORWARD_CONTROL okapi::ControllerAnalog::leftY
 #define YAW_CONTROL okapi::ControllerAnalog::rightX

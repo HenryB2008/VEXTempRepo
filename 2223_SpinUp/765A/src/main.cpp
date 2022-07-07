@@ -1,6 +1,7 @@
 #include "main.h"
 #include "drive.h"
 #include "controller.h"
+#include "odometry.h"
 
 /**
  * Runs initialization code. This occurs as soon as the program is started.
@@ -12,7 +13,8 @@ void initialize() {
 	pros::lcd::initialize();
 
 	Drive::setBrakeMode(okapi::AbstractMotor::brakeMode::coast);
-	Drive::calibrateIMU();
+
+	Odometry::init({ 0_in, 0_in, 0_deg });
 }
 
 /**
@@ -65,8 +67,8 @@ void opcontrol() {
 		
 		Drive::arcade(Controller::getForward(), Controller::getYaw());
 
-		Drive::printPos();
+		Odometry::printPos();
 
-		pros::delay(10);
+		pros::delay(DELAY);
 	}
 }
