@@ -1,7 +1,11 @@
 #include "main.h"
 #include "drive.h"
 #include "controller.h"
+#include "flywheel.h"
 #include "odometry.h"
+#include "ports.h"
+
+Flywheel fly = Flywheel(FLYWHEEL_1, FLYWHEEL_2, FLYWHEEL_3);
 
 /**
  * Runs initialization code. This occurs as soon as the program is started.
@@ -61,13 +65,15 @@ void autonomous() {}
  * operator control task will be stopped. Re-enabling the robot will restart the
  * task, not resume it from where it left off.
  */
-void opcontrol() {
+void opcontrol() {	
 	while (true) {
-		Controller::step();
+		//Controller::step();
 		
-		Drive::arcade(Controller::getForward(), Controller::getYaw());
+		//Drive::arcade(Controller::getForward(), Controller::getYaw());
 
 		Odometry::printPos();
+
+		fly.runVoltage(Controller::getForward() * 12000);
 
 		pros::delay(DELAY);
 	}
