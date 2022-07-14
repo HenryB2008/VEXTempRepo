@@ -4,11 +4,11 @@
 #include "okapi/api/units/QAngle.hpp"
 #include "ports.h"
 
-#define RIGHT_TRACKING_WHEEL_DIM 2.5_in
-#define MID_TRACKING_WHEEL_DIM 2.5_in
+#define RIGHT_TRACKING_WHEEL_DIM 2.79491607_in
+#define MID_TRACKING_WHEEL_DIM 2.75847284_in
 
-#define RIGHT_TRACKING_WHEEL_TRACK -5.583333_in
-#define MID_TRACKING_WHEEL_TRACK 4.263888_in
+#define RIGHT_TRACKING_WHEEL_TRACK 2.25_in
+#define MID_TRACKING_WHEEL_TRACK 2.1_in
 
 namespace Odometry {
     okapi::OdomState curPos;
@@ -34,18 +34,18 @@ namespace Odometry {
 
         encs.take();
         double right_tick = (rightEnc.get());
-        // double mid_tick   = (midEnc.get());
+        double mid_tick   = (midEnc.get());
         encs.give();
 
         // Movements in inches
 
         okapi::QLength delta_right = (right_tick - rightEncVal) / 360 * M_PI * RIGHT_TRACKING_WHEEL_DIM;
-        // okapi::QLength delta_mid   = (mid_tick - midEncVal)     / 720 * M_PI * MID_TRACKING_WHEEL_DIM;
+        okapi::QLength delta_mid   = (mid_tick - midEncVal)     / 720 * M_PI * MID_TRACKING_WHEEL_DIM;
 
         // Reset previous values
 
         rightEncVal = right_tick;
-        //midEncVal   = mid_tick;
+        midEncVal   = mid_tick;
 
         // Get heading
 
@@ -56,18 +56,18 @@ namespace Odometry {
 
         if (deltaHeading == 0_deg){
             localXChange = delta_right;
-            // localYChange = delta_mid;
+            localYChange = delta_mid;
         } else {
             auto factor = 2 * sin(deltaHeading / 2);
             
             localXChange = factor * (delta_right / deltaHeading.convert(okapi::radian) + RIGHT_TRACKING_WHEEL_TRACK);
-            // localYChange = factor * (delta_mid   / deltaHeading.convert(okapi::radian) + MID_TRACKING_WHEEL_TRACK);
+            localYChange = factor * (delta_mid   / deltaHeading.convert(okapi::radian) + MID_TRACKING_WHEEL_TRACK);
         }
 
         okapi::QAngle avgTheta = curPos.theta + (deltaHeading / 2);
         
-        okapi::QLength globalXChange = (localXChange * cos(avgTheta)); // - (localYChange * sin(avgTheta));
-        okapi::QLength globalYChange = (localXChange * sin(avgTheta)); // + (localYChange * cos(avgTheta));
+        okapi::QLength globalXChange = (localXChange * cos(avgTheta)) - (localYChange * sin(avgTheta));
+        okapi::QLength globalYChange = (localXChange * sin(avgTheta)) + (localYChange * cos(avgTheta));
 
         positionMutex.take();
         curPos.x += globalXChange;

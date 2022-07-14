@@ -9,7 +9,7 @@
 #define BOTTOM_LEFT_MOTOR -2
 #define BOTTOM_RIGHT_MOTOR 1
 
-#define FLYWHEEL_1 3
+#define FLYWHEEL_1 1
 #define FLYWHEEL_2 -4
 #define FLYWHEEL_3 5
 

@@ -1,0 +1,6 @@
+make --dry-run --keep-going --print-directory
+make: Entering directory `/Users/testing/Desktop/765A/2223_SpinUp'
+make: Leaving directory `/Users/testing/Desktop/765A/2223_SpinUp'
+ 
+make: *** No targets specified and no makefile found.  Stop.
+
