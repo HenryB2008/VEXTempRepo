@@ -1,4 +1,5 @@
 #include "controller.h"
+#include "drive.h"
 
 namespace Controller {
     // initialize the controller and deadzone
@@ -7,7 +8,8 @@ namespace Controller {
 
     // initialize the map of buttons
     std::unordered_map<okapi::ControllerDigital, ButtonData> map = {
-        { RESET_ODOM_BUTTON, { false, Odometry::resetOdometry } }
+        { RESET_ODOM_BUTTON, { false, Odometry::resetOdometry } },
+        { POINT_TO_GOAL_BUTTON, { false, Drive::pointToGoal }}
     };
 
     void step() {

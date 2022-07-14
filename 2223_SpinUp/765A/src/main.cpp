@@ -67,13 +67,13 @@ void autonomous() {}
  */
 void opcontrol() {	
 	while (true) {
-		//Controller::step();
+		Controller::step();
 		
-		//Drive::arcade(Controller::getForward(), Controller::getYaw());
+		Drive::arcade(Controller::getForward(), Controller::getYaw());
 
 		Odometry::printPos();
 
-		fly.runVoltage(Controller::getForward() * 12000);
+		// fly.runVoltage(Controller::getForward() * 12000);
 
 		pros::delay(DELAY);
 	}

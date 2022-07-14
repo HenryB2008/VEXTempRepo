@@ -9,6 +9,8 @@
 
 #define RESET_ODOM_BUTTON okapi::ControllerDigital::A
 
+#define POINT_TO_GOAL_BUTTON okapi::ControllerDigital::B
+
 // Struct which stores the previous state of a button and the amount of times it has been pressed
 struct ButtonData {
     bool previousState; // Previous state of the button (pressed = true, unpressed = false)

@@ -17,6 +17,7 @@ namespace Odometry {
     void resetOdometry();
 
     QAngle getHeading();
+    okapi::OdomState getPos();
 
     void printPos();
 };
