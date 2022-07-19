@@ -13,11 +13,11 @@ void Flywheel::runVoltage(double power) {
 void Flywheel::toggle(double power) {
     if (previousPower != power) {
         runVoltage(power);
+        previousPower = power;
     } else {
         runVoltage(0);
+        previousPower = 0;
     }
-
-    previousPower = power;
 }
 
 Flywheel fly = Flywheel(FLYWHEEL_1, FLYWHEEL_2, FLYWHEEL_3);

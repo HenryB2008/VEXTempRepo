@@ -11,7 +11,7 @@ namespace Controller {
         { RESET_ODOM_BUTTON, { false, Odometry::resetHeading } },
         { POINT_TO_ALLIANCE_GOAL_BUTTON, { false, Auton::pointToAllianceGoal }},
         { POINT_TO_ENEMY_GOAL_BUTTON, { false, Auton::pointToEnemyGoal }},
-        { TOGGLE_FLYWHEEL, { false, [](){ fly.toggle(9000); } }}
+        { TOGGLE_FLYWHEEL, { false, [](){ fly.toggle(8000); } }}
     };
 
     void step() { 
