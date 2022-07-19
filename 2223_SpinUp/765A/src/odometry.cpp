@@ -80,10 +80,8 @@ namespace Odometry {
 
     }
 
-    void init(const okapi::OdomState& os) {
-        positionMutex.take();
-        curPos = os;
-        positionMutex.give();
+    void init() {
+        setPos({ 0_in, 0_in, 0_deg });
 
         encs.take();
         rightEnc.reset();
@@ -118,7 +116,7 @@ namespace Odometry {
         inertialMutex.give();
     }
 
-    void resetOdometry() {
+    void resetHeading() {
         inertialMutex.take();
         // Round the current heading to the nearest 90 degrees (0, 90, 180, 270, or 360)
         int nearest90 = round(inertial.get_heading() / 90) * 90;
@@ -140,6 +138,12 @@ namespace Odometry {
         return returnOs;
     }
 
+    void setPos(const okapi::OdomState& os) {
+        positionMutex.take();
+        curPos = os;
+        positionMutex.give();
+    }
+
     void printPos() {
         auto curPos = getPos();
         pros::lcd::print(0, "X: %f in", curPos.x.convert(okapi::inch));
@@ -151,4 +155,24 @@ namespace Odometry {
         encs.give();
 
     }
+
+    okapi::QLength magError(const okapi::Point& target) {
+        okapi::OdomState pos = getPos();
+        okapi::QLength xError = target.x - pos.x;
+        okapi::QLength yError = target.y - pos.y;
+
+        return sqrt(xError * xError + yError * yError); // Hypotenuse
+    }
+
+    okapi::QAngle thetaError(const okapi::QAngle& target) {
+        return okapi::OdomMath::constrainAngle180(target - getPos().theta);
+    }
+
+    okapi::QAngle pointingTo(const okapi::Point& p) {
+        okapi::OdomState curPos = getPos();
+        okapi::QAngle degrees   = (atan2((p.x - curPos.x).convert(okapi::meter), (p.y -  curPos.y).convert(okapi::meter)) * 1_rad); // Some tricky unit circle math
+
+        return okapi::OdomMath::constrainAngle180(90_deg - degrees); // 90_deg - degrees converts the angle from unit circle heading to airplane heading
+    }
+
 };

@@ -9,9 +9,9 @@
 #define BOTTOM_LEFT_MOTOR -2
 #define BOTTOM_RIGHT_MOTOR 1
 
-#define FLYWHEEL_1 1
-#define FLYWHEEL_2 -4
-#define FLYWHEEL_3 5
+#define FLYWHEEL_1 11
+#define FLYWHEEL_2 -12
+#define FLYWHEEL_3 14
 
 #define RIGHT_TRACKING_WHEEL_TOP 'B'
 #define RIGHT_TRACKING_WHEEL_BOTTOM 'A'

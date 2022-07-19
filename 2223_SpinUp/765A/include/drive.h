@@ -19,9 +19,9 @@ namespace Drive {
     okapi::QLength magError(const okapi::Point& target);
     okapi::QAngle thetaError(const okapi::QAngle& target);
 
-    void turnInPlace(okapi::QAngle target);
+    void timedForward(double power, double time);
+    void timedTurn(double power, double time);
 
-    void pointToGoal();
 };
 
 #endif

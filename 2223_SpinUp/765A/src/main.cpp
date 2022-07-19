@@ -5,8 +5,6 @@
 #include "odometry.h"
 #include "ports.h"
 
-Flywheel fly = Flywheel(FLYWHEEL_1, FLYWHEEL_2, FLYWHEEL_3);
-
 /**
  * Runs initialization code. This occurs as soon as the program is started.
  *
@@ -18,7 +16,7 @@ void initialize() {
 
 	Drive::setBrakeMode(okapi::AbstractMotor::brakeMode::coast);
 
-	Odometry::init({ 0_in, 0_in, 0_deg });
+	Odometry::init();
 }
 
 /**
@@ -66,6 +64,8 @@ void autonomous() {}
  * task, not resume it from where it left off.
  */
 void opcontrol() {	
+	Odometry::setPos({ 1_ft, 6_ft, 0_deg });
+	
 	while (true) {
 		Controller::step();
 		
