@@ -8,12 +8,12 @@ using okapi::Motor;
 
 class Flywheel {
     private:
-        Motor m1, m2, m3;
+        Motor m;
         
         double previousPower;
 
     public:
-        Flywheel(int port1, int port2, int port3);
+        Flywheel(int port);
 
         void runVoltage(double power = 12000);
         void toggle(double power = 12000);
