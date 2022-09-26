@@ -65,24 +65,23 @@ bin/controller.cpp.o: src/controller.cpp include/controller.h \
  include/display/lv_objx/lv_arc.h include/display/lv_objx/lv_calendar.h \
  include/display/lv_objx/lv_spinbox.h include/display/lv_objx/lv_ta.h \
  include/pros/misc.h include/pros/motors.h include/pros/optical.h \
- include/pros/error.h include/pros/rtos.h include/pros/rotation.h \
+ include/api.h include/pros/rtos.h include/pros/rotation.h \
  include/pros/screen.h include/pros/colors.h include/pros/vision.h \
  include/pros/adi.hpp include/pros/distance.hpp include/pros/distance.h \
  include/pros/gps.hpp include/pros/gps.h include/pros/imu.hpp \
  include/pros/imu.h include/pros/llemu.hpp include/pros/llemu.h \
  include/pros/misc.hpp include/pros/misc.h include/pros/motors.hpp \
- include/pros/motors.h include/pros/rtos.hpp include/pros/rtos.h \
- include/pros/optical.hpp include/pros/optical.h \
+ include/pros/motors.h include/pros/optical.hpp include/pros/optical.h \
  include/pros/rotation.hpp include/pros/rotation.h include/pros/rtos.hpp \
- include/pros/screen.hpp include/pros/screen.h include/pros/vision.hpp \
- include/pros/vision.h include/pros/link.hpp include/pros/link.h \
- include/okapi/api.hpp \
+ include/pros/rtos.h include/pros/screen.hpp include/pros/screen.h \
+ include/pros/vision.hpp include/pros/vision.h include/pros/link.hpp \
+ include/pros/link.h include/okapi/api.hpp \
  include/okapi/api/chassis/controller/chassisControllerIntegrated.hpp \
  include/okapi/api/chassis/controller/chassisController.hpp \
  include/okapi/api/chassis/controller/chassisScales.hpp \
  include/okapi/api/units/QAngle.hpp include/okapi/api/units/RQuantity.hpp \
  include/okapi/api/units/QLength.hpp include/okapi/api/util/logging.hpp \
- include/okapi/api/coreProsAPI.hpp include/api.h include/pros/apix.h \
+ include/okapi/api/coreProsAPI.hpp include/pros/apix.h \
  include/pros/serial.h include/pros/serial.hpp \
  include/okapi/api/util/abstractTimer.hpp \
  include/okapi/api/units/QFrequency.hpp include/okapi/api/units/QTime.hpp \
@@ -201,8 +200,7 @@ bin/controller.cpp.o: src/controller.cpp include/controller.h \
  include/okapi/api/units/QTorque.hpp include/okapi/api/units/QVolume.hpp \
  include/okapi/impl/util/configurableTimeUtilFactory.hpp \
  include/okapi/impl/util/rate.hpp include/odometry.h include/drive.h \
- include/ports.h include/pid.h include/auton.h include/path_builder.h \
- include/motor_group_handler.h
+ include/ports.h include/pid.h include/auton.h include/path_builder.h
 include/controller.h:
 include/main.h:
 include/api.h:
@@ -324,7 +322,7 @@ include/display/lv_objx/lv_ta.h:
 include/pros/misc.h:
 include/pros/motors.h:
 include/pros/optical.h:
-include/pros/error.h:
+include/api.h:
 include/pros/rtos.h:
 include/pros/rotation.h:
 include/pros/screen.h:
@@ -343,13 +341,12 @@ include/pros/misc.hpp:
 include/pros/misc.h:
 include/pros/motors.hpp:
 include/pros/motors.h:
-include/pros/rtos.hpp:
-include/pros/rtos.h:
 include/pros/optical.hpp:
 include/pros/optical.h:
 include/pros/rotation.hpp:
 include/pros/rotation.h:
 include/pros/rtos.hpp:
+include/pros/rtos.h:
 include/pros/screen.hpp:
 include/pros/screen.h:
 include/pros/vision.hpp:
@@ -365,7 +362,6 @@ include/okapi/api/units/RQuantity.hpp:
 include/okapi/api/units/QLength.hpp:
 include/okapi/api/util/logging.hpp:
 include/okapi/api/coreProsAPI.hpp:
-include/api.h:
 include/pros/apix.h:
 include/pros/serial.h:
 include/pros/serial.hpp:
@@ -497,4 +493,3 @@ include/ports.h:
 include/pid.h:
 include/auton.h:
 include/path_builder.h:
-include/motor_group_handler.h:
