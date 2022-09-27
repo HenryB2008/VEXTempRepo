@@ -16,6 +16,9 @@ namespace Controller {
 =======
         { POINT_TO_ENEMY_GOAL_BUTTON, { false, Auton::pointToEnemyGoal }},
         { TOGGLE_FLYWHEEL, { false, [](){ fly.toggle(8000); } }}
+<<<<<<< HEAD:2223_SpinUp/September/src/controller.cpp
+>>>>>>> parent of 7087f99 (Changed flywheel to only one motor):2223_SpinUp/765A/src/controller.cpp
+=======
 >>>>>>> parent of 7087f99 (Changed flywheel to only one motor):2223_SpinUp/765A/src/controller.cpp
     };
 
