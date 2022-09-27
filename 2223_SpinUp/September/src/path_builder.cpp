@@ -21,13 +21,13 @@ void Movement::execute(std::vector<Callback>& callbacks) {
 
   auto targetTheta = Odometry::pointingTo(target);
 
+  double headingCorrectionTolInches = headingCorrectionTol.convert(okapi::inch);
+
   while (distanceError > distanceTol && pros::millis() < endTime) {
       distanceError = Odometry::magError(target).convert(okapi::inch);
-      std::cout << distanceError << std::endl;
-      pros::c::lcd_print(4, "distanceError: %f inches", distanceError);
 
-      // if we are outside 12_in distance, recalculate theta
-      if (distanceError > 12)
+      // if we are outside a certain distance, recalculate theta
+      if (distanceError > headingCorrectionTolInches)
         targetTheta = Odometry::pointingTo(target);
 
       if(dir == REVERSE){

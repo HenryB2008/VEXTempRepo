@@ -36,6 +36,7 @@ class Movement {
         double headingSlew     = 0.1;
         double distanceSlew    = 0.1;
 
+        okapi::QLength headingCorrectionTol = 12_in;
         okapi::QLength tol     = 2.5_in;
         void execute(std::vector<Callback>& callbacks);
 

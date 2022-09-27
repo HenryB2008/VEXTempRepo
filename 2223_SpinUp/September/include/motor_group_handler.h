@@ -11,14 +11,39 @@ using okapi::Motor;
 
 // Better version of okapi MotorGroup
 
-struct MotorInfo {
+class MotorInfo {
+
+private:
+
   std::string color;
   int maxRpm;
-};
+  okapi::AbstractMotor::gearset gearset;
 
-const MotorInfo RED_MOTOR_INFO = {"red", 100};
-const MotorInfo GREEN_MOTOR_INFO = {"green", 200};
-const MotorInfo BLUE_MOTOR_INFO = {"blue", 600};
+  MotorInfo(const std::string& _color, int maxRpm, okapi::AbstractMotor::gearset _gearset):
+    color(_color), maxRpm(_maxRpm), gearset(_gearset)
+  {
+
+  }
+
+public:
+
+  static const MotorInfo RED_MOTOR_INFO = MotorInfo("red", 100, okapi::AbstractMotor::gearset::red);
+  static const MotorInfo GREEN_MOTOR_INFO = MotorInfo("green", 200, okapi::AbstractMotor::gearset::green);
+  static const MotorInfo BLUE_MOTOR_INFO = MotorInfo("blue", 600, okapi::AbstractMotor::gearset::blue);
+
+  const std::string& getColor() const{
+    return color;
+  }
+
+  int getMaxRpm() const {
+    return maxRpm;
+  }
+
+  okapi::AbstractMotor::gearset getGearset() const{
+    return gearset;
+  }
+
+};
 
 template<size_t N>
 
