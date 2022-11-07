@@ -18,7 +18,7 @@ void initialize() {
 
 	Drive::setBrakeMode(okapi::AbstractMotor::brakeMode::coast);
 
-	Odometry::init();
+	//Odometry::init();
 }
 
 /**
@@ -66,16 +66,16 @@ void autonomous() {}
  * task, not resume it from where it left off.
  */
 void opcontrol() {	
-	Odometry::setPos({ 1_ft, 6_ft, 0_deg });
+	//Odometry::setPos({ 1_ft, 6_ft, 0_deg });
 	
 	while (true) {
 		Controller::step();
 		
 		Drive::arcade(Controller::getForward(), Controller::getYaw());
 
-		Odometry::printPos();
+		//Odometry::printPos();
 
-		// fly.runVoltage(Controller::getForward() * 12000);
+		fly.runVoltage(Controller::getForward() * 12000);
 
 		pros::delay(DELAY);
 	}
