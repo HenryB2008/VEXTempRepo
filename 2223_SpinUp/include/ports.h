@@ -3,8 +3,8 @@
 
 // bad ports: 3, 9
 
-#define TOP_LEFT_MOTOR 4
-#define TOP_RIGHT_MOTOR -6
+#define TOP_LEFT_MOTOR -2
+#define TOP_RIGHT_MOTOR 6
 
 #define BOTTOM_LEFT_MOTOR -8
 #define BOTTOM_RIGHT_MOTOR 7
