@@ -7,6 +7,7 @@
 #include "odometry.h"
 #include <functional>
 #include "vector"
+#include <queue>
 
 struct Callback {
     okapi::Point target;
@@ -37,7 +38,7 @@ class Movement {
         double distanceSlew    = 0.1;
 
         okapi::QLength tol     = 2.5_in;
-        void execute(std::vector<Callback>& callbacks);
+        void execute(std::queue<Callback>& callbacks);
 
     public:
         Movement(const okapi::Point& _target, const okapi::QTime& _time, const Direction& _dir) : target(_target), time(_time), dir(_dir) {}
@@ -97,19 +98,19 @@ class Turn {
 class PathBuilder {
     private:
         /* Stored values that will later be executed */
-        std::vector<Movement> paths;
-        std::vector<Callback> callbacks;
+        std::queue<Movement> paths;
+        std::queue<Callback> callbacks;
 
     public:
 
         PathBuilder& addPath(const Movement& data){
-            paths.push_back(data);
+            paths.push(data);
             return *this;
         }
 
         PathBuilder& addCallback(const okapi::Point& target,const std::function<void()>& func,const okapi::QLength& tol = 4_in){
             Callback c = { target, func, tol };
-            callbacks.push_back(c);
+            callbacks.push(c);
             return *this;
         }
 

@@ -1,6 +1,6 @@
 #include "path_builder.h"
 
-void Movement::execute(std::vector<Callback>& callbacks) {
+void Movement::execute(std::queue<Callback>& callbacks) {
 
   PIDController headingController  = PIDController(headingGains, headingSlew, headingMax);
   PIDController distanceController = PIDController(distanceGains, distanceSlew, distanceMax);
@@ -49,11 +49,11 @@ void Movement::execute(std::vector<Callback>& callbacks) {
 
       // if there is at least one callback to handle
       if (!callbacks.empty()) {
-          Callback current = callbacks.at(0);
+          Callback current = callbacks.front();
 
           if(Drive::magError(current.target) < current.tol) {
               current.func();
-              callbacks.erase(callbacks.begin());
+              callbacks.pop();
 
               std::cout << "Callback called" << std::endl;
           }
@@ -142,9 +142,10 @@ void PathBuilder::execute() {
 
     // Loop through each path
 
-    for (Movement& path : paths) {
+    while (!paths.empty()) {
 
-        path.execute(callbacks);
+        paths.front().execute(callbacks);
+        paths.pop();
 
         std::cout << "End movement" << std::endl;
     }
