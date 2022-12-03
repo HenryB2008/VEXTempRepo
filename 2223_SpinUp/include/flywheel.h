@@ -9,13 +9,14 @@ using okapi::Motor;
 class Flywheel {
     private:
         Motor m1, m2;
-        
-        double previousPower;
+
+        const std::vector<double> powers = { 8000, 12000, 0 };
+        int currPower = 0;
 
     public:
         Flywheel(int port1, int port2);
         void runVoltage(double power = 12000);
-        void toggle(double power = 12000);
+        void toggle();
 };
 
 extern Flywheel fly;

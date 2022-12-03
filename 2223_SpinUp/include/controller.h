@@ -12,6 +12,7 @@
 #define RESET_ODOM_BUTTON okapi::ControllerDigital::A
 #define POINT_TO_ALLIANCE_GOAL_BUTTON okapi::ControllerDigital::B
 #define POINT_TO_ENEMY_GOAL_BUTTON okapi::ControllerDigital::X
+
 #define TOGGLE_FLYWHEEL okapi::ControllerDigital::R1
 
 // Struct which stores the previous state of a button and the amount of times it has been pressed
