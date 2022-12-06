@@ -19,11 +19,72 @@ namespace Auton {
             .execute(FORWARD);
     }
 
-    void leftRoute() {
+    void AUTON_LEFT_crossMap() {
 
-    }
+        // Start right in front of the roller
+        Odometry::setPos( { 1_ft, 3_ft, 0_deg} );
 
-    void rightRoute() {
+        // Turn flywheel on
+        // TODO: tweak power
+        Flywheel::toggle(12000);
 
+        // TODO: Back up into the 
+        // * timed movement here *
+        // Will end up around { .5_ft, 3_ft }
+
+        PathBuilder()
+            .addPath(
+                Movement( { 5_ft, 6_ft }, 3_s, FORWARD )
+            )
+            .execute();
+
+        Turn( { ALLIANCE_GOAL }, 2_s )
+            .execute(FORWARD);
+
+        // TODO: Shoot all 3 discs
+        // Power feeder here
+
+        Turn( 0_deg, 2_s )
+            .execute(FORWARD);
+
+        PathBuilder()
+            .addPath(
+                Movement( { 4_ft, 6_ft }, 3_s, REVERSE )
+            )
+            .execute();
+
+
+        // Turn to disc line
+        Turn( { 7_ft, 9_ft }, 3_s )
+            .execute(FORWARD);
+
+        // Collect discs
+        // TODO: Turn intake on
+        PathBuilder()
+            .addPath(
+                Movement( { 7_ft, 9_ft }, 3_s, FORWARD )
+            )
+            .execute();
+
+        Turn( { ALLIANCE_GOAL }, 2_s )
+            .execute(FORWARD);
+
+        // TODO: Shoot all 3 discs
+        // Power feeder here
+
+        Turn( { 9_ft, 11_ft }, 3_s )
+            .execute(REVERSE);
+        
+        PathBuilder()
+            .addPath(
+                Movement( { 9_ft, 11_ft }, 3_s, REVERSE )
+            )
+            .execute();
+
+        Turn( 270_deg, 2_s)
+            .execute(REVERSE);
+
+        // Back up for a set amount of time and move the roller
+        // TODO: Add movement here
     }
 }
