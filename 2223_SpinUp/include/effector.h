@@ -14,7 +14,8 @@ class Effector {
 
         const std::vector<double> powers;
 
-        int currPower = 0;
+        int currPowerIndex = -1;
+        Direction prevDir;
 
     public:
         Effector(const MotorGroup& motors, const std::vector<double>& powers);

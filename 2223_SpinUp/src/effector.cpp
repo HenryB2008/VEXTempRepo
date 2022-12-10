@@ -13,15 +13,26 @@ void Effector::runVoltage(double power) {
 }
 
 void Effector::toggle(const Direction& dir) {
-    // Run the power at the current index
-    runVoltage(powers.at(currPower) * dir);
-
-    // Increment by 1
-    currPower += 1;
+    /*
+        If the direction swapped, we assume we want to run the previous power in the opposite direction instead of going to the next
+        Check if: 
+        -- the direction DIDN'T swap
+        -- the current index is less than 0 (starts at -1)
+        -- the current power is 0 (we don't care about a change of direction in this case)
+        If so, increment the current power index by 1
+    */
+    if (prevDir != -dir || currPowerIndex < 0 || powers.at(currPowerIndex) == 0)
+        currPowerIndex += 1;
 
     // Cycle back to the beginning of the vector
-    if (currPower == powers.size())
-        currPower = 0;
+    if (currPowerIndex == powers.size())
+        currPowerIndex = 0;
+
+    // Run the power at the current index
+    runVoltage(powers.at(currPowerIndex) * dir);
+
+    // Store the previous direction
+    prevDir = dir;
 }
 
 void Effector::runWhenPressed(const okapi::ControllerDigital& b, double power) {
