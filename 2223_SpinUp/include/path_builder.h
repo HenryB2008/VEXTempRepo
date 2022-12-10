@@ -15,11 +15,6 @@ struct Callback {
     okapi::QLength tol;
 };
 
-enum Direction {
-    FORWARD = 1,
-    REVERSE = -1
-};
-
 class Movement {
 
     friend class PathBuilder;

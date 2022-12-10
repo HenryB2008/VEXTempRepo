@@ -58,6 +58,11 @@
 // using namespace okapi;
 using namespace okapi::literals;
 
+enum Direction {
+    FORWARD = 1,
+    REVERSE = -1
+};
+
 /**
  * \file main.h
  *

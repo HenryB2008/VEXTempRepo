@@ -3,6 +3,13 @@
 
 #include "main.h"
 #include "path_builder.h"
+#include "effector.h"
+
+/*
+
+Our coordinate 
+
+*/
 
 #define ALLIANCE_GOAL { 10.5_ft, 1.5_ft }
 #define ENEMY_GOAL { 1.5_ft, 10.5_ft }

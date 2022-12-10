@@ -5,6 +5,7 @@
 #include "odometry.h"
 #include "auton.h"
 #include "drive.h"
+#include "effector.h"
 
 #define FORWARD_CONTROL okapi::ControllerAnalog::leftY
 #define YAW_CONTROL okapi::ControllerAnalog::rightX
@@ -15,10 +16,21 @@
 
 #define TOGGLE_FLYWHEEL okapi::ControllerDigital::R1
 
+#define RUN_INDEXER okapi::ControllerDigital::R2
+
+#define INTAKE_IN okapi::ControllerDigital::up
+#define INTAKE_OUT okapi::ControllerDigital::down
+
+
 // Struct which stores the previous state of a button and the amount of times it has been pressed
-struct ButtonData {
-    bool previousState; // Previous state of the button (pressed = true, unpressed = false)
-    void (*callback)(); // Callback that runs after the button is pressed
+struct ToggleData {
+    bool previousState;             // Previous state of the button (pressed = true, unpressed = false)
+    std::function<void()> callback; // Callback that runs after the button is pressed
+};
+
+struct HoldData {
+    std::function<void()> on;  // Callback that runs when the button is held
+    std::function<void()> off; // Callback that runs when the button is released
 };
 
 // Wrapper namespace for okapi::Controller

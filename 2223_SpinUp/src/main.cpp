@@ -1,7 +1,6 @@
 #include "main.h"
 #include "drive.h"
 #include "controller.h"
-#include "flywheel.h"
 #include "odometry.h"
 #include "ports.h"
 
@@ -74,8 +73,6 @@ void opcontrol() {
 		Drive::arcade(Controller::getForward(), Controller::getYaw());
 
 		//Odometry::printPos();
-
-		// fly.runVoltage(Controller::getForward() * 12000);
 
 		pros::delay(DELAY);
 	}

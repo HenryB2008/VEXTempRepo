@@ -13,7 +13,7 @@ namespace Auton {
 
     // TODO: fix point
     void pointToEnemyGoal() {
-        Turn(ENEMY_GOAL, 1.5_s)
+        Turn( ENEMY_GOAL, 1.5_s )
             .withTurnGains({0.02, 0.0, 0.002})
             .withTurnMax(0.5)
             .execute(FORWARD);
@@ -26,7 +26,7 @@ namespace Auton {
 
         // Turn flywheel on
         // TODO: tweak power
-        Flywheel::toggle(12000);
+        flywheel.runVoltage(12000);
 
         // TODO: Back up into the 
         // * timed movement here *
@@ -38,7 +38,7 @@ namespace Auton {
             )
             .execute();
 
-        Turn( { ALLIANCE_GOAL }, 2_s )
+        Turn( ALLIANCE_GOAL, 2_s )
             .execute(FORWARD);
 
         // TODO: Shoot all 3 discs
@@ -66,7 +66,7 @@ namespace Auton {
             )
             .execute();
 
-        Turn( { ALLIANCE_GOAL }, 2_s )
+        Turn( ALLIANCE_GOAL, 2_s )
             .execute(FORWARD);
 
         // TODO: Shoot all 3 discs
