@@ -4,7 +4,7 @@ namespace Controller {
 
     // initialize the controller and deadzone
     okapi::Controller masterController(okapi::ControllerId::master);
-    double deadzone = 0.1;
+    constexpr double deadzone = 0.1;
 
     // initialize the map of buttons
     std::unordered_map<okapi::ControllerDigital, ToggleData> toggleMap = {
@@ -55,7 +55,7 @@ namespace Controller {
         return fabs(yaw) > deadzone ? yaw : 0;
     }
 
-    bool getDigital(const okapi::ControllerDigital& button) {
+    bool getDigital(const okapi::ControllerDigital button) {
         return masterController.getDigital(button);
     }
 };

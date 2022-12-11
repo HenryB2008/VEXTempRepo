@@ -48,7 +48,7 @@ namespace Controller {
        @param button digital button on the controller
        @returns the state of the button (pressed -> true, unpressed -> false)
     */
-    bool getDigital(const okapi::ControllerDigital& button);
+    bool getDigital(const okapi::ControllerDigital button);
 };
 
 #endif

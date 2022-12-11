@@ -15,35 +15,25 @@ namespace Drive {
         .build();
 
 
-    void arcade(const double& forward, const double& yaw) {
+    void arcade(const double forward, const double yaw) {
         chassis->getModel()->arcade(forward, yaw);
     }
 
-    void setBrakeMode(const okapi::AbstractMotor::brakeMode& bm) {
+    void setBrakeMode(const okapi::AbstractMotor::brakeMode bm) {
         chassis->getModel()->setBrakeMode(bm);
     }
 
-    void timedForward(const double &power, const double &time) {
+    void timedForward(const double power, const double time) {
         arcade(power, 0);
         pros::delay(time);
         arcade(0, 0);
     }
 
-    void timedTurn(const double &power, const double& time) {
+    void timedTurn(const double power, const double time) {
         arcade(0, power);
         pros::delay(time);
         arcade(0, 0);
     }
 
-    okapi::QLength magError(const okapi::Point& target) {
-        okapi::OdomState pos = Odometry::getPos();
-        okapi::QLength xError = target.x - pos.x;
-        okapi::QLength yError = target.y - pos.y;
-
-        return sqrt(xError * xError + yError * yError); // Hypotenuse
-    }
-
-    okapi::QAngle thetaError(const okapi::QAngle& target) {
-        return okapi::OdomMath::constrainAngle180(target - Odometry::getPos().theta);
-    }
+    
 };

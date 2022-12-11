@@ -7,20 +7,23 @@
 #include "pid.h"
 #include "okapi/api/chassis/controller/chassisScales.hpp"
 
-#define WHEEL_DIM 4_in
-#define WHEEL_TRACK 14_in
+// Values required for ChassisController instantiation
+
+constexpr okapi::QLength WHEEL_DIM  = 4_in
+constexpr okapi::QLength WHEEL_TRACK = 14_in;
 
 namespace Drive {
 
-    void arcade(const double& forward, const double& yaw);
+    // Controls forward and turn movements
 
-    void setBrakeMode(const okapi::AbstractMotor::brakeMode& bm);
+    void arcade(const double forward, const double yaw);
 
-    okapi::QLength magError(const okapi::Point& target);
-    okapi::QAngle thetaError(const okapi::QAngle& target);
+    // Sets how the robot will brake during movements
 
-    void timedForward(double power, double time);
-    void timedTurn(double power, double time);
+    void setBrakeMode(const okapi::AbstractMotor::brakeMode bm);
+
+    void timedForward(const double power, const double time);
+    void timedTurn(const double power, const double time);
 
 };
 
