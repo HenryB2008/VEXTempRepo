@@ -16,7 +16,7 @@
 */
 
 #define ALLIANCE_GOAL { 10.5_ft, 1.5_ft }
-#define ENEMY_GOAL { 1.5_ft, 10.5_ft }
+#define ENEMY_GOAL { 1.5_ft, 10.5_ft }  
 
 /*
 
@@ -56,6 +56,7 @@ namespace Auton {
     // the 3 preload discs and 3 discs found in a row near the center. 
 
     void AUTON_LEFT_crossMap();
+    void AUTON_RIGHT_rollerAndShoot();
 
 }
 

@@ -19,6 +19,38 @@ namespace Auton {
             .execute(FORWARD);
     }
 
+    void AUTON_RIGHT_rollerAndShoot() {
+        // Turn flywheel on
+        flywheel.runVoltage(12000);
+
+        // Start right in front of the roller
+        Odometry::setPos( { 9_ft, 11_ft, 90_deg} );
+
+        // Back up to roller
+        Drive::timedForward(0.5, 200);
+
+        // TODO: rotate roller
+        
+        // Go back to where we were (start pos)
+        Drive::timedForward(-0.5, 200);
+
+        Turn( { 7_ft, 9_ft }, 3_s )
+            .execute(FORWARD);
+
+        PathBuilder()
+            .addPath(
+                Movement( { 7_ft, 9_ft }, 3_s, FORWARD )
+            )
+            .execute();
+
+        pointToAllianceGoal();
+
+        indexer.runTimed(12000, );
+
+
+        flywheel.runVoltage(0);
+    }
+
     void AUTON_LEFT_crossMap() {
 
         // Start right in front of the roller

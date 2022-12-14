@@ -3,6 +3,7 @@
 #include "controller.h"
 #include "odometry.h"
 #include "ports.h"
+#include "auton.h"
 
 /**
  * Runs initialization code. This occurs as soon as the program is started.
@@ -17,7 +18,7 @@ void initialize() {
 
 	Drive::setBrakeMode(okapi::AbstractMotor::brakeMode::coast);
 
-	//Odometry::init();
+	Odometry::init();
 }
 
 /**
@@ -49,7 +50,11 @@ void competition_initialize() {}
  * will be stopped. Re-enabling the robot will restart the task, not re-start it
  * from where it left off.
  */
-void autonomous() {}
+void autonomous() {
+
+	Auton::AUTON_LEFT_crossMap();
+
+}
 
 /**
  * Runs the operator control code. This function will be started in its own task
@@ -64,16 +69,27 @@ void autonomous() {}
  * operator control task will be stopped. Re-enabling the robot will restart the
  * task, not resume it from where it left off.
  */
-void opcontrol() {	
-	//Odometry::setPos({ 1_ft, 6_ft, 0_deg });
+void opcontrol() {
+
+	Odometry::setPos({ 0_ft, 0_ft, 0_deg });
+
+	//okapi::ADIEncoder rightEnc(RIGHT_TRACKING_WHEEL_TOP, RIGHT_TRACKING_WHEEL_BOTTOM);
+    //okapi::ADIEncoder midEnc(MID_TRACKING_WHEEL_TOP, MID_TRACKING_WHEEL_BOTTOM, true);
+
+	//rightEnc.reset();
+	//midEnc.reset();
 	
 	while (true) {
 		Controller::step();
 		
 		Drive::arcade(Controller::getForward(), Controller::getYaw());
 
-		//Odometry::printPos();
+		Odometry::printPos();
+
+		//pros::lcd::print(3, "Right enc: %f", rightEnc.get());
+        //pros::lcd::print(4, "Mid enc: %f", midEnc.get());
 
 		pros::delay(DELAY);
 	}
+	
 }

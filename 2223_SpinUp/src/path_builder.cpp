@@ -34,7 +34,7 @@ void Movement::execute(std::queue<Callback>& callbacks) {
           targetTheta += 180_deg;
       }
 
-      headError = Drive::thetaError(targetTheta).convert(okapi::degree);
+      headError = Odometry::thetaError(targetTheta).convert(okapi::degree);
 
       Odometry::printPos();
 
@@ -51,7 +51,7 @@ void Movement::execute(std::queue<Callback>& callbacks) {
       if (!callbacks.empty()) {
           Callback current = callbacks.front();
 
-          if(Drive::magError(current.target) < current.tol) {
+          if(Odometry::magError(current.target) < current.tol) {
               current.func();
               callbacks.pop();
 
@@ -85,7 +85,7 @@ void Turn::execute(const Direction& dir){
 
       Odometry::printPos();
 
-      turnError = Drive::thetaError(target).convert(okapi::degree);
+      turnError = Odometry::thetaError(target).convert(okapi::degree);
 
       turnPower = Turn.step(turnError);
 
@@ -123,8 +123,8 @@ void Turn::inPlace(const Direction &dir) {
 
         Odometry::printPos();
 
-        distanceError = Drive::magError(ogPos).convert(okapi::inch);
-        turnError     = Drive::thetaError(target).convert(okapi::degree);
+        distanceError = Odometry::magError(ogPos).convert(okapi::inch);
+        turnError     = Odometry::thetaError(target).convert(okapi::degree);
 
         distancePower = distanceController.step(distanceError);
         turnPower     = Turn.step(turnError);

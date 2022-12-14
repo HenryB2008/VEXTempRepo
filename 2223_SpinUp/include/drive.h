@@ -9,7 +9,7 @@
 
 // Values required for ChassisController instantiation
 
-constexpr okapi::QLength WHEEL_DIM  = 4_in
+constexpr okapi::QLength WHEEL_DIM  = 4_in;
 constexpr okapi::QLength WHEEL_TRACK = 14_in;
 
 namespace Drive {

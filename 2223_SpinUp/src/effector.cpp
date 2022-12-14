@@ -12,6 +12,12 @@ void Effector::runVoltage(double power) {
     motors.moveVoltage(power);
 }
 
+void Effector::runTimed(double power, double time) {
+    motors.moveVoltage(power);
+    pros::delay(time);
+    motors.moveVoltage(0);
+}
+
 void Effector::toggle(const Direction& dir) {
     /*
         If the direction swapped, we assume we want to run the previous power in the opposite direction instead of going to the next

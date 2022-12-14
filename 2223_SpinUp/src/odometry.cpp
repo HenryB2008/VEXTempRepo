@@ -4,11 +4,11 @@
 #include "okapi/api/units/QAngle.hpp"
 #include "ports.h"
 
-#define RIGHT_TRACKING_WHEEL_DIM 2.79491607_in
-#define MID_TRACKING_WHEEL_DIM 2.75847284_in
+#define RIGHT_TRACKING_WHEEL_DIM 2.83525506869_in
+#define MID_TRACKING_WHEEL_DIM 2.78360062412_in
 
-#define RIGHT_TRACKING_WHEEL_TRACK 2.25_in
-#define MID_TRACKING_WHEEL_TRACK 2.1_in
+#define RIGHT_TRACKING_WHEEL_TRACK 3.50013685418_in
+#define MID_TRACKING_WHEEL_TRACK 5.65612182373_in
 
 namespace Odometry {
     okapi::OdomState curPos;
@@ -40,7 +40,7 @@ namespace Odometry {
         // Movements in inches
 
         okapi::QLength delta_right = (right_tick - rightEncVal) / 360 * M_PI * RIGHT_TRACKING_WHEEL_DIM;
-        okapi::QLength delta_mid   = (mid_tick - midEncVal)     / 720 * M_PI * MID_TRACKING_WHEEL_DIM;
+        okapi::QLength delta_mid   = (mid_tick - midEncVal)     / 360 * M_PI * MID_TRACKING_WHEEL_DIM;
 
         // Reset previous values
 
