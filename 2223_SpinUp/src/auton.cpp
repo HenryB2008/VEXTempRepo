@@ -1,11 +1,13 @@
 #include "auton.h"
+#include "drive.h"
 
 // TODO: fix overshooting
 
 namespace Auton {
     // TOOD: fix point
     void pointToAllianceGoal() {
-        Turn(ALLIANCE_GOAL, 1.5_s)
+        //Turn(ALLIANCE_GOAL, 1.5_s)
+        Turn({ 10.25_ft, 1.5_ft }, 1.5_s)
             .withTurnGains({0.02, 0.0, 0.002})
             .withTurnMax(0.5)
             .execute(FORWARD);
@@ -60,6 +62,7 @@ namespace Auton {
             .addPath(
                 Movement( {3_ft, 5_ft}, 3_s, FORWARD)
             )
+            .execute();
 
         pointToAllianceGoal();
 
@@ -79,8 +82,8 @@ namespace Auton {
         // TODO: tweak power
         flywheel.runVoltage(12000);
 
-        // TODO: Back up into the 
-        // * timed movement here *
+        // TODO: Back up into the roller
+        // Drive::timedForward(-.5, 300);
         // Will end up around { .5_ft, 3_ft }
 
         PathBuilder()
@@ -88,16 +91,17 @@ namespace Auton {
                 Movement( { 5_ft, 6_ft }, 3_s, FORWARD )
             )
             .execute();
-
-        Turn( ALLIANCE_GOAL, 2_s )
-            .execute(FORWARD);
+        
+        pointToAllianceGoal();
 
         // TODO: Shoot all 3 discs
-        // Power feeder here
+        indexer.runTimed(12000, 2200);
 
+        
         Turn( 0_deg, 2_s )
             .execute(FORWARD);
 
+        
         PathBuilder()
             .addPath(
                 Movement( { 4_ft, 6_ft }, 3_s, REVERSE )
@@ -110,32 +114,36 @@ namespace Auton {
             .execute(FORWARD);
 
         // Collect discs
-        // TODO: Turn intake on
-        PathBuilder()
-            .addPath(
-                Movement( { 7_ft, 9_ft }, 3_s, FORWARD )
-            )
-            .execute();
+        intake.runVoltage(12000);
+        Drive::timedForward(0.5, 3000);
 
-        Turn( ALLIANCE_GOAL, 2_s )
-            .execute(FORWARD);
+        pointToAllianceGoal();
+
+        // Wait for intake
+        pros::delay(1100);
 
         // TODO: Shoot all 3 discs
         // Power feeder here
+        indexer.runTimed(12000, 2200);
+        intake.runVoltage(0);
 
+        
         Turn( { 9_ft, 11_ft }, 3_s )
             .execute(REVERSE);
         
         PathBuilder()
             .addPath(
-                Movement( { 9_ft, 11_ft }, 3_s, REVERSE )
+                Movement( { 9.5_ft, 11_ft }, 1.5_s, REVERSE )
             )
             .execute();
 
-        Turn( 270_deg, 2_s)
+        Turn( 295_deg, 2_s)
             .execute(REVERSE);
 
-        // Back up for a set amount of time and move the roller
-        // TODO: Add movement here
+
+        Drive::timedForward(0.5, 1000);
+        intake.runTimed(-12000, 2200);
+
+        flywheel.runVoltage(0);
     }
 }
