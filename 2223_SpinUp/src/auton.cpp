@@ -45,8 +45,27 @@ namespace Auton {
 
         pointToAllianceGoal();
 
-        indexer.runTimed(12000, );
+        // Run indexer
+        // TODO: fix this
+        indexer.runTimed(12000, 2000);
 
+        // Turn to 3, 5
+
+        intake.runVoltage(12000);
+
+        Turn( {3_ft, 5_ft}, 2_s)
+            .execute(FORWARD);
+
+        PathBuilder()
+            .addPath(
+                Movement( {3_ft, 5_ft}, 3_s, FORWARD)
+            )
+
+        pointToAllianceGoal();
+
+        // Run indexer
+        // TODO: fix this
+        indexer.runTimed(12000, 3000);
 
         flywheel.runVoltage(0);
     }
