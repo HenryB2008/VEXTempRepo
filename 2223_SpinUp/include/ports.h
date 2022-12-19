@@ -12,7 +12,7 @@
 #define FLYWHEEL_1 -16
 #define FLYWHEEL_2 17
 
-#define INTAKE_MOTOR 20
+#define INTAKE_MOTOR 3
 #define INDEXER_MOTOR 5
 
 #define RIGHT_TRACKING_WHEEL_TOP 'C'
