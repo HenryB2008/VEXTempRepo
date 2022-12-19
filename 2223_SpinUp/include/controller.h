@@ -21,6 +21,8 @@
 #define INTAKE_IN okapi::ControllerDigital::up
 #define INTAKE_OUT okapi::ControllerDigital::down
 
+#define ENDGAME okapi::ControllerDigital::L1
+
 
 // Struct which stores the previous state of a button and the amount of times it has been pressed
 struct ToggleData {
@@ -35,6 +37,12 @@ struct HoldData {
 
 // Wrapper namespace for okapi::Controller
 namespace Controller {
+    // Adds key-value pair to toggleMap
+    void addToggleControl(okapi::ControllerDigital btn, std::function<void()> func);
+    
+    // If the toggleMap contains the key-value pair
+    bool toggleContains(okapi::ControllerDigital btn);
+
     // Called every opcontrol loop
     void step();
 

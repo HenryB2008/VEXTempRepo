@@ -4,6 +4,8 @@
 #include "odometry.h"
 #include "ports.h"
 #include "auton.h"
+#include <cstdio>
+#include <sys/_stdint.h>
 
 /**
  * Runs initialization code. This occurs as soon as the program is started.
@@ -71,6 +73,8 @@ void autonomous() {
  */
 void opcontrol() {
 
+	const uint32_t START_TIME = pros::c::millis();
+
 	Odometry::setPos({ 0_ft, 0_ft, 0_deg });
 
 	//okapi::ADIEncoder rightEnc(RIGHT_TRACKING_WHEEL_TOP, RIGHT_TRACKING_WHEEL_BOTTOM);
@@ -80,6 +84,14 @@ void opcontrol() {
 	//midEnc.reset();
 	
 	while (true) {
+		// If the controller map doesn't contain the endgame button key and enough time has passed (so it's endgame), add the input
+		// 110000 ms = 110 seconds = 1 minute 50 seconds
+		// TODO: add an actual endgame method
+		if (!Controller::toggleContains(ENDGAME) && pros::c::millis() - START_TIME > 10000) {
+			printf("woop");
+			Controller::addToggleControl(ENDGAME, [](){ pros::ADIDigitalOut piston('A'); piston.set_value(true); });
+		}
+
 		Controller::step();
 		
 		Drive::arcade(Controller::getForward(), Controller::getYaw());
