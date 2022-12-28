@@ -12,6 +12,10 @@ void Effector::runVoltage(double power) {
     motors.moveVoltage(power);
 }
 
+void Effector::runRPM(double rpm) {
+    motors.moveVelocity(rpm);
+}
+
 void Effector::runTimed(double power, double time) {
     motors.moveVoltage(power);
     pros::delay(time);

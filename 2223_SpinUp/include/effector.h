@@ -20,6 +20,7 @@ class Effector {
     public:
         Effector(const MotorGroup& motors, const std::vector<double>& powers);
         void runVoltage(double power);
+        void runRPM(double rpm);
         void runTimed(double power, double time);
         void toggle(const Direction& dir = FORWARD);
         void runWhenPressed(const okapi::ControllerDigital& b, double power);
