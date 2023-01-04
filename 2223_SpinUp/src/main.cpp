@@ -54,8 +54,8 @@ void competition_initialize() {}
  */
 void autonomous() {
 
-	Auton::AUTON_LEFT_crossMap();
-
+	//Auton::AUTON_LEFT_crossMap();
+	Auton::AUTON_RIGHT_rollerAndShoot();
 }
 
 /**

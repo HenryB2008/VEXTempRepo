@@ -26,18 +26,12 @@ namespace Auton {
         flywheel.runVoltage(12000);
 
         // Start right in front of the roller
-        Odometry::setPos( { 9_ft, 11_ft, 90_deg} );
+        Odometry::setPos( { 9_ft, 11_ft, 270_deg} );
 
-        // Back up to roller
-        Drive::timedForward(0.5, 200);
-
-        // TODO: rotate roller
-        
-        // Go back to where we were (start pos)
-        Drive::timedForward(-0.5, 200);
-
-        Turn( { 7_ft, 9_ft }, 3_s )
+        Turn( {7_ft, 9_ft}, 2_s)
             .execute(FORWARD);
+
+        intake.runVoltage(12000);
 
         PathBuilder()
             .addPath(
@@ -53,7 +47,6 @@ namespace Auton {
 
         // Turn to 3, 5
 
-        intake.runVoltage(12000);
 
         Turn( {3_ft, 5_ft}, 2_s)
             .execute(FORWARD);
@@ -76,19 +69,15 @@ namespace Auton {
     void AUTON_LEFT_crossMap() {
 
         // Start right in front of the roller
-        Odometry::setPos( { 1_ft, 3_ft, 0_deg} );
+        Odometry::setPos( { 1_ft, 5_ft, 0_deg} );
 
         // Turn flywheel on
         // TODO: tweak power
         flywheel.runVoltage(12000);
 
-        // TODO: Back up into the roller
-        // Drive::timedForward(-.5, 300);
-        // Will end up around { .5_ft, 3_ft }
-
         PathBuilder()
             .addPath(
-                Movement( { 5_ft, 6_ft }, 3_s, FORWARD )
+                Movement( { 3_ft, 5_ft }, 3_s, FORWARD )
             )
             .execute();
         
@@ -96,18 +85,6 @@ namespace Auton {
 
         // TODO: Shoot all 3 discs
         indexer.runTimed(12000, 2200);
-
-        
-        Turn( 0_deg, 2_s )
-            .execute(FORWARD);
-
-        
-        PathBuilder()
-            .addPath(
-                Movement( { 4_ft, 6_ft }, 3_s, REVERSE )
-            )
-            .execute();
-
 
         // Turn to disc line
         Turn( { 7_ft, 9_ft }, 3_s )
@@ -115,18 +92,24 @@ namespace Auton {
 
         // Collect discs
         intake.runVoltage(12000);
-        Drive::timedForward(0.5, 3000);
+
+        // Go forward 
+        PathBuilder()
+            .addPath(
+                Movement( {7_ft, 9_ft}, 4_s, FORWARD )
+            )
+            .execute();
+
 
         pointToAllianceGoal();
-
-        // Wait for intake
-        pros::delay(1100);
 
         // TODO: Shoot all 3 discs
         // Power feeder here
         indexer.runTimed(12000, 2200);
+        
         intake.runVoltage(0);
 
+        /*
         
         Turn( { 9_ft, 11_ft }, 3_s )
             .execute(REVERSE);
@@ -142,7 +125,9 @@ namespace Auton {
 
 
         Drive::timedForward(0.5, 1000);
-        intake.runTimed(-12000, 2200);
+        intake.runTimed(-12000, 1100);
+
+        */
 
         flywheel.runVoltage(0);
     }

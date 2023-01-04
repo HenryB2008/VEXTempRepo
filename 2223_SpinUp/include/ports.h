@@ -1,7 +1,7 @@
 #ifndef PORTS_H
 #define PORTS_H
 
-// bad ports: 19
+// bad ports: 19, 15
 
 #define TOP_LEFT_MOTOR -7
 #define TOP_RIGHT_MOTOR 10
