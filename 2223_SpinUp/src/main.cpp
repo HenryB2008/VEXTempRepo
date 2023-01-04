@@ -87,7 +87,7 @@ void opcontrol() {
 		// If the controller map doesn't contain the endgame button key and enough time has passed (so it's endgame), add the input
 		// 110000 ms = 110 seconds = 1 minute 50 seconds
 		// TODO: add an actual endgame method
-		if (!Controller::toggleContains(ENDGAME) && pros::c::millis() - START_TIME > 10000) {
+		if (!Controller::toggleContains(ENDGAME) && pros::c::millis() - START_TIME > 110000) {
 			printf("woop");
 			Controller::addToggleControl(ENDGAME, [](){ pros::ADIDigitalOut piston('A'); piston.set_value(true); });
 		}
@@ -96,9 +96,14 @@ void opcontrol() {
 		
 		Drive::arcade(Controller::getForward(), Controller::getYaw());
 
+		//double percentage = Controller::getForward();
+
+		//intake.runRPM(200 * percentage);
+
+		//pros::lcd::print(3, "RPM: %lf", 200 * percentage);
+
 		Odometry::printPos();
 
-		//pros::lcd::print(3, "Right enc: %f", rightEnc.get());
         //pros::lcd::print(4, "Mid enc: %f", midEnc.get());
 
 		pros::delay(DELAY);
