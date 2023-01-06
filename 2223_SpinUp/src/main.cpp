@@ -96,15 +96,7 @@ void opcontrol() {
 		
 		Drive::arcade(Controller::getForward(), Controller::getYaw());
 
-		//double percentage = Controller::getForward();
-
-		//intake.runRPM(200 * percentage);
-
-		//pros::lcd::print(3, "RPM: %lf", 200 * percentage);
-
 		Odometry::printPos();
-
-        //pros::lcd::print(4, "Mid enc: %f", midEnc.get());
 
 		pros::delay(DELAY);
 	}

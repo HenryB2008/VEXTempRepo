@@ -13,7 +13,8 @@ namespace Controller {
         { POINT_TO_ENEMY_GOAL_BUTTON, { false, Auton::pointToEnemyGoal } },
         { TOGGLE_FLYWHEEL, { false, [](){ flywheel.toggle(); } } },
         { INTAKE_IN, { false, [](){ intake.toggle(FORWARD); } } },
-        { INTAKE_OUT, { false, [](){ intake.toggle(REVERSE); } } }
+        { INTAKE_OUT, { false, [](){ intake.toggle(REVERSE); } } },
+        { SWITCH_FLYWHEEL_ANGLE, { false, [](){ angleChanger.toggle(); } } }
     };
 
     std::unordered_map<okapi::ControllerDigital, HoldData> holdMap = {

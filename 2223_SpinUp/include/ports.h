@@ -9,11 +9,11 @@
 #define BOTTOM_LEFT_MOTOR -8
 #define BOTTOM_RIGHT_MOTOR 9
 
-#define FLYWHEEL_1 -16
-#define FLYWHEEL_2 17
+#define FLYWHEEL_MOTOR 16
+#define INDEXER_MOTOR -17
 
-#define INTAKE_MOTOR 3
-#define INDEXER_MOTOR -5
+#define INTAKE_MOTOR_1 -3
+#define INTAKE_MOTOR_2 4
 
 #define RIGHT_TRACKING_WHEEL_TOP 'C'
 #define RIGHT_TRACKING_WHEEL_BOTTOM 'D'
@@ -21,6 +21,8 @@
 #define MID_TRACKING_WHEEL_TOP 'F'
 #define MID_TRACKING_WHEEL_BOTTOM 'E'
 
-#define IMU_PORT 4
+#define PNEUM_SWITCHER 'A'
+
+#define IMU_PORT 6
 
 #endif

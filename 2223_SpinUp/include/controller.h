@@ -6,21 +6,23 @@
 #include "auton.h"
 #include "drive.h"
 #include "effector.h"
+#include "pneums.h"
 
 #define FORWARD_CONTROL okapi::ControllerAnalog::leftY
 #define YAW_CONTROL okapi::ControllerAnalog::rightX
 
 #define RESET_ODOM_BUTTON okapi::ControllerDigital::A
 #define POINT_TO_ALLIANCE_GOAL_BUTTON okapi::ControllerDigital::B
-#define POINT_TO_ENEMY_GOAL_BUTTON okapi::ControllerDigital::X
+#define POINT_TO_ENEMY_GOAL_BUTTON okapi::ControllerDigital::Y
 
-#define TOGGLE_FLYWHEEL okapi::ControllerDigital::R1
+#define TOGGLE_FLYWHEEL okapi::ControllerDigital::X
 
 #define RUN_INDEXER okapi::ControllerDigital::R2
 
 #define INTAKE_IN okapi::ControllerDigital::up
 #define INTAKE_OUT okapi::ControllerDigital::down
 
+#define SWITCH_FLYWHEEL_ANGLE okapi::ControllerDigital::R1
 #define ENDGAME okapi::ControllerDigital::L1
 
 
