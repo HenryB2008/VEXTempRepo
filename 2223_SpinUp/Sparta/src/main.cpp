@@ -54,7 +54,8 @@ void competition_initialize() {}
  */
 void autonomous() {
 
-	Auton::AUTON_rollerAndShoot();
+	// Auton::AUTON_rollerAndShoot();
+	Auton::SKILLS();
 	
 }
 

@@ -57,6 +57,13 @@ namespace Auton {
 
     void AUTON_rollerAndShoot();
     
+    /*
+
+        Skills Routes
+    
+    */
+
+    void SKILLS();
 }
 
 #endif
