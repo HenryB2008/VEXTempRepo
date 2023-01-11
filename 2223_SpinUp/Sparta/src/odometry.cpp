@@ -15,8 +15,8 @@ namespace Odometry {
 
     pros::Imu inertial(IMU_PORT);
 
-    okapi::ADIEncoder rightEnc(RIGHT_TRACKING_WHEEL_TOP, RIGHT_TRACKING_WHEEL_BOTTOM);
-    okapi::ADIEncoder midEnc(MID_TRACKING_WHEEL_TOP, MID_TRACKING_WHEEL_BOTTOM, true);
+    okapi::ADIEncoder rightEnc(RIGHT_TRACKING_WHEEL_TOP, RIGHT_TRACKING_WHEEL_BOTTOM, true);
+    okapi::ADIEncoder midEnc(MID_TRACKING_WHEEL_TOP, MID_TRACKING_WHEEL_BOTTOM, false);
 
     pros::Mutex inertialMutex;
 
