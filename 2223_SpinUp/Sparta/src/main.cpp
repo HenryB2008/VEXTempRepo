@@ -97,8 +97,6 @@ void opcontrol() {
 		
 		Drive::arcade(Controller::getForward(), Controller::getYaw());
 
-		Odometry::printPos();
-
 		pros::delay(DELAY);
 	}
 	

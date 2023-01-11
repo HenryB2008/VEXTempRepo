@@ -96,6 +96,7 @@ namespace Odometry {
         pros::Task task{[] {
             while (true) {
                 run();
+                Odometry::printPos();
                 pros::delay(1);
             }
         }};

@@ -101,7 +101,7 @@ namespace Auton {
         flywheel.runVoltage(9000);
 
         Turn( ALLIANCE_GOAL, 2_s)
-            .withTurnGains({0.025,0.00001,0})
+            .withTurnGains({0.025,0,0.0002})
             .executeToPoint(ALLIANCE_GOAL, FORWARD);
 
         // Shoot 3 stack
@@ -110,34 +110,25 @@ namespace Auton {
         indexer.runTimed(12000, 2000);
 
         // Turn to roller position
-        Turn( {1.5_ft, 2.5_ft}, 2_s)
-            .withTurnGains({0.05,0,0})
-            .executeToPoint({1.5_ft, 2.5_ft}, REVERSE);
-
-        // Move towards roller position
-        PathBuilder()
-            .addPath(
-                Movement( {1.5_ft, 2.5_ft}, 3_s, REVERSE)
-            )
-            .execute();
-        
-        // Turn to be flush with the roller
-        Turn(90_deg, 2_s)
-            .withTurnGains({0.75,0,0})
+        Turn( 90_deg, 5_s)
+            .withTurnGains({0.01,0,0})
+            .withTurnMax(0.6)
             .execute(FORWARD);
 
-         // Continually back up slightly
+        // Continually back up slightly
         Drive::arcade(-0.4, 0);
 
-        pros::delay(1000);
+        pros::delay(1200);
 
         // Run the roller mechanism for a timed period
         intake.runTimed(12000, 600);
 
+        /*
         // Push out a bit
         Drive::arcade(0.4, 0);
 
         pros::delay(300);
+        */
 
         /*
         intake.runVoltage(12000);
