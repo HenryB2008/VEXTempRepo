@@ -75,27 +75,55 @@ namespace Auton {
         // Stop backing up and go forward
         Drive::timedForward(0.3, 400);
 
-        // Point towards the alliance goal
-        Drive::timedTurn(-0.25, 300);
-
         // Run the flywheel at slightly lower power
         flywheel.runVoltage(11000);
+
+        // Point towards the alliance goal
+        Drive::timedTurn(-0.25, 300);
 
         pros::delay(2150);
 
         // Run the indexer to shoot all of the preloaded discs
         indexer.runTimed(12000, 450);
-        pros::delay(2150);
+        pros::delay(1500);
         indexer.runTimed(12000, 2000);
 
+        intake.runVoltage(12000);
+
+        // To 3-stack
+        PathBuilder()
+            .addPath( 
+                Movement({3_ft, 3_ft}, 3_s, FORWARD)
+                    .withDistanceMax(0.4)
+            )
+            .execute();
+
+        flywheel.runVoltage(9000);
+
+        Turn( ALLIANCE_GOAL, 2_s)
+            .withTurnGains({0.025,0.00001,0})
+            .executeToPoint(ALLIANCE_GOAL, FORWARD);
+
+        // Shoot 3 stack
+        indexer.runTimed(12000, 450);
+        pros::delay(1500);
+        indexer.runTimed(12000, 2000);
+
+        // Turn to roller position
+        Turn( {1.5_ft, 2.5_ft}, 2_s)
+            .withTurnGains({0.05,0,0})
+            .executeToPoint({1.5_ft, 2.5_ft}, REVERSE);
+
+        // Move towards roller position
         PathBuilder()
             .addPath(
-                Movement( {2_ft + 8_in, 2.5_ft}, 3_s, FORWARD)
+                Movement( {1.5_ft, 2.5_ft}, 3_s, REVERSE)
             )
             .execute();
         
-        Turn(90_deg, 1.5_s)
-            .withTurnGains({0.01,0,0.002})
+        // Turn to be flush with the roller
+        Turn(90_deg, 2_s)
+            .withTurnGains({0.75,0,0})
             .execute(FORWARD);
 
          // Continually back up slightly
@@ -111,6 +139,7 @@ namespace Auton {
 
         pros::delay(300);
 
+        /*
         intake.runVoltage(12000);
         Turn({5_ft, 3_ft}, 3_s)
             .withTurnGains({0.01,0,0.002})
@@ -126,6 +155,7 @@ namespace Auton {
                     .withHeadingGains({0.08, 0, 0.002})
             )
 
+        */
         /*
 
         // Pick up 3-stack

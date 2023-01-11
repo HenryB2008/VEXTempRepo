@@ -138,6 +138,41 @@ void Turn::inPlace(const Direction &dir) {
     Drive::arcade(0,0);
 }
 
+void Turn::executeToPoint(const okapi::Point& _target, const Direction& dir){
+    
+    PIDController Turn = PIDController(turnGains, turnSlew, turnMax);
+
+    double turnError = 999999999;
+
+    double turnPower;
+
+    double turnTol = tol.convert(okapi::degree);
+
+    double endTime = pros::millis() + time.convert(okapi::millisecond);
+
+    while(abs(turnError) > turnTol && pros::millis() < endTime) {
+
+        okapi::QAngle theta = Odometry::pointingTo(_target);
+
+        if(dir == REVERSE){
+            theta += 180_deg;
+        }
+
+        Odometry::printPos();
+
+        turnError = Odometry::thetaError(theta).convert(okapi::degree);
+
+        turnPower = Turn.step(turnError);
+
+        Drive::arcade(0, turnPower);
+
+        pros::delay(10);
+
+    }
+
+  Drive::arcade(0,0);
+}
+
 void PathBuilder::execute() {
 
     // Loop through each path

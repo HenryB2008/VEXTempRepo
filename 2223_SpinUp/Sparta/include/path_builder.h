@@ -75,6 +75,7 @@ class Turn {
 
        void execute(const Direction& dir);
        void inPlace(const Direction& dir);
+       void executeToPoint(const okapi::Point& _target, const Direction& dir);
 
        /*
 
