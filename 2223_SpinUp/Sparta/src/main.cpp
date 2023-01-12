@@ -90,7 +90,7 @@ void opcontrol() {
 		// TODO: add an actual endgame method
 		if (!Controller::toggleContains(ENDGAME) && pros::c::millis() - START_TIME > 110000) {
 			printf("woop");
-			Controller::addToggleControl(ENDGAME, [](){ pros::ADIDigitalOut piston('A'); piston.set_value(true); });
+			Controller::addToggleControl(ENDGAME, [](){ pros::ADIDigitalOut piston('H'); piston.set_value(true); });
 		}
 
 		Controller::step();

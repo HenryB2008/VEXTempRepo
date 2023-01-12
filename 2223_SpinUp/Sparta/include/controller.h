@@ -15,14 +15,13 @@
 #define POINT_TO_ALLIANCE_GOAL_BUTTON okapi::ControllerDigital::B
 #define POINT_TO_ENEMY_GOAL_BUTTON okapi::ControllerDigital::Y
 
-#define TOGGLE_FLYWHEEL okapi::ControllerDigital::X
-
+#define TOGGLE_FLYWHEEL okapi::ControllerDigital::R1
 #define RUN_INDEXER okapi::ControllerDigital::R2
 
 #define INTAKE_IN okapi::ControllerDigital::up
 #define INTAKE_OUT okapi::ControllerDigital::down
 
-#define SWITCH_FLYWHEEL_ANGLE okapi::ControllerDigital::R1
+#define SWITCH_FLYWHEEL_ANGLE okapi::ControllerDigital::X
 #define ENDGAME okapi::ControllerDigital::L1
 
 

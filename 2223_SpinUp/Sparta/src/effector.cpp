@@ -53,5 +53,5 @@ void Effector::runWhenPressed(const okapi::ControllerDigital& b, double power) {
 }
 
 Effector intake    = Effector(MotorGroup({ INTAKE_MOTOR_1, INTAKE_MOTOR_2 }), { 12000, 0 });
-Effector flywheel  = Effector(MotorGroup({ FLYWHEEL_MOTOR }), { 10000, 12000, 0 });
+Effector flywheel  = Effector(MotorGroup({ FLYWHEEL_MOTOR }), { 8000, 9000, 10000, 12000, 0 });
 Effector indexer   = Effector(MotorGroup({ INDEXER_MOTOR }), { 12000, 0 });

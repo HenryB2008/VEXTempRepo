@@ -111,26 +111,26 @@ namespace Auton {
 
         // Turn to roller position
         Turn( 90_deg, 5_s)
-            .withTurnGains({0.01,0,0})
+            .withTurnGains({0.01,0,0.0002})
             .withTurnMax(0.6)
             .execute(FORWARD);
 
         // Continually back up slightly
         Drive::arcade(-0.4, 0);
 
-        pros::delay(1200);
+        pros::delay(1000);
 
         // Run the roller mechanism for a timed period
-        intake.runTimed(12000, 600);
+        intake.runTimed(12000, 1000);
 
-        /*
+        
         // Push out a bit
         Drive::arcade(0.4, 0);
 
         pros::delay(300);
-        */
+        
 
-        /*
+        
         intake.runVoltage(12000);
         Turn({5_ft, 3_ft}, 3_s)
             .withTurnGains({0.01,0,0.002})
@@ -145,34 +145,7 @@ namespace Auton {
                     .withDistGains({0.06, 0, 0})
                     .withHeadingGains({0.08, 0, 0.002})
             )
-
-        */
-        /*
-
-        // Pick up 3-stack
-        // When we appraoach the point, run the intake and start preparing the flywheel
-        PathBuilder()
-            .addPath(
-                Movement( {3_ft, 3_ft}, 3_s, FORWARD)
-            )
-            .addCallback(
-                { 3_ft, 3_ft },
-                [](){ intake.runVoltage(12000); flywheel.runVoltage(10000); },
-                10_in
-            )
             .execute();
-        
-        // Turn toward the goal
-        Turn( ALLIANCE_GOAL, 2_s)
-            .withTurnGains({0.05,0,0.0002})
-            .execute(FORWARD);
-
-        // Run the indexer to shoot all three discs inputted
-        indexer.runTimed(12000, 450);
-        pros::delay(2150);
-        indexer.runTimed(12000, 2000);       
-
-        */
 
     }
 }
