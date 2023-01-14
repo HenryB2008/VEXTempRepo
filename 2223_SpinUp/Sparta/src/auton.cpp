@@ -21,7 +21,11 @@ namespace Auton {
             .execute(FORWARD);
     }
 
-    void AUTON_rollerAndShoot() {
+    void AUTON_RIGHT_rollerAndShoot() {
+        
+    }
+
+    void AUTON_LEFT_rollerAndShoot() {
         // Start right in front of the roller
         Odometry::setPos( { 1_ft + 1.5_in, 2_ft + 8.75_in, 0_deg} );
 
