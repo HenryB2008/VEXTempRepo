@@ -55,7 +55,7 @@ namespace Auton {
     //   This particular autonomous route rotates both rollers and should shoot 
     // the 3 preload discs and 3 discs found in a row near the center. 
 
-    void AUTON_rollerAndShoot();
+    void AUTON_LEFT_rollerAndShoot();
     
     /*
 

@@ -22,7 +22,7 @@ namespace Auton {
     }
 
     void AUTON_RIGHT_rollerAndShoot() {
-        
+
     }
 
     void AUTON_LEFT_rollerAndShoot() {
@@ -30,17 +30,13 @@ namespace Auton {
         Odometry::setPos( { 1_ft + 1.5_in, 2_ft + 8.75_in, 0_deg} );
 
         // Turn flywheel on
-        flywheel.runVoltage(12000);
+        flywheel.runVoltage(9000);
 
         // Continually back up slightly
         Drive::arcade(-0.4, 0);
 
-        pros::delay(200);
-
-        Drive::arcade(0,0);
-
         // Run the roller mechanism for a timed period
-        intake.runTimed(12000, 600);
+        intake.runTimed(12000, 800);
 
         // Stop backing up and go forward
         Drive::timedForward(0.3, 400);
@@ -48,10 +44,7 @@ namespace Auton {
         // Point towards the alliance goal
         Drive::timedTurn(-0.25, 300);
 
-        // Run the flywheel at slightly lower power
-        flywheel.runVoltage(11000);
-
-        pros::delay(2150);
+        pros::delay(2000);
 
         // Run the indexer to shoot all of the preloaded discs
         indexer.runTimed(12000, 450);
@@ -68,7 +61,7 @@ namespace Auton {
         Odometry::setPos( { 1_ft + 1.5_in, 2_ft + 8.75_in, 0_deg} );
 
         // Turn flywheel on
-        flywheel.runVoltage(12000);
+        flywheel.runVoltage(9000);
 
         // Continually back up slightly
         Drive::arcade(-0.4, 0);
@@ -79,22 +72,16 @@ namespace Auton {
         // Stop backing up and go forward
         Drive::timedForward(0.3, 400);
 
-        // Run the flywheel at slightly lower power
-        flywheel.runVoltage(11500);
-
         // Point towards the alliance goal
         Drive::timedTurn(-0.25, 300);
 
-        intake.runVoltage(12000);
-
-        pros::delay(2150);
+        pros::delay(2000);
 
         // Run the indexer to shoot all of the preloaded discs
         indexer.runTimed(12000, 450);
-        pros::delay(1500);
-        indexer.runTimed(12000, 2000);
-
+        pros::delay(2150);
         intake.runVoltage(12000);
+        indexer.runTimed(12000, 2000);
 
         // To 3-stack
         PathBuilder()
@@ -104,7 +91,7 @@ namespace Auton {
             )
             .execute();
 
-        flywheel.runVoltage(10500);
+        flywheel.runVoltage(7000);
 
         Turn( ALLIANCE_GOAL, 2_s)
             .withTurnGains({0.025,0,0.0002})
@@ -139,7 +126,9 @@ namespace Auton {
             .withTurnGains({0.01,0,0.002})
             .execute(FORWARD);
 
-        flywheel.runVoltage(9000);
+        angleChanger.on();
+
+        flywheel.runVoltage(7500);
 
         PathBuilder()
             .addPath(

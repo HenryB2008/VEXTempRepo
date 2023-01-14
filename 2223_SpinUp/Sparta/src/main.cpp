@@ -54,7 +54,7 @@ void competition_initialize() {}
  */
 void autonomous() {
 
-	// Auton::AUTON_rollerAndShoot();
+	//Auton::AUTON_LEFT_rollerAndShoot();
 	Auton::SKILLS();
 	
 }
@@ -88,9 +88,9 @@ void opcontrol() {
 		// If the controller map doesn't contain the endgame button key and enough time has passed (so it's endgame), add the input
 		// 110000 ms = 110 seconds = 1 minute 50 seconds
 		// TODO: add an actual endgame method
-		if (!Controller::toggleContains(ENDGAME) && pros::c::millis() - START_TIME > 1000) {
+		if (!Controller::toggleContains(ENDGAME) && pros::c::millis() - START_TIME > 11 * ( 10000 ) ) {
 			printf("woop");
-			Controller::addToggleControl(ENDGAME, [](){ pros::ADIDigitalOut piston('G'); piston.set_value(true); });
+			Controller::addToggleControl(ENDGAME, [](){ pros::ADIDigitalOut piston('H'); piston.set_value(true); });
 		}
 
 		Controller::step();
