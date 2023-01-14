@@ -76,10 +76,12 @@ namespace Auton {
         Drive::timedForward(0.3, 400);
 
         // Run the flywheel at slightly lower power
-        flywheel.runVoltage(11000);
+        flywheel.runVoltage(11500);
 
         // Point towards the alliance goal
         Drive::timedTurn(-0.25, 300);
+
+        intake.runVoltage(12000);
 
         pros::delay(2150);
 
@@ -98,7 +100,7 @@ namespace Auton {
             )
             .execute();
 
-        flywheel.runVoltage(9000);
+        flywheel.runVoltage(10500);
 
         Turn( ALLIANCE_GOAL, 2_s)
             .withTurnGains({0.025,0,0.0002})
@@ -118,16 +120,13 @@ namespace Auton {
         // Continually back up slightly
         Drive::arcade(-0.4, 0);
 
-        pros::delay(1000);
-
-        // Run the roller mechanism for a timed period
-        intake.runTimed(12000, 1000);
+        pros::delay(2000);
 
         
         // Push out a bit
-        Drive::arcade(0.4, 0);
+        Drive::arcade(0.5, 0);
 
-        pros::delay(300);
+        pros::delay(100);
         
 
         
@@ -136,16 +135,30 @@ namespace Auton {
             .withTurnGains({0.01,0,0.002})
             .execute(FORWARD);
 
+        flywheel.runVoltage(9000);
+
         PathBuilder()
             .addPath(
                 Movement({5_ft, 3_ft}, 3_s, FORWARD)
             )
             .addPath(
-                Movement({7_ft, 5_ft}, 3_s, FORWARD)
-                    .withDistGains({0.06, 0, 0})
+                Movement({8_ft, 6_ft}, 3_s, FORWARD)
+                    .withDistGains({0.07, 0, 0.0002})
                     .withHeadingGains({0.08, 0, 0.002})
             )
+            .addCallback(
+                {7_ft, 5_ft}, []() {intake.runVoltage(12000);}
+            )
             .execute();
+
+        Turn( ALLIANCE_GOAL, 2_s)
+            .withTurnGains({0.011,0,0.0002})
+            .withTurnMax(0.6)
+            .executeToPoint(ALLIANCE_GOAL, FORWARD);
+
+        indexer.runTimed(12000, 450);
+        pros::delay(1500);
+        indexer.runTimed(12000, 2000);
 
     }
 }
