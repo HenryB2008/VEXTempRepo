@@ -23,5 +23,6 @@ class Pneumatics {
 };
 
 extern Pneumatics angleChanger;
+extern Pneumatics endgame;
 
 #endif

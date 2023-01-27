@@ -22,7 +22,7 @@
 #define INTAKE_OUT okapi::ControllerDigital::down
 
 #define SWITCH_FLYWHEEL_ANGLE okapi::ControllerDigital::X
-#define ENDGAME okapi::ControllerDigital::L1
+#define TRIGGER_ENDGAME okapi::ControllerDigital::L1
 
 
 // Struct which stores the previous state of a button and the amount of times it has been pressed

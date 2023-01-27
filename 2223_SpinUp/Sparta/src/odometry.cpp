@@ -4,11 +4,11 @@
 #include "okapi/api/units/QAngle.hpp"
 #include "ports.h"
 
-#define RIGHT_TRACKING_WHEEL_DIM 2.83525506869_in
-#define MID_TRACKING_WHEEL_DIM 2.78360062412_in
+#define RIGHT_TRACKING_WHEEL_DIM 2.855865_in
+#define MID_TRACKING_WHEEL_DIM 2.80061_in
 
-#define RIGHT_TRACKING_WHEEL_TRACK 3.50013685418_in
-#define MID_TRACKING_WHEEL_TRACK 5.65612182373_in
+#define RIGHT_TRACKING_WHEEL_TRACK 3.61346_in
+#define MID_TRACKING_WHEEL_TRACK 4.95163_in
 
 namespace Odometry {
     okapi::OdomState curPos;

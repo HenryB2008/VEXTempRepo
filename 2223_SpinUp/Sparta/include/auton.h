@@ -52,10 +52,12 @@ namespace Auton {
     
     */
 
-    //   This particular autonomous route rotates both rollers and should shoot 
-    // the 3 preload discs and 3 discs found in a row near the center. 
+    //   This particular autonomous route rotates one rollers and shoots 
+    // the 2 preload discs and 3 stack. 
 
-    void AUTON_LEFT_rollerAndShoot();
+    void LeftAuton_FiveDiscs_OneRoller();
+
+    void RightAuton_ThreeDiscs_OneRoller();
     
     /*
 

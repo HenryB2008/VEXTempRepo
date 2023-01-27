@@ -13,7 +13,7 @@
 #define INDEXER_MOTOR -17
 
 #define INTAKE_MOTOR_1 -3
-#define INTAKE_MOTOR_2 4
+#define INTAKE_MOTOR_2 5
 
 #define RIGHT_TRACKING_WHEEL_TOP 'E'
 #define RIGHT_TRACKING_WHEEL_BOTTOM 'F'
@@ -22,6 +22,7 @@
 #define MID_TRACKING_WHEEL_BOTTOM 'C'
 
 #define PNEUM_SWITCHER 'A'
+#define ENDGAME_PORT 'H'
 
 #define IMU_PORT 6
 

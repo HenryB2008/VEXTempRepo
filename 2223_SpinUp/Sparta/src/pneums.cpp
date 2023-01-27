@@ -1,7 +1,9 @@
 #include "pneums.h"
 
 Pneumatics::Pneumatics(uint8_t port): piston(port){
+    // TODO: Put pneums.off()
 
+    // remove from initialize
 }
 
 void Pneumatics::on(){
@@ -23,3 +25,4 @@ void Pneumatics::toggle(){
 }
 
 Pneumatics angleChanger = Pneumatics(PNEUM_SWITCHER);
+Pneumatics endgame = Pneumatics(ENDGAME_PORT);

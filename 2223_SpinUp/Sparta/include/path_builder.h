@@ -5,6 +5,7 @@
 #include "drive.h"
 #include "pid.h"
 #include "odometry.h"
+#include "logistic.h"
 #include <functional>
 #include "vector"
 #include <queue>
@@ -60,10 +61,10 @@ class Turn {
        okapi::QAngle target;
        okapi::QTime time;
 
-       PIDGAINS turnGains = {0.015, 0.00001, 0.0003};
+       PIDGAINS turnGains = {0.014, 0, 0};
        double turnSlew = 0.1;
        double turnMax = 1.0;
-       okapi::QAngle tol = 2_deg;
+       okapi::QAngle tol = 1_deg;
 
    public:
 
@@ -74,6 +75,7 @@ class Turn {
        : target(Odometry::pointingTo(_target)), time(_time) {}
 
        void execute(const Direction& dir);
+       void executeLogistic(const Direction& dir);
        void inPlace(const Direction& dir);
        void executeToPoint(const okapi::Point& _target, const Direction& dir);
 

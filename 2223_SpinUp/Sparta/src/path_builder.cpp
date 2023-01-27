@@ -99,6 +99,59 @@ void Turn::execute(const Direction& dir){
 
 }
 
+void Turn::executeLogistic(const Direction& dir) {
+    PIDController Turn = PIDController({0.02, 0.00065, 0.0135}, 0.1, turnMax);
+
+    double turnError = 999999999;
+
+    double turnPower;
+
+    double turnTol = tol.convert(okapi::degree);
+
+    double endTime = pros::millis() + time.convert(okapi::millisecond);
+
+    if(dir == REVERSE) {
+        target += 180_deg;
+    }
+
+    double EXECUTE_DELAY_MS = 10;
+
+    double thetaDiff = (target - Odometry::getPos().theta).convert(okapi::degree);
+
+    Logistic turnControl = Logistic(
+        -time.convert(okapi::second) * 2, 
+        time.convert(okapi::millisecond) / EXECUTE_DELAY_MS, 
+        thetaDiff,
+        Odometry::getPos().theta
+    );
+
+    Direction turnDir;
+    
+    if (thetaDiff < 0)
+        turnDir == REVERSE;
+    else {
+        turnDir == FORWARD;
+    } 
+
+    while(abs(thetaDiff) > 0.25 && pros::millis() < endTime) {
+
+        thetaDiff = (target - Odometry::getPos().theta).convert(okapi::degree);
+
+        Odometry::printPos();
+
+        turnError = (turnControl.step(dir) - Odometry::getPos().theta).convert(okapi::degree);
+
+        turnPower = Turn.step(turnError);
+
+        Drive::arcade(0, turnPower);
+
+        pros::delay(EXECUTE_DELAY_MS);
+
+    }
+
+    Drive::arcade(0,0);
+}
+
 void Turn::inPlace(const Direction &dir) {
     PIDController Turn = PIDController(turnGains, turnSlew, 0.5);
     PIDController distanceController = PIDController({0.035, 0, 0}, 0.1, 0.6);

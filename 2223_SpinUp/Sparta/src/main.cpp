@@ -3,6 +3,7 @@
 #include "controller.h"
 #include "odometry.h"
 #include "ports.h"
+#include "pneums.h"
 #include "auton.h"
 #include <cstdio>
 #include <sys/_stdint.h>
@@ -14,9 +15,10 @@
  * to keep execution time for this mode under a few seconds.
  */
 
-
 void initialize() {
 	pros::lcd::initialize();
+
+	endgame.off();
 
 	Drive::setBrakeMode(okapi::AbstractMotor::brakeMode::coast);
 
@@ -54,8 +56,10 @@ void competition_initialize() {}
  */
 void autonomous() {
 
-	//Auton::AUTON_LEFT_rollerAndShoot();
+	Drive::setBrakeMode(okapi::AbstractMotor::brakeMode::brake);
+
 	Auton::SKILLS();
+	//Auton::SKILLS();
 	
 }
 
@@ -74,6 +78,10 @@ void autonomous() {
  */
 void opcontrol() {
 
+	Drive::setBrakeMode(okapi::AbstractMotor::brakeMode::brake);
+
+	//Auton::RightAuton_ThreeDiscs_OneRoller();
+
 	const uint32_t START_TIME = pros::c::millis();
 
 	Odometry::setPos({ 0_ft, 0_ft, 0_deg });
@@ -88,9 +96,9 @@ void opcontrol() {
 		// If the controller map doesn't contain the endgame button key and enough time has passed (so it's endgame), add the input
 		// 110000 ms = 110 seconds = 1 minute 50 seconds
 		// TODO: add an actual endgame method
-		if (!Controller::toggleContains(ENDGAME) && pros::c::millis() - START_TIME > 11 * ( 10000 ) ) {
+		if (!Controller::toggleContains(TRIGGER_ENDGAME) && pros::c::millis() - START_TIME > (11 *  10000 ) ) {
 			printf("woop");
-			Controller::addToggleControl(ENDGAME, [](){ pros::ADIDigitalOut piston('H'); piston.set_value(true); });
+			Controller::addToggleControl(TRIGGER_ENDGAME, [](){ endgame.on(); });
 		}
 
 		Controller::step();
