@@ -198,17 +198,17 @@ namespace Auton {
 
         flywheel.runRPM(133);
 
-        Turn({2_ft, 2_ft})
+        Turn({2_ft, 2_ft}, 2_s)
             .executeLogistic(FORWARD);
 
         PathBuilder()
-            addPath( 
+            .addPath( 
                 Movement({2_ft, 2_ft}, 2_s, FORWARD)
-                    .withDistMax(0.5)
+                    .withDistanceMax(0.5)
             )
             .execute();
 
-        Turn(90_deg)
+        Turn(90_deg, 2_s)
             .executeLogistic(FORWARD);
 
         // Back up into roller
