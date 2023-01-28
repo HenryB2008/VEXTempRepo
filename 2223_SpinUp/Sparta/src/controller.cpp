@@ -9,8 +9,6 @@ namespace Controller {
     // initialize the map of buttons
     std::unordered_map<okapi::ControllerDigital, ToggleData> toggleMap = {
         { RESET_ODOM_BUTTON, { false, Odometry::resetHeading } },
-        { POINT_TO_ALLIANCE_GOAL_BUTTON, { false, Auton::pointToAllianceGoal } },
-        { POINT_TO_ENEMY_GOAL_BUTTON, { false, Auton::pointToEnemyGoal } },
         { TOGGLE_FLYWHEEL, { false, [](){ flywheel.toggle(); } } },
         { INTAKE_IN, { false, [](){ intake.toggle(FORWARD); } } },
         { INTAKE_OUT, { false, [](){ intake.toggle(REVERSE); } } },

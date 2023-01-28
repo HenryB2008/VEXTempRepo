@@ -34,11 +34,11 @@ class Movement {
         double distanceSlew    = 0.1;
 
         okapi::QLength tol     = 2.5_in;
-        void execute(std::queue<Callback>& callbacks);
 
     public:
         Movement(const okapi::Point& _target, const okapi::QTime& _time, const Direction& _dir) : target(_target), time(_time), dir(_dir) {}
 
+        void execute(std::queue<Callback> callbacks);
 
         Movement& withHeadingGains(const PIDGAINS& head) {headingGains = head; return *this;}
         Movement& withDistGains(const PIDGAINS& dist)  {distanceGains = dist; return *this;}
@@ -75,7 +75,7 @@ class Turn {
        : target(Odometry::pointingTo(_target)), time(_time) {}
 
        void execute(const Direction& dir);
-       void executeLogistic(const Direction& dir);
+       void executeLogistic(const Direction& dir, const PIDGAINS& logisticGains = {0.02, 0.00065, 0.0135});
        void inPlace(const Direction& dir);
        void executeToPoint(const okapi::Point& _target, const Direction& dir);
 

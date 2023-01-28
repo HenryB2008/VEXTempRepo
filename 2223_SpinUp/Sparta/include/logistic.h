@@ -21,7 +21,7 @@ class Logistic {
         double val(double max, double t);
         double derivative(double max, double t);
 
-        okapi::QAngle step(const Direction& dir);
+        okapi::QAngle step();
 };
 
 #endif

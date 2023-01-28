@@ -30,22 +30,6 @@
 
 namespace Auton {
 
-
-    /*
-    
-        ========== UTILITY FUNCTIONS ==========
-    
-    */
-
-    // Turns to the alliance goal, chained to macro specified by the driver
-
-    void pointToAllianceGoal();
-
-    // Turns to the enemy goal, chained to macro specified by the driver
-    // Not nearly as useful as the pointToAllianceGoal function
-
-    void pointToEnemyGoal();
-
     /*
     
         ========== AUTON ROUTES ==========
@@ -66,6 +50,9 @@ namespace Auton {
     */
 
     void SKILLS();
+
+    void overturnTest();
+
 }
 
 #endif

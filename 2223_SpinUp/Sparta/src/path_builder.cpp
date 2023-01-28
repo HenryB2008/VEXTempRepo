@@ -1,6 +1,6 @@
 #include "path_builder.h"
 
-void Movement::execute(std::queue<Callback>& callbacks) {
+void Movement::execute(std::queue<Callback> callbacks) {
 
   PIDController headingController  = PIDController(headingGains, headingSlew, headingMax);
   PIDController distanceController = PIDController(distanceGains, distanceSlew, distanceMax);
@@ -99,12 +99,13 @@ void Turn::execute(const Direction& dir){
 
 }
 
-void Turn::executeLogistic(const Direction& dir) {
-    PIDController Turn = PIDController({0.02, 0.00065, 0.0135}, 0.1, turnMax);
+void Turn::executeLogistic(const Direction& dir, const PIDGAINS& logisticGains) {
+    PIDController Turn = PIDController(logisticGains, 0.1, turnMax);
 
     double turnError = 999999999;
 
     double turnPower;
+    Direction turnDir;
 
     double turnTol = tol.convert(okapi::degree);
 
@@ -116,7 +117,7 @@ void Turn::executeLogistic(const Direction& dir) {
 
     double EXECUTE_DELAY_MS = 10;
 
-    double thetaDiff = (target - Odometry::getPos().theta).convert(okapi::degree);
+    double thetaDiff = okapi::OdomMath::constrainAngle180(target - Odometry::getPos().theta).convert(okapi::degree);
 
     Logistic turnControl = Logistic(
         -time.convert(okapi::second) * 2, 
@@ -125,26 +126,20 @@ void Turn::executeLogistic(const Direction& dir) {
         Odometry::getPos().theta
     );
 
-    Direction turnDir;
-    
-    if (thetaDiff < 0)
-        turnDir == REVERSE;
-    else {
-        turnDir == FORWARD;
-    } 
+    std::cout << thetaDiff << std::endl;
 
     while(abs(thetaDiff) > 0.25 && pros::millis() < endTime) {
 
-        thetaDiff = (target - Odometry::getPos().theta).convert(okapi::degree);
+        thetaDiff = okapi::OdomMath::constrainAngle180(target - Odometry::getPos().theta).convert(okapi::degree);
 
         Odometry::printPos();
 
-        turnError = (turnControl.step(dir) - Odometry::getPos().theta).convert(okapi::degree);
+        turnError = (turnControl.step() - Odometry::getPos().theta).convert(okapi::degree);
 
         turnPower = Turn.step(turnError);
 
         Drive::arcade(0, turnPower);
-
+    
         pros::delay(EXECUTE_DELAY_MS);
 
     }
@@ -169,6 +164,8 @@ void Turn::inPlace(const Direction &dir) {
     if (dir == REVERSE) {
         target += 180_deg;
     }
+
+    target = okapi::OdomMath::constrainAngle180(target);
 
     okapi::Point ogPos = {Odometry::getPos().x, Odometry::getPos().y};
 

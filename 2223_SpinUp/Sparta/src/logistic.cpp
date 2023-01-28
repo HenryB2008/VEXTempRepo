@@ -18,10 +18,10 @@ double Logistic::derivative(double max, double t) {
     return max * (1 - val(1, t)) * val(1, t);
 }
 
-okapi::QAngle Logistic::step(const Direction& dir) {
+okapi::QAngle Logistic::step() {
     currTime += TIME_INCREMENT;
 
-    idealTheta = val(MAX_VAL, currTime) * dir * 1_deg;
+    idealTheta = val(MAX_VAL, currTime) * 1_deg;
 
     std::cout << idealTheta.convert(okapi::degree) << "\n";
 

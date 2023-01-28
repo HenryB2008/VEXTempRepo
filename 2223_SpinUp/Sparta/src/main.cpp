@@ -58,8 +58,8 @@ void autonomous() {
 
 	Drive::setBrakeMode(okapi::AbstractMotor::brakeMode::brake);
 
-	Auton::SKILLS();
-	//Auton::SKILLS();
+	//Auton::LeftAuton_FiveDiscs_OneRoller();
+	Auton::overturnTest();
 	
 }
 
