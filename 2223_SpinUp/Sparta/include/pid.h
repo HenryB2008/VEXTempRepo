@@ -22,10 +22,11 @@ class PIDController { // Class which takes in an error and converts it into a ua
     double prevError; // Previous error (used for kd)
     double prevOutput; // Previous return of step (used for slew limiter)
     double errorSum; // Sum of errors from step (used for ki)
+    double integralMax;
     double maxOutput; // The absolute value of the return value from step will never be more than maxOutput
   public:
     ~PIDController() = default; // Destructor
-    PIDController(const PIDGAINS& gains, const double& slew, const double& maxOutput); // Constructor (gains, slew, maxOutput)
+    PIDController(const PIDGAINS& gains, const double& slew, const double& integralMax, const double& maxOutput); // Constructor (gains, slew, maxOutput)
     double step(const double& error); // Converts error into a usable value, such as motor power
 };
 

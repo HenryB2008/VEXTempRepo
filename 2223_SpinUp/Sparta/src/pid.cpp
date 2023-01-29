@@ -1,11 +1,12 @@
 #include "pid.h"
 
-PIDController::PIDController(const PIDGAINS& gains, const double& slew,const double& maxOutput) {
+PIDController::PIDController(const PIDGAINS& gains, const double& slew, const double& integralMax, const double& maxOutput) {
     // Copy PID Gains into PIDController
     this->kp = gains.kp;
     this->ki = gains.ki;
     this->kd = gains.kd;
     this->slew = slew;
+    this->integralMax = integralMax;
     this->maxOutput = maxOutput;
     prevError = 0;
     prevOutput = 0;
