@@ -21,7 +21,11 @@ double PIDController::step(const double& error) {
 
     errorSum += error; // sum of the error for ki
 
-    double rawOutput = error * kp + errorSum * ki + (error - prevError) * kd; // raw output from PIDGAINS
+    double i_value = errorSum * ki;
+
+    i_value = std::clamp(i_value, -integralMax, integralMax);
+
+    double rawOutput = error * kp + i_value + (error - prevError) * kd; // raw output from PIDGAINS
 
     double finalOutput; // value which is returned
 

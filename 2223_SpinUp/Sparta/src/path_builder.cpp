@@ -2,8 +2,8 @@
 
 void Movement::execute(std::queue<Callback> callbacks) {
 
-  PIDController headingController  = PIDController(headingGains, headingSlew, headingMax);
-  PIDController distanceController = PIDController(distanceGains, distanceSlew, distanceMax);
+  PIDController headingController  = PIDController(headingGains, headingSlew, 0.2, headingMax);
+  PIDController distanceController = PIDController(distanceGains, distanceSlew, 0.2, distanceMax);
 
   std::cout << "Start movement" << std::endl;
 
@@ -67,7 +67,7 @@ void Movement::execute(std::queue<Callback> callbacks) {
 
 void Turn::execute(const Direction& dir){
 
-  PIDController Turn = PIDController(turnGains, turnSlew, turnMax);
+  PIDController Turn = PIDController(turnGains, turnSlew, 0.2, turnMax);
 
   double turnError = 999999999;
 
@@ -100,7 +100,7 @@ void Turn::execute(const Direction& dir){
 }
 
 void Turn::executeLogistic(const Direction& dir, const PIDGAINS& logisticGains) {
-    PIDController Turn = PIDController(logisticGains, 0.1, turnMax);
+    PIDController Turn = PIDController(logisticGains, 0.1, 0.2, turnMax);
 
     double turnError = 999999999;
 
@@ -148,8 +148,8 @@ void Turn::executeLogistic(const Direction& dir, const PIDGAINS& logisticGains) 
 }
 
 void Turn::inPlace(const Direction &dir) {
-    PIDController Turn = PIDController(turnGains, turnSlew, 0.5);
-    PIDController distanceController = PIDController({0.035, 0, 0}, 0.1, 0.6);
+    PIDController Turn = PIDController(turnGains, turnSlew,  0.2, 0.5);
+    PIDController distanceController = PIDController({0.035, 0, 0}, 0.1,  0.2, 0.6);
 
     double distanceError = 999999999;
     double turnError = 999999999;
@@ -190,7 +190,7 @@ void Turn::inPlace(const Direction &dir) {
 
 void Turn::executeToPoint(const okapi::Point& _target, const Direction& dir){
     
-    PIDController Turn = PIDController(turnGains, turnSlew, turnMax);
+    PIDController Turn = PIDController(turnGains, turnSlew, 0.2, turnMax);
 
     double turnError = 999999999;
 
