@@ -23,8 +23,6 @@ okapi::QAngle Logistic::step() {
 
     idealTheta = val(MAX_VAL, currTime) * 1_deg;
 
-    std::cout << "ideal position: " << okapi::OdomMath::constrainAngle180(startTheta + idealTheta).convert(okapi::degree) << std::endl;
-
     return okapi::OdomMath::constrainAngle180(startTheta + idealTheta);
 
 

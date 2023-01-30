@@ -225,7 +225,7 @@ namespace Auton {
         // Back up into roller
         Drive::timedForward(-0.4, 800);
 
-        pros::delay(700);
+        pros::delay(800);
 
         Drive::timedForward(0.3, 300);
 
@@ -309,8 +309,9 @@ namespace Auton {
         indexer.runRPM(0);
 
         // Move towards roller
-        MoveUtil::turnTo({ 9_ft, 11_ft }, 2_s, REVERSE);
-        MoveUtil::moveTo({ 9_ft, 11_ft }, 2_s, REVERSE, 0.8);
+        MoveUtil::turnTo({ 9_ft, 11.5_ft }, 2_s, REVERSE);
+        intake.runRPM(0);
+        MoveUtil::moveTo({ 9_ft, 11.5_ft }, 2_s, REVERSE, 0.8);
 
         // Turn flush with the roller
         MoveUtil::turnTo(270_deg, 2_s, FORWARD);
@@ -318,10 +319,8 @@ namespace Auton {
         // Back up into roller
         Drive::timedForward(-0.3, 750);
 
-        intake.runRPM(-120);
-
-        pros::delay(500);
-
+        intake.runRPM(-130);
+        pros::delay(400);
         intake.runRPM(0);
 
         Drive::timedForward(0.3, 500);
