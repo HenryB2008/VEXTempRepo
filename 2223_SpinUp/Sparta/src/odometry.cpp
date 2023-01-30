@@ -49,8 +49,10 @@ namespace Odometry {
 
         // Get heading
 
+        positionMutex.take();
         QAngle curHeading   = getHeading();
         QAngle deltaHeading = okapi::OdomMath::constrainAngle180(curHeading - curPos.theta);
+        positionMutex.give();
 
         okapi::QLength localXChange, localYChange;
 
@@ -143,6 +145,10 @@ namespace Odometry {
         positionMutex.take();
         curPos = os;
         positionMutex.give();
+
+        inertialMutex.take();
+        inertial.set_heading(okapi::OdomMath::constrainAngle360(os.theta).convert(okapi::degree));
+        inertialMutex.give();
     }
 
     void printPos() {

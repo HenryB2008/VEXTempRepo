@@ -156,12 +156,11 @@ namespace Auton {
     }
 
     void overturnTest(){
-        Odometry::setPos( { 6_ft, 8_ft, 0_deg} );
-        Odometry::setPos( {6_ft, 8_ft, Odometry::pointingTo(ENEMY_GOAL)});
+        Odometry::setPos( { 6_ft, 8_ft, 150_deg });
 
         // Move towards roller
-        MoveUtil::turnTo({ 6_ft, 10_ft }, 2_s, FORWARD);
-        MoveUtil::moveTo({ 9_ft, 11_ft }, 2_s, REVERSE, 1.0);
+        MoveUtil::turnTo({ 6_ft, 10_ft }, 2_s, REVERSE);
+        // MoveUtil::moveTo({ 9_ft, 11_ft }, 2_s, REVERSE, 1.0);
 
     }
 
@@ -169,8 +168,6 @@ namespace Auton {
 
         // Start right in front of the roller
         Odometry::setPos( { 1_ft, 3_ft, 0_deg} );
-
-
 
         flywheel.runRPM(200);
 
@@ -204,12 +201,13 @@ namespace Auton {
         pros::delay(500);
 
         indexer.runRPM(200);
-        pros::delay(400);
+        pros::delay(600);
         indexer.runRPM(0);
 
         Turn({2_ft, 2_ft}, 2_s)
             .executeLogistic(FORWARD);
 
+        
         PathBuilder()
             .addPath( 
                 Movement({2_ft, 2_ft}, 2_s, FORWARD)
@@ -312,7 +310,7 @@ namespace Auton {
 
         // Move towards roller
         MoveUtil::turnTo({ 9_ft, 11_ft }, 2_s, REVERSE);
-        MoveUtil::moveTo({ 9_ft, 11_ft }, 2_s, REVERSE, 1.0);
+        MoveUtil::moveTo({ 9_ft, 11_ft }, 2_s, REVERSE, 0.8);
 
         // Turn flush with the roller
         MoveUtil::turnTo(270_deg, 2_s, FORWARD);

@@ -18,14 +18,14 @@ namespace MoveUtil {
         const okapi::Point& _target,
         const okapi::QTime& timeout,
         const Direction& dir, 
-        const PIDGAINS& gains = {0.02, 0.00065, 0.0135}
+        const PIDGAINS& gains = {0.025, 0.00065, 0.015}
     );
 
     void turnTo(
         const okapi::QAngle& _angle, 
         const okapi::QTime& timeout,
         const Direction& dir,
-        const PIDGAINS& gains = {0.02, 0.00065, 0.0135}
+        const PIDGAINS& gains = {0.025, 0.00065, 0.015}
     );
         
 }

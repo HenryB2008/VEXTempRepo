@@ -23,7 +23,7 @@ void Movement::execute(std::queue<Callback> callbacks) {
 
   while (distanceError > distanceTol && pros::millis() < endTime) {
       distanceError = Odometry::magError(target).convert(okapi::inch);
-      std::cout << distanceError << std::endl;
+      // std::cout << distanceError << std::endl;
       pros::c::lcd_print(4, "distanceError: %f inches", distanceError);
 
       // if we are outside 12_in distance, recalculate theta
@@ -105,13 +105,12 @@ void Turn::executeLogistic(const Direction& dir, const PIDGAINS& logisticGains) 
     double turnError = 999999999;
 
     double turnPower;
-    Direction turnDir;
 
     double turnTol = tol.convert(okapi::degree);
 
     double endTime = pros::millis() + time.convert(okapi::millisecond);
 
-    if(dir == REVERSE) {
+    if (dir == REVERSE) {
         target += 180_deg;
     }
 
@@ -126,19 +125,22 @@ void Turn::executeLogistic(const Direction& dir, const PIDGAINS& logisticGains) 
         Odometry::getPos().theta
     );
 
-    std::cout << thetaDiff << std::endl;
+    //std::cout << thetaDiff << std::endl;
 
     while(abs(thetaDiff) > 0.25 && pros::millis() < endTime) {
 
         thetaDiff = okapi::OdomMath::constrainAngle180(target - Odometry::getPos().theta).convert(okapi::degree);
+        // std::cout << "theta diff: " << thetaDiff << std::endl;
 
         Odometry::printPos();
 
-        turnError = (turnControl.step() - Odometry::getPos().theta).convert(okapi::degree);
+        turnError = okapi::OdomMath::constrainAngle180(turnControl.step() - Odometry::getPos().theta).convert(okapi::degree);
 
         turnPower = Turn.step(turnError);
 
         Drive::arcade(0, turnPower);
+
+        // std::cout << "turn power: " << turnPower << std::endl;
     
         pros::delay(EXECUTE_DELAY_MS);
 
