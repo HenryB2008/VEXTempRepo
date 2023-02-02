@@ -108,7 +108,6 @@ namespace Auton {
             )
             .execute();
 
-        /*
 
         Turn( ALLIANCE_GOAL, 1.5_s)
             .executeLogistic(FORWARD);
@@ -150,8 +149,6 @@ namespace Auton {
         pros::delay(400);
 
         Drive::timedForward(0.3, 500);
-
-        */
 
     }
 
