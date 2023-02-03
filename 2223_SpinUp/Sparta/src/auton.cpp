@@ -13,7 +13,7 @@ namespace Auton {
         // Start right in front of the roller
         Odometry::setPos( { 1_ft, 3_ft, 0_deg} );
 
-        flywheel.runRPM(200);
+        flywheel.runRPM(133);
 
         // Back up into roller
         Drive::timedForward(-0.3, 600);
@@ -28,8 +28,6 @@ namespace Auton {
 
         intake.runRPM(200);
 
-        flywheel.runRPM(133);
-
         MoveUtil::turnTo(ALLIANCE_GOAL, 2.5_s, FORWARD);
 
         pros::delay(1000);
@@ -38,8 +36,6 @@ namespace Auton {
         indexer.runRPM(200);
         pros::delay(400);
         indexer.runRPM(0);
-
-        flywheel.runRPM(127);
 
         pros::delay(500);
 
@@ -60,7 +56,7 @@ namespace Auton {
             )
             .execute();
 
-        flywheel.runRPM(118);
+        flywheel.runRPM(120);
 
         Drive::timedForward(0.3, 400);
 
@@ -79,15 +75,13 @@ namespace Auton {
         pros::delay(300);
         indexer.runRPM(0);
 
-        flywheel.runRPM(118);
         pros::delay(300);
 
         indexer.runRPM(200);
         pros::delay(400);
         indexer.runRPM(0);
 
-        flywheel.runRPM(117);
-        pros::delay(500);
+        pros::delay(300);
         
         indexer.runRPM(200);
 
@@ -220,11 +214,11 @@ namespace Auton {
         intake.runRPM(135);
 
         // Back up into roller
-        Drive::timedForward(-0.4, 800);
+        Drive::timedForward(-0.6, 500);
 
-        pros::delay(800);
+        pros::delay(1050);
 
-        Drive::timedForward(0.3, 300);
+        Drive::timedForward(0.3, 150);
 
         intake.runRPM(200);
 
@@ -287,6 +281,8 @@ namespace Auton {
         // Turn to the enemy goal
         Drive::timedTurn(0.375, 200);
 
+        pros::delay(500);
+
         // Run the indexer to shoot all of the preloaded discs
         indexer.runRPM(200);
         pros::delay(300);
@@ -306,20 +302,56 @@ namespace Auton {
         indexer.runRPM(0);
 
         // Move towards roller
-        MoveUtil::turnTo({ 9_ft, 11.5_ft }, 2_s, REVERSE);
+        MoveUtil::turnTo({ 6_ft, 10.5_ft }, 2_s, REVERSE);
         intake.runRPM(0);
-        MoveUtil::moveTo({ 9_ft, 11.5_ft }, 2_s, REVERSE, 0.8);
+        MoveUtil::moveTo({ 6_ft, 10.75_ft }, 4_s, REVERSE, 0.5);
 
-        // Turn flush with the roller
+        // Turn facing 9,11
+        MoveUtil::turnTo(0_deg, 2_s, FORWARD);
+
+        // Move forward 2 feet
+        MoveUtil::moveTo( {9_ft, 10.75_ft}, 2_s, FORWARD, 0.8);
+
+        // Turn 270_deg
         MoveUtil::turnTo(270_deg, 2_s, FORWARD);
 
         // Back up into roller
-        Drive::timedForward(-0.3, 750);
+        Drive::timedForward(-0.6, 500);
 
-        intake.runRPM(-130);
+        // Rotate Roller
+        intake.runRPM(130);
         pros::delay(400);
         intake.runRPM(0);
 
         Drive::timedForward(0.3, 500);
+
+        // Turn to final roller
+        MoveUtil::turnTo({10.5_ft, 9_ft}, 2_s, REVERSE);
+
+        // Move to the final position
+        MoveUtil::moveTo({10.5_ft, 9_ft}, 2_s, REVERSE, 0.75);
+    
+        // Turn 270_deg
+        MoveUtil::turnTo(180_deg, 2_s, FORWARD);
+
+        // Back up into roller
+        Drive::timedForward(-0.6, 500);
+
+        // Rotate Roller
+        intake.runRPM(130);
+        pros::delay(400);
+        intake.runRPM(0);
+
+        MoveUtil::moveTo({9_ft, 9_ft}, 2_s, FORWARD, 0.75);
+
+        MoveUtil::turnTo(225_deg, 2_s, FORWARD);
+
+        // Back up into roller
+        Drive::timedForward(-0.7, 650);
+
+        pros::delay(600);
+
+        endgame.off();
+    
     }
 }

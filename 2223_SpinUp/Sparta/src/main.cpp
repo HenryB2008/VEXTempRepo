@@ -18,7 +18,7 @@
 void initialize() {
 	pros::lcd::initialize();
 
-	endgame.off();
+	endgame.on();
 
 	Drive::setBrakeMode(okapi::AbstractMotor::brakeMode::coast);
 
@@ -30,7 +30,9 @@ void initialize() {
  * the VEX Competition Switch, following either autonomous or opcontrol. When
  * the robot is enabled, this task will exit.
  */
-void disabled() {}
+void disabled() {
+
+}
 
 /**
  * Runs after initialize(), and before autonomous when connected to the Field
@@ -97,9 +99,9 @@ void opcontrol() {
 		// If the controller map doesn't contain the endgame button key and enough time has passed (so it's endgame), add the input
 		// 110000 ms = 110 seconds = 1 minute 50 seconds
 		// TODO: add an actual endgame method
-		if (!Controller::toggleContains(TRIGGER_ENDGAME) && pros::c::millis() - START_TIME > (11 *  10000 ) ) {
+		if (!Controller::toggleContains(TRIGGER_ENDGAME) && pros::c::millis() - START_TIME > (1 *  10000 ) ) {
 			printf("woop");
-			Controller::addToggleControl(TRIGGER_ENDGAME, [](){ endgame.on(); });
+			Controller::addToggleControl(TRIGGER_ENDGAME, [](){ endgame.off(); });
 		}
 
 		Controller::step();
