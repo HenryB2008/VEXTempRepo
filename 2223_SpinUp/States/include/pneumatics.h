@@ -33,8 +33,8 @@ class Pneumatics {
         // Deactivates pneumatoc
         void off();
 
-        //
-        bool getPreviousState
+        // If previous state was on, shuts the piston down
+        void toggle();
 
 };
 

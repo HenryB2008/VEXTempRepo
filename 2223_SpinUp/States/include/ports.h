@@ -1,0 +1,32 @@
+#ifndef PORTS_H
+#define PORTS_H
+
+// bad ports: 19, 15
+
+#define TOP_LEFT_MOTOR 1
+#define TOP_RIGHT_MOTOR 4
+
+#define MID_LEFT_MOTOR -2
+#define MID_RIGHT_MOTOR 5
+
+#define BOTTOM_LEFT_MOTOR -3
+#define BOTTOM_RIGHT_MOTOR 6
+
+#define FLYWHEEL_MOTOR 16
+#define INDEXER_MOTOR -17
+
+#define INTAKE_MOTOR_1 -3
+#define INTAKE_MOTOR_2 5
+
+#define RIGHT_TRACKING_WHEEL_TOP 'E'
+#define RIGHT_TRACKING_WHEEL_BOTTOM 'F'
+
+#define MID_TRACKING_WHEEL_TOP 'D'
+#define MID_TRACKING_WHEEL_BOTTOM 'C'
+
+#define PNEUM_SWITCHER 'A'
+#define ENDGAME_PORT 'H'
+
+#define IMU_PORT 6
+
+#endif
