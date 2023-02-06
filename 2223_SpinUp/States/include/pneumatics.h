@@ -33,6 +33,7 @@ class Pneumatics {
         // Deactivates pneumatoc
         void off();
 
+        //
         bool getPreviousState
 
 };
