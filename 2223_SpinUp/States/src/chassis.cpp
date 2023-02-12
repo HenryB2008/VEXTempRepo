@@ -34,8 +34,6 @@ namespace Chassis {
         arcade(0, 0);
     }
 
-    /*
-
     namespace Odometry {
 
         okapi::OdomState curPos;
@@ -210,7 +208,5 @@ namespace Chassis {
         }
 
     };
-
-    */
-
+    
 };
