@@ -10,7 +10,7 @@ Logistic::Logistic(double startTime, double numberOfIntervals, double thetaDiffe
 }
 
 double Logistic::val(double max, double t) {
-    return max / (1 + pow(M_E, -t));
+    return max / (1 + pow(2.71828, -t));
 }
 
 double Logistic::derivative(double max, double t) {

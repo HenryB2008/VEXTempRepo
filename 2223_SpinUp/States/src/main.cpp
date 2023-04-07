@@ -1,5 +1,6 @@
 #include "main.h"
 #include "chassis.h"
+#include "controller.h"
 
 /**
  * A callback function for LLEMU's center button.
@@ -85,6 +86,8 @@ void opcontrol() {
 	const uint32_t START_TIME = pros::c::millis();
 	
 	while (true) {
+
+		Controller::step();
 		
 		Chassis::arcade(masterController.getAnalog(okapi::ControllerAnalog::leftY), masterController.getAnalog( okapi::ControllerAnalog::rightX));
 

@@ -34,6 +34,8 @@ namespace Chassis {
         arcade(0, 0);
     }
 
+    
+
     namespace Odometry {
 
         okapi::OdomState curPos;
@@ -64,8 +66,8 @@ namespace Chassis {
 
             // Movements in inches
 
-            okapi::QLength delta_right = (right_tick - rightEncVal) / 360 * M_PI * RIGHT_TRACKING_WHEEL_DIM;
-            okapi::QLength delta_mid   = (mid_tick - midEncVal)     / 360 * M_PI * MID_TRACKING_WHEEL_DIM;
+            okapi::QLength delta_right = (right_tick - rightEncVal) / 360 * 3.141592 * RIGHT_TRACKING_WHEEL_DIM;
+            okapi::QLength delta_mid   = (mid_tick - midEncVal)     / 360 * 3.141592 * MID_TRACKING_WHEEL_DIM;
 
             // Reset previous values
 
