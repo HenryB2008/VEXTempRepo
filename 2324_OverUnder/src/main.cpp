@@ -1,21 +1,81 @@
 #include "main.h"
 #include "lemlib/api.hpp"
 
-/**
- * A callback function for LLEMU's center button.
- *
- * When this callback is fired, it will toggle line 2 of the LCD text between
- * "I was pressed!" and nothing.
- */
-void on_center_button() {
-	static bool pressed = false;
-	pressed = !pressed;
-	if (pressed) {
-		pros::lcd::set_text(2, "I was pressed!");
-	} else {
-		pros::lcd::clear_line(2);
-	}
-}
+pros::Controller master(pros::E_CONTROLLER_MASTER);
+
+pros::MotorGroup left_drive({pros::Motor(10, pros::E_MOTOR_GEAR_BLUE), pros::Motor(-4, pros::E_MOTOR_GEAR_BLUE), pros::Motor(19, pros::E_MOTOR_GEAR_BLUE)});	// front mid back
+pros::MotorGroup right_drive({pros::Motor(-1, pros::E_MOTOR_GEAR_BLUE), pros::Motor(8, pros::E_MOTOR_GEAR_BLUE), pros::Motor(-12, pros::E_MOTOR_GEAR_BLUE)});
+
+pros::Motor cata[2] = {pros::Motor(5, pros::E_MOTOR_GEAR_GREEN), pros::Motor(-9, pros::E_MOTOR_GEAR_GREEN)};	// left right
+
+pros::Rotation left_rot(16);
+pros::Rotation right_rot(-17);
+pros::Imu imu(18);	// check this port
+
+lemlib::Drivetrain_t drivetrain {
+	&left_drive,
+	&right_drive,
+	11.71875, // track width
+	4, // wheel diameter
+	300 // wheel rpm
+};
+
+lemlib::TrackingWheel left_tracking(
+	&left_rot, // rotation sensor object
+	2.75, // wheel diameter
+	-2.890625, // tracking center offset (negative if to left of tracking center)
+	1 // TRACKING WHEEL gear ratio
+);
+
+lemlib::TrackingWheel right_tracking(
+	&left_rot, // rotation sensor object
+	2.75, // wheel diameter
+	2.890625, // tracking center offset (negative if to left of tracking center)
+	1 // TRACKING WHEEL gear ratio
+);
+
+lemlib::OdomSensors_t odom_sensors {
+	&left_tracking, // parallel tracking wheel left
+	nullptr, // &right_tracking, // parallel tracking wheel right
+	nullptr, // perpendicular tracking wheel 1
+	nullptr, // perpendicular tracking wheel 2
+	&imu // inertial sensor
+};
+
+// forward/backward PID
+lemlib::ChassisController_t lateral_controller {
+    3000000, // kP
+    0.01, // kD
+    1, // smallErrorRange
+    100, // smallErrorTimeout
+    3, // largeErrorRange
+    500, // largeErrorTimeout
+    5000 // slew rate
+};
+ 
+// turning PID
+lemlib::ChassisController_t angular_controller {
+    4, // kP
+    40, // kD
+    100, // smallErrorRange		//1
+    100, // smallErrorTimeout
+    3, // largeErrorRange
+    500, // largeErrorTimeout
+    5 // slew rate		// 0
+};
+
+lemlib::Chassis chassis(drivetrain, lateral_controller, angular_controller, odom_sensors);
+
+pros::ADIDigitalOut wings('A');
+pros::ADIDigitalOut load_arm('B');
+
+bool wings_deployed = true;		// true is actually not deployed, it's just the piston state for not deployed is 1
+bool load_arm_deployed = true;
+
+int cata_retract_length = 250;
+int cata_retract_start = -cata_retract_length;
+
+
 
 /**
  * Runs initialization code. This occurs as soon as the program is started.
@@ -25,9 +85,11 @@ void on_center_button() {
  */
 void initialize() {
 	pros::lcd::initialize();
-	pros::lcd::set_text(1, "Hello PROS User!");
+	chassis.calibrate();
 
-	pros::lcd::register_btn1_cb(on_center_button);
+	for (pros::Motor m : cata) {
+		m.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
+	}
 }
 
 /**
@@ -75,41 +137,24 @@ void autonomous() {}
  * task, not resume it from where it left off.
  */
 void opcontrol() {
-	pros::Controller master(pros::E_CONTROLLER_MASTER);
-	pros::Motor left_mtr(1);
-	pros::Motor right_mtr(2);
-
-	pros::Motor left_drive[3] = {pros::Motor(10, pros::E_MOTOR_GEAR_BLUE), pros::Motor(-4, pros::E_MOTOR_GEAR_BLUE), pros::Motor(19, pros::E_MOTOR_GEAR_BLUE)};	// front mid back
-	pros::Motor right_drive[3] = {pros::Motor(-1, pros::E_MOTOR_GEAR_BLUE), pros::Motor(8, pros::E_MOTOR_GEAR_BLUE), pros::Motor(-12, pros::E_MOTOR_GEAR_BLUE)};
-
-	pros::Motor cata[2] = {pros::Motor(5, pros::E_MOTOR_GEAR_GREEN), pros::Motor(-9, pros::E_MOTOR_GEAR_GREEN)};	// left right
-	for (pros::Motor m : cata) {
-		m.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
-	}
-
-	pros::ADIDigitalOut wings('A');
-	pros::ADIDigitalOut load_arm('B');
-
-	bool wings_deployed = true;		// true is actually not deployed, it's just the piston state for not deployed is 1
-	bool load_arm_deployed = true;
-
 	wings.set_value(wings_deployed);
 	load_arm.set_value(wings_deployed);
 
-	int cata_retract_length = 250;
-	int cata_retract_start = -cata_retract_length;
+	// chassis.moveTo(0, 10, 0, 1000, false, true, 0, 0.6, 127, true);
+
+	// chassis.moveTo(0, 10, 0, 1000, );
 
 	while (true) {
+		lemlib::Pose pose = chassis.getPose();
+		pros::lcd::print(0, "x: %f", pose.x);
+		pros::lcd::print(1, "y: %f", pose.y);
+		pros::lcd::print(2, "theta: %f", pose.theta);
+		
 		int left = master.get_analog(ANALOG_LEFT_Y);
 		int right = master.get_analog(ANALOG_RIGHT_Y);
 
-		for (pros::Motor m : left_drive) {
-			m.move(left);
-		}
-
-		for (pros::Motor m : right_drive) {
-			m.move(right);
-		}
+		left_drive.move(left);
+		right_drive.move(right);
 
 		if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_L1)) {
 			wings_deployed = !wings_deployed;
