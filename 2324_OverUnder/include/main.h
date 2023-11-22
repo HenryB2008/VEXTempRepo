@@ -62,6 +62,7 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
+
 void autonomous(void);
 void initialize(void);
 void disabled(void);
@@ -76,6 +77,14 @@ void opcontrol(void);
  * You can add C++-only headers here
  */
 //#include <iostream>
+
+#ifndef OBJECTS
+#define OBJECTS
+extern pros::ADIDigitalOut wings;
+extern pros::ADIDigitalOut load_arm;
+extern pros::MotorGroup cata;
+#endif
+
 #endif
 
 #endif  // _PROS_MAIN_H_

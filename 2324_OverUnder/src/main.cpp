@@ -1,12 +1,13 @@
 #include "main.h"
 #include "lemlib/api.hpp"
+#include "routes.h"
 
 pros::Controller master(pros::E_CONTROLLER_MASTER);
 
 pros::MotorGroup left_drive({pros::Motor(10, pros::E_MOTOR_GEAR_BLUE), pros::Motor(-4, pros::E_MOTOR_GEAR_BLUE), pros::Motor(19, pros::E_MOTOR_GEAR_BLUE)});	// front mid back
 pros::MotorGroup right_drive({pros::Motor(-1, pros::E_MOTOR_GEAR_BLUE), pros::Motor(8, pros::E_MOTOR_GEAR_BLUE), pros::Motor(-12, pros::E_MOTOR_GEAR_BLUE)});
 
-pros::Motor cata[2] = {pros::Motor(5, pros::E_MOTOR_GEAR_GREEN), pros::Motor(-9, pros::E_MOTOR_GEAR_GREEN)};	// left right
+pros::MotorGroup cata({pros::Motor(5, pros::E_MOTOR_GEAR_RED), pros::Motor(-9, pros::E_MOTOR_GEAR_RED)});	// left right
 
 pros::Rotation left_rot(16);
 pros::Rotation right_rot(-17);
@@ -35,8 +36,8 @@ lemlib::TrackingWheel right_tracking(
 );
 
 lemlib::OdomSensors_t odom_sensors {
-	&left_tracking, // parallel tracking wheel left
-	nullptr, // &right_tracking, // parallel tracking wheel right
+	&left_tracking, // &left_tracking, // parallel tracking wheel left
+	nullptr, // parallel tracking wheel right
 	nullptr, // perpendicular tracking wheel 1
 	nullptr, // perpendicular tracking wheel 2
 	&imu // inertial sensor
@@ -44,24 +45,24 @@ lemlib::OdomSensors_t odom_sensors {
 
 // forward/backward PID
 lemlib::ChassisController_t lateral_controller {
-    3000000, // kP
-    0.01, // kD
+    22, // kP
+    125, // kD 80 pretty good
     1, // smallErrorRange
     100, // smallErrorTimeout
     3, // largeErrorRange
     500, // largeErrorTimeout
-    5000 // slew rate
+    100 // slew rate
 };
  
 // turning PID
 lemlib::ChassisController_t angular_controller {
     4, // kP
-    40, // kD
-    100, // smallErrorRange		//1
+    25, // 40 kD
+    1, // smallErrorRange		//1
     100, // smallErrorTimeout
-    3, // largeErrorRange
+    2, // largeErrorRange
     500, // largeErrorTimeout
-    5 // slew rate		// 0
+    100 // slew rate		// 0
 };
 
 lemlib::Chassis chassis(drivetrain, lateral_controller, angular_controller, odom_sensors);
@@ -85,11 +86,20 @@ int cata_retract_start = -cata_retract_length;
  */
 void initialize() {
 	pros::lcd::initialize();
+
+	wings.set_value(wings_deployed);
+	load_arm.set_value(wings_deployed);
+
 	chassis.calibrate();
 
-	for (pros::Motor m : cata) {
-		m.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
-	}
+	cata.set_brake_modes(pros::E_MOTOR_BRAKE_HOLD);
+
+
+	cata.move(127);
+    pros::delay(500);
+    cata.move(0);
+
+	cata.move(15*127/100);
 }
 
 /**
@@ -97,7 +107,10 @@ void initialize() {
  * the VEX Competition Switch, following either autonomous or opcontrol. When
  * the robot is enabled, this task will exit.
  */
-void disabled() {}
+void disabled() {
+	initialize();
+	competition_initialize();
+}
 
 /**
  * Runs after initialize(), and before autonomous when connected to the Field
@@ -108,7 +121,9 @@ void disabled() {}
  * This task will exit when the robot is enabled and autonomous or opcontrol
  * starts.
  */
-void competition_initialize() {}
+void competition_initialize() {
+	
+}
 
 /**
  * Runs the user autonomous code. This function will be started in its own task
@@ -121,7 +136,9 @@ void competition_initialize() {}
  * will be stopped. Re-enabling the robot will restart the task, not re-start it
  * from where it left off.
  */
-void autonomous() {}
+void autonomous() {
+
+}
 
 /**
  * Runs the operator control code. This function will be started in its own task
@@ -137,12 +154,19 @@ void autonomous() {}
  * task, not resume it from where it left off.
  */
 void opcontrol() {
-	wings.set_value(wings_deployed);
-	load_arm.set_value(wings_deployed);
-
 	// chassis.moveTo(0, 10, 0, 1000, false, true, 0, 0.6, 127, true);
 
-	// chassis.moveTo(0, 10, 0, 1000, );
+	// chassis.turnTo(30, 0, 10000);
+	// chassis.moveTo(0, 48, 10000, 40, true);
+
+
+	while (true) {
+		if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_A)) {
+			break;
+		}
+	}
+
+	opposite_side(chassis);
 
 	while (true) {
 		lemlib::Pose pose = chassis.getPose();
@@ -154,7 +178,7 @@ void opcontrol() {
 		int right = master.get_analog(ANALOG_RIGHT_Y);
 
 		left_drive.move(left);
-		right_drive.move(right);
+		right_drive.move(left); // right
 
 		if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_L1)) {
 			wings_deployed = !wings_deployed;
@@ -172,17 +196,11 @@ void opcontrol() {
 		}
 		
 		if (pros::millis() - cata_retract_start < cata_retract_length) {
-			for (pros::Motor m : cata) {
-				m.move(127);
-			}
+			cata.move(127);
 		} else if (master.get_digital(pros::E_CONTROLLER_DIGITAL_R1)) {
-			for (pros::Motor m : cata) {
-				m.move(127);
-			}
+			cata.move(127);
 		} else {
-			for (pros::Motor m : cata) {
-				m.move(0);
-			}
+			cata.move(0);
 		}
 
 		pros::delay(20);
