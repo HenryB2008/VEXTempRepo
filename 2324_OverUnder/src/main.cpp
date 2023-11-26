@@ -94,12 +94,14 @@ void initialize() {
 
 	cata.set_brake_modes(pros::E_MOTOR_BRAKE_HOLD);
 
+	cata.set_zero_position(0);
 
-	cata.move(127);
-    pros::delay(500);
-    cata.move(0);
-
-	cata.move(15*127/100);
+	/*
+	while (true) {
+		pros::lcd::print(0, "%f", cata.get_positions()[1]);
+		pros::delay(50);
+	}
+	*/
 }
 
 /**
@@ -108,8 +110,8 @@ void initialize() {
  * the robot is enabled, this task will exit.
  */
 void disabled() {
-	initialize();
-	competition_initialize();
+	//initialize();
+	//competition_initialize();
 }
 
 /**
@@ -137,7 +139,7 @@ void competition_initialize() {
  * from where it left off.
  */
 void autonomous() {
-
+	own_side(chassis);
 }
 
 /**
@@ -159,14 +161,14 @@ void opcontrol() {
 	// chassis.turnTo(30, 0, 10000);
 	// chassis.moveTo(0, 48, 10000, 40, true);
 
-
+	/*
 	while (true) {
 		if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_A)) {
 			break;
 		}
-	}
+	} */
 
-	opposite_side(chassis);
+	cata.move(0);
 
 	while (true) {
 		lemlib::Pose pose = chassis.getPose();

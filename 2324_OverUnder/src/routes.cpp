@@ -43,10 +43,23 @@ void opposite_side(lemlib::Chassis chassis) {
 }
 
 void own_side(lemlib::Chassis chassis) {
-    cata.move(15*127/100);
     chassis.setPose(0, 0, 0);
+    while (cata.get_positions()[0] < 1500) {
+        cata.move(127);
+        pros::delay(50);
+    }
+    cata.move(15*127/100);
 
+    chassis.moveTo(0, -18, 1000, 40);
+    pros::delay(500);
+    chassis.turnTo(-20, 30, 1000, false, 80);
+    chassis.moveTo(20, -30, 1000, 60);
+    cata.move(-127);
+    pros::delay(500);
+    chassis.turnTo(-10, 0, 1000, 40);
     chassis.moveTo(0, -20, 1000, 40);
-    chassis.turnTo(10, -10, 1000, false, 80);
-    chassis.moveTo(10, -10, 1000, 40);
+    //pros::delay(500);
+    //chassis.moveTo(0, 5, 1000, 40);
+
+    // chassis.
 }
