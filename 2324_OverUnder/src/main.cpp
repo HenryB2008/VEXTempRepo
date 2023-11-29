@@ -67,8 +67,8 @@ lemlib::ChassisController_t angular_controller {
 
 lemlib::Chassis chassis(drivetrain, lateral_controller, angular_controller, odom_sensors);
 
-pros::ADIDigitalOut wings('A');
-pros::ADIDigitalOut load_arm('B');
+pros::ADIDigitalOut left_wing('A');
+pros::ADIDigitalOut right_wing('B');
 
 bool wings_deployed = true;		// true is actually not deployed, it's just the piston state for not deployed is 1
 bool load_arm_deployed = true;
@@ -87,8 +87,8 @@ int cata_retract_start = -cata_retract_length;
 void initialize() {
 	pros::lcd::initialize();
 
-	wings.set_value(wings_deployed);
-	load_arm.set_value(wings_deployed);
+	left_wing.set_value(wings_deployed);
+	right_wing.set_value(wings_deployed);
 
 	chassis.calibrate();
 
@@ -180,16 +180,16 @@ void opcontrol() {
 		int right = master.get_analog(ANALOG_RIGHT_Y);
 
 		left_drive.move(left);
-		right_drive.move(left); // right
+		right_drive.move(right); // right
 
 		if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_L1)) {
 			wings_deployed = !wings_deployed;
-			wings.set_value(wings_deployed);
+			left_wing.set_value(wings_deployed);
 		}
 
 		if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_L2)) {
 			load_arm_deployed = !load_arm_deployed;
-			load_arm.set_value(load_arm_deployed);
+			right_wing.set_value(wings_deployed);
 		}
 
 

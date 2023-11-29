@@ -80,8 +80,8 @@ void opcontrol(void);
 
 #ifndef OBJECTS
 #define OBJECTS
-extern pros::ADIDigitalOut wings;
-extern pros::ADIDigitalOut load_arm;
+extern pros::ADIDigitalOut left_wing;
+extern pros::ADIDigitalOut right_wing;
 extern pros::MotorGroup cata;
 #endif
 
