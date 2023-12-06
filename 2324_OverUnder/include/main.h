@@ -82,6 +82,8 @@ void opcontrol(void);
 #define OBJECTS
 extern pros::ADIDigitalOut left_wing;
 extern pros::ADIDigitalOut right_wing;
+extern pros::MotorGroup left_drive;
+extern pros::MotorGroup right_drive;
 extern pros::MotorGroup cata;
 #endif
 
