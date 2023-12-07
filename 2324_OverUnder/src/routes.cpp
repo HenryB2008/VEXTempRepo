@@ -103,3 +103,36 @@ void own_side(lemlib::Chassis chassis) {
     //pros::delay(600);
     //right_drive.move(0);
 }
+
+void skills(lemlib::Chassis chassis) {
+    chassis.setPose(14.5, 20.5, -135);
+
+    // Change angle to shoot
+    left_drive.move(-35);
+    pros::delay(475);
+    left_drive.move(0);
+
+    pros::delay(1000);
+
+    cata.move(127);
+    // pros::delay(40000);
+    cata.move(0);
+
+    chassis.turnTo(72, 48, 2000, true, 40);
+    chassis.moveTo(72, 48, 2000, 70);
+    pros::delay(500);
+    // chassis.turnTo()
+    // left_wing.set_value(false);
+    // right_wing.set_value(false);
+    chassis.turnTo(72, 120, 2000, false, 50);
+    pros::delay(500);
+
+    left_drive.move(80);
+    right_drive.move(80);
+    left_wing.set_value(false);
+    right_wing.set_value(false);
+    pros::delay(1500);
+    pros::delay(1000);
+    left_drive.move(0);
+    right_drive.move(0);
+}
