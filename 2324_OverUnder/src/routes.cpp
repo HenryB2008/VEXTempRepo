@@ -62,8 +62,8 @@ void own_side(lemlib::Chassis chassis) {
 
     chassis.setPose(0, 0, 45);
     // chassis.turnTo(2, 40, 1000, false, 80);
-    right_drive.move(60);
-    left_drive.move(-20);
+    right_drive.move(57);
+    left_drive.move(-23);
     while (true) {
         if (chassis.getPose().theta < 15) {
             break;
@@ -80,35 +80,26 @@ void own_side(lemlib::Chassis chassis) {
     pros::delay(500);
     cata.move(0);
     chassis.setPose(0, 0, 0);
-    chassis.moveTo(0, -18, 1500, 100);
+    chassis.moveTo(0, -20, 1500, 100);
     pros::delay(500);
     chassis.setPose(0, 0, 0);
     chassis.moveTo(0, 4, 1000, 80);
     chassis.setPose(0, 0, 0);
-    chassis.turnTo(42, 0, 3000, false, 50);
+    chassis.turnTo(43, 0, 3000, false, 40);
     pros::delay(500);
-    chassis.moveTo(42, 0, 3000, 50);
+    chassis.moveTo(43, 0, 3000, 40);
     
-    right_wing.set_value(false);
     right_drive.move(60);
-    left_drive.move(-15);
+    left_drive.move(-20);
+    right_wing.set_value(false);
     pros::delay(1000);
     right_drive.move(0);
     left_drive.move(0);
     
     
-    // chassis.turnTo(47, 25, 1000, false, 60);
     chassis.setPose(0, 0, 0);
-    chassis.moveTo(0, 15, 1000, 60);
-    right_drive.move(80);
-    pros::delay(600);
-    right_drive.move(0);
-
-
-    //chassis.turnTo(-10, 0, 1000, 40);
-    //chassis.moveTo(0, -20, 1000, 40);
-    //pros::delay(500);
-    //chassis.moveTo(0, 5, 1000, 40);
-
-    // chassis.
+    chassis.moveTo(0, 15, 1000, 40);
+    //right_drive.move(80);
+    //pros::delay(600);
+    //right_drive.move(0);
 }

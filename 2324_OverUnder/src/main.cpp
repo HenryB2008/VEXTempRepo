@@ -139,7 +139,7 @@ void competition_initialize() {
  * from where it left off.
  */
 void autonomous() {
-	opposite_side(chassis);
+	own_side(chassis);
 }
 
 /**
