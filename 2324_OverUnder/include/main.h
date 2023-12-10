@@ -80,6 +80,7 @@ void opcontrol(void);
 
 #ifndef OBJECTS
 #define OBJECTS
+extern pros::Controller master;
 extern pros::ADIDigitalOut left_wing;
 extern pros::ADIDigitalOut right_wing;
 extern pros::MotorGroup left_drive;

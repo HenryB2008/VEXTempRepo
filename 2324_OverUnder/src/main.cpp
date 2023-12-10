@@ -73,7 +73,7 @@ pros::ADIDigitalOut right_wing('B');
 bool wings_deployed = true;		// true is actually not deployed, it's just the piston state for not deployed is 1
 bool load_arm_deployed = true;
 
-int cata_retract_length = 250;
+int cata_retract_length = 250*4.2;
 int cata_retract_start = -cata_retract_length;
 
 
@@ -139,7 +139,7 @@ void competition_initialize() {
  * from where it left off.
  */
 void autonomous() {
-	skills(chassis);
+	awp(chassis);
 }
 
 /**
@@ -189,7 +189,7 @@ void opcontrol() {
 
 		if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_L2)) {
 			load_arm_deployed = !load_arm_deployed;
-			right_wing.set_value(wings_deployed);
+			right_wing.set_value(load_arm_deployed);
 		}
 
 
@@ -205,6 +205,6 @@ void opcontrol() {
 			cata.move(0);
 		}
 
-		pros::delay(20);
+		pros::delay(10);
 	}
 }
