@@ -4,14 +4,15 @@
 
 pros::Controller master(pros::E_CONTROLLER_MASTER);
 
-pros::MotorGroup left_drive({pros::Motor(10, pros::E_MOTOR_GEAR_BLUE), pros::Motor(-4, pros::E_MOTOR_GEAR_BLUE), pros::Motor(19, pros::E_MOTOR_GEAR_BLUE)});	// front mid back
-pros::MotorGroup right_drive({pros::Motor(-1, pros::E_MOTOR_GEAR_BLUE), pros::Motor(8, pros::E_MOTOR_GEAR_BLUE), pros::Motor(-12, pros::E_MOTOR_GEAR_BLUE)});
+pros::MotorGroup left_drive({pros::Motor(6, pros::E_MOTOR_GEAR_BLUE), pros::Motor(-14, pros::E_MOTOR_GEAR_BLUE), pros::Motor(12, pros::E_MOTOR_GEAR_BLUE)});	// front mid back
+pros::MotorGroup right_drive({pros::Motor(-10, pros::E_MOTOR_GEAR_BLUE), pros::Motor(8, pros::E_MOTOR_GEAR_BLUE), pros::Motor(-20, pros::E_MOTOR_GEAR_BLUE)});
 
-pros::MotorGroup cata({pros::Motor(5, pros::E_MOTOR_GEAR_RED), pros::Motor(-9, pros::E_MOTOR_GEAR_RED)});	// left right
+pros::MotorGroup cata({pros::Motor(-18, pros::E_MOTOR_GEAR_GREEN)});	// left right
+pros::MotorGroup intake({pros::Motor(-1, pros::E_MOTOR_GEAR_BLUE)});
 
 pros::Rotation left_rot(16);
-pros::Rotation right_rot(-17);
-pros::Imu imu(18);	// check this port
+// pros::Rotation right_rot(-17);
+pros::Imu imu(15);	// check this port
 
 lemlib::Drivetrain_t drivetrain {
 	&left_drive,
@@ -24,7 +25,7 @@ lemlib::Drivetrain_t drivetrain {
 lemlib::TrackingWheel left_tracking(
 	&left_rot, // rotation sensor object
 	2.75, // wheel diameter
-	-2.890625, // tracking center offset (negative if to left of tracking center)
+	1.1875, // tracking center offset (negative if to left of tracking center)
 	1 // TRACKING WHEEL gear ratio
 );
 
@@ -67,11 +68,12 @@ lemlib::ChassisController_t angular_controller {
 
 lemlib::Chassis chassis(drivetrain, lateral_controller, angular_controller, odom_sensors);
 
-pros::ADIDigitalOut left_wing('A');
-pros::ADIDigitalOut right_wing('B');
+pros::ADIDigitalOut blocker('A'); // and descorer
+pros::ADIDigitalOut left_wing('B');
+pros::ADIDigitalOut right_wing('C'); // not used
 
 bool wings_deployed = true;		// true is actually not deployed, it's just the piston state for not deployed is 1
-bool load_arm_deployed = true;
+bool blocker_deployed = true;
 
 int cata_retract_length = 250*4.2;
 int cata_retract_start = -cata_retract_length;
@@ -182,14 +184,22 @@ void opcontrol() {
 		left_drive.move(left);
 		right_drive.move(right); // right
 
-		if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_L1)) {
+		if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_R1)) {
 			wings_deployed = !wings_deployed;
 			left_wing.set_value(wings_deployed);
 		}
 
-		if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_L2)) {
-			load_arm_deployed = !load_arm_deployed;
-			right_wing.set_value(load_arm_deployed);
+		if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_R2)) {
+			blocker_deployed = !blocker_deployed;
+			blocker.set_value(blocker_deployed);
+		}
+
+		if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_L1)) {
+			intake.move(127);
+		} else if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_L2)) {
+			intake.move(-127);
+		} else {
+			intake.move(0);
 		}
 
 
@@ -199,7 +209,7 @@ void opcontrol() {
 		
 		if (pros::millis() - cata_retract_start < cata_retract_length) {
 			cata.move(127);
-		} else if (master.get_digital(pros::E_CONTROLLER_DIGITAL_R1)) {
+		} else if (master.get_digital(pros::E_CONTROLLER_DIGITAL_X)) {
 			cata.move(127);
 		} else {
 			cata.move(0);
