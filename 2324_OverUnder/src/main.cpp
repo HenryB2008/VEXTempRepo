@@ -57,8 +57,8 @@ lemlib::ChassisController_t lateral_controller {
  
 // turning PID
 lemlib::ChassisController_t angular_controller {
-    4, // kP
-    25, // 40 kD
+    5, // kP
+    20, // 40 kD
     1, // smallErrorRange		//1
     100, // smallErrorTimeout
     2, // largeErrorRange
@@ -145,7 +145,13 @@ void competition_initialize() {
  * from where it left off.
  */
 void autonomous() {
-	chassis.moveTo(0, 24, 10000, 50);
+	// chassis.moveTo(0, 24, 10000, 50);
+
+	// chassis.turnTo(50, -50, 10000, false, 50);
+
+	int start = pros::millis();
+	opposite_side(chassis);
+	pros::lcd::print(0, "Time: %d", pros::millis() - start);
 }
 
 /**

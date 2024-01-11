@@ -83,9 +83,11 @@ void opcontrol(void);
 extern pros::Controller master;
 extern pros::ADIDigitalOut left_wing;
 extern pros::ADIDigitalOut right_wing;
+extern pros::ADIDigitalOut blocker;
 extern pros::MotorGroup left_drive;
 extern pros::MotorGroup right_drive;
 extern pros::MotorGroup cata;
+extern pros::MotorGroup intake;
 #endif
 
 #endif
