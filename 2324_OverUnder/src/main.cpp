@@ -5,10 +5,10 @@
 pros::Controller master(pros::E_CONTROLLER_MASTER);
 
 pros::MotorGroup left_drive({pros::Motor(6, pros::E_MOTOR_GEAR_BLUE), pros::Motor(-14, pros::E_MOTOR_GEAR_BLUE), pros::Motor(12, pros::E_MOTOR_GEAR_BLUE)});	// front mid back
-pros::MotorGroup right_drive({pros::Motor(-10, pros::E_MOTOR_GEAR_BLUE), pros::Motor(8, pros::E_MOTOR_GEAR_BLUE), pros::Motor(-20, pros::E_MOTOR_GEAR_BLUE)});
+pros::MotorGroup right_drive({pros::Motor(-10, pros::E_MOTOR_GEAR_BLUE), pros::Motor(9, pros::E_MOTOR_GEAR_BLUE), pros::Motor(-20, pros::E_MOTOR_GEAR_BLUE)});
 
 pros::MotorGroup cata({pros::Motor(-18, pros::E_MOTOR_GEAR_GREEN)});	// left right
-pros::MotorGroup intake({pros::Motor(-1, pros::E_MOTOR_GEAR_BLUE)});
+pros::MotorGroup intake({pros::Motor(1, pros::E_MOTOR_GEAR_BLUE)});
 
 pros::Rotation left_rot(16);
 // pros::Rotation right_rot(-17);
@@ -46,8 +46,8 @@ lemlib::OdomSensors_t odom_sensors {
 
 // forward/backward PID
 lemlib::ChassisController_t lateral_controller {
-    22, // kP
-    125, // kD 80 pretty good
+    11, // kP
+    40, // kD 80 pretty good
     1, // smallErrorRange
     100, // smallErrorTimeout
     3, // largeErrorRange
@@ -91,12 +91,16 @@ void initialize() {
 
 	left_wing.set_value(wings_deployed);
 	right_wing.set_value(wings_deployed);
+	blocker.set_value(blocker_deployed);
 
 	chassis.calibrate();
 
 	cata.set_brake_modes(pros::E_MOTOR_BRAKE_HOLD);
 
 	cata.set_zero_position(0);
+
+	left_drive.set_brake_modes(pros::E_MOTOR_BRAKE_COAST);
+	right_drive.set_brake_modes(pros::E_MOTOR_BRAKE_COAST);
 
 	/*
 	while (true) {
@@ -141,7 +145,7 @@ void competition_initialize() {
  * from where it left off.
  */
 void autonomous() {
-	awp(chassis);
+	chassis.moveTo(0, 24, 10000, 50);
 }
 
 /**
@@ -194,14 +198,13 @@ void opcontrol() {
 			blocker.set_value(blocker_deployed);
 		}
 
-		if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_L1)) {
+		if (master.get_digital(pros::E_CONTROLLER_DIGITAL_L2)) {
 			intake.move(127);
-		} else if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_L2)) {
+		} else if (master.get_digital(pros::E_CONTROLLER_DIGITAL_L1)) {
 			intake.move(-127);
 		} else {
 			intake.move(0);
 		}
-
 
 		if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_R2)) {
 			cata_retract_start = pros::millis();
