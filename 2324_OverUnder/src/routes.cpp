@@ -5,7 +5,7 @@ void opposite_side(lemlib::Chassis chassis) {
     chassis.setPose(129.4375, 24.6875, -45);
 
     blocker.set_value(false);
-    pros::delay(100);
+    pros::delay(400);
 
     while (chassis.getPose().theta > -85) {
         right_drive.move(60);
@@ -52,201 +52,43 @@ void opposite_side(lemlib::Chassis chassis) {
 }
 
 void awp(lemlib::Chassis chassis) {
-    int start = pros::millis();
-    chassis.setPose(0, 0, 0);
-    chassis.moveTo(0, -12, 1000, 30);
-    right_wing.set_value(false);
-    pros::delay(100);
-    chassis.moveTo(0, 1, 1000, 30);
-    right_wing.set_value(true);
     
-    chassis.setPose(129.5, 23.5, 45);
-
-    chassis.moveTo(84, 48, 4000, 50);   // move to center
-    pros::delay(300);
-    chassis.turnTo(76, 120, 2000, true, 30);   // turn to face goal
-
-    // // square up against barrier
-    // right_drive.move(-30);
-    // left_drive.move(-30);
-    // pros::delay(1400);
-    // right_drive.move(0);
-    // left_drive.move(0);
-
-    cata.move(127);
-    pros::delay(500);
-    cata.move(0);   // end firing triball
-    pros::delay(500);
-
-    // // back up
-    // right_drive.move(50);
-    // left_drive.move(50);
-    // pros::delay(300);
-    // right_drive.move(0);
-    // left_drive.move(0);
-    // pros::delay(100);
-
-    right_drive.move(70);
-    left_drive.move(-70);
-    while (chassis.getPose().theta > 95) {
-        pros::delay(25);
-    }
-    right_drive.move(0);
-    left_drive.move(0);
-
-    chassis.moveTo(106, chassis.getPose().y, 2000, 80);   // straight right movement towards barrier
-    // was 106, if this doesn't work, then add some back left wheel turn to the final turn
-
-    right_drive.move(40);
-    left_drive.move(-40);
-    while (chassis.getPose().theta > 10) {
-        pros::delay(5);
-    }
-    right_drive.move(0);
-    left_drive.move(0);
-
-    right_drive.move(30);
-    left_drive.move(60);    // was 40
-    pros::delay(600);       // was 300, 200 was too low (too far back)
-    right_drive.move(0);
-    left_drive.move(0);
-
-    right_drive.move(40);
-    left_drive.move(40);
-    pros::delay(500);
-    left_drive.move(0);
-    pros::delay(500);
-    right_drive.move(0);
-    left_drive.move(0);
-
-
-    left_drive.move(-30);
-    pros::delay(250);
-    left_drive.move(0);
-
-    right_wing.set_value(false);
-
-    pros::delay(200);
-    right_drive.move(35);
-    pros::delay(300);
-    right_drive.move(0);
-
-    pros::lcd::print(0, "Time: %d", pros::millis() - start);
 }
 
 void elims(lemlib::Chassis chassis) {
-    int start = pros::millis();
-    chassis.setPose(0, 0, 0);
-    chassis.moveTo(0, -12, 1000, 30);
-    pros::delay(100);
-    chassis.moveTo(0, 1, 1000, 30);
     
-    chassis.setPose(129.5, 23.5, 45);
-
-    chassis.moveTo(84, 48, 4000, 50);   // move to center
-    pros::delay(300);
-    chassis.turnTo(76, 120, 2000, true, 30);   // turn to face goal
-
-    // // square up against barrier
-    // right_drive.move(-30);
-    // left_drive.move(-30);
-    // pros::delay(1400);
-    // right_drive.move(0);
-    // left_drive.move(0);
-
-    cata.move(127);
-    pros::delay(500);
-    cata.move(0);   // end firing triball
-    pros::delay(500);
-
-    // // back up
-    // right_drive.move(50);
-    // left_drive.move(50);
-    // pros::delay(300);
-    // right_drive.move(0);
-    // left_drive.move(0);
-    // pros::delay(100);
-
-    // right_drive.move(70);
-    // left_drive.move(-70);
-    // while (chassis.getPose().theta > 95) {
-    //     pros::delay(25);
-    // }
-    // right_drive.move(0);
-    // left_drive.move(0);
-
-    // chassis.moveTo(106, chassis.getPose().y, 2000, 80);   // straight right movement towards barrier
-    // // was 106, if this doesn't work, then add some back left wheel turn to the final turn
-
-    // right_drive.move(40);
-    // left_drive.move(-40);
-    // while (chassis.getPose().theta > 10) {
-    //     pros::delay(5);
-    // }
-    // right_drive.move(0);
-    // left_drive.move(0);
-
-    // right_drive.move(30);
-    // left_drive.move(60);    // was 40
-    // pros::delay(600);       // was 300, 200 was too low (too far back)
-    // right_drive.move(0);
-    // left_drive.move(0);
-
-    // right_drive.move(40);
-    // left_drive.move(40);
-    // pros::delay(500);
-    // left_drive.move(0);
-    // pros::delay(500);
-    // right_drive.move(0);
-    // left_drive.move(0);
-
-
-    // left_drive.move(-30);
-    // pros::delay(250);
-    // left_drive.move(0);
-
-    // right_wing.set_value(false);
-
-    // pros::delay(200);
-    // right_drive.move(35);
-    // pros::delay(300);
-    // right_drive.move(0);
-
-    // pros::lcd::print(0, "Time: %d", pros::millis() - start);
 }
 
 void own_side(lemlib::Chassis chassis) {
-    chassis.setPose(0, 17.1875, 45);
+    chassis.setPose(16.3125, 22.5, 45);
 
     blocker.set_value(false);
-    pros::delay(100);
+    pros::delay(400);
 
-    /*
+    
     while (chassis.getPose().theta < 85) {
-        right_drive.move(60);
+        left_drive.move(60);
+        right_drive.move(-30);
     }
-    */
-    chassis.turnTo(5, 0, 2000, false, 60);
+    left_drive.move(0);
+    right_drive.move(20);
+    pros::delay(200);
     right_drive.move(0);
-
+    
     blocker.set_value(true);
     pros::delay(600);
 
-    chassis.turnTo(26, 2, 2000, false, 60);
-    chassis.moveTo(26, 2, 2000, 50);
-    chassis.turnTo(32, 2, 2000, false, 60);
-    //chassis.moveTo(-15, -10, 2000, 50);
-    //chassis.turnTo(15, 10, 2000, false, 60);
+    chassis.moveTo(36, 12, 2000, 50);
     pros::delay(200);
 
-    // chassis.turnTo(0, 10, 2000, false, 60);
+    chassis.turnTo(144, 12, 2000, false, 60);
 
     intake.move(127);
     pros::delay(1000);
     intake.move(0);
 
-    left_drive.move(75);
-    right_drive.move(75);
+    left_drive.move(50);
+    right_drive.move(50);
     pros::delay(500);
     left_drive.move(0);
     right_drive.move(0);
@@ -258,6 +100,88 @@ void own_side(lemlib::Chassis chassis) {
     pros::delay(100);
     left_drive.move(0);
     right_drive.move(0);
+
+    chassis.moveTo(14, 36, 2000, 50);
+
+    chassis.turnTo(14, 72, 2000, false, 60);
+    blocker.set_value(false);
+    intake.move(-127);
+    pros::delay(200);
+    left_drive.move(60);
+    right_drive.move(60);
+    pros::delay(800);
+    left_drive.move(0);
+    right_drive.move(0);
+    pros::delay(1000);
+    intake.move(0);
+}
+
+void own_secondary(lemlib::Chassis chassis) {
+    chassis.setPose(16.3125, 22.5, 45);
+
+    blocker.set_value(false);
+    pros::delay(400);
+
+    
+    while (chassis.getPose().theta < 85) {
+        left_drive.move(60);
+        right_drive.move(-30);
+    }
+    left_drive.move(0);
+    right_drive.move(20);
+    pros::delay(200);
+    right_drive.move(0);
+    blocker.set_value(true);
+    pros::delay(200);
+
+    chassis.moveTo(36, 12, 2000, 50);
+    pros::delay(200);
+
+    chassis.turnTo(144, 12, 2000, false, 60);
+
+    intake.move(127);
+    pros::delay(500);
+    intake.move(0);
+
+    left_drive.move(50);
+    right_drive.move(50);
+    pros::delay(500);
+    left_drive.move(0);
+    right_drive.move(0);
+
+    pros::delay(500);
+
+    left_drive.move(-50);
+    right_drive.move(-50);
+    pros::delay(250);
+    left_drive.move(0);
+    right_drive.move(0);
+
+    chassis.moveTo(48, 48, 2000, 50);
+    pros::delay(200);
+    intake.move(-127);
+    chassis.moveTo(48, 64, 1250, 50);
+    pros::delay(200);
+    left_drive.move(-50);
+    right_drive.move(-50);
+    pros::delay(100);
+    left_drive.move(0);
+    right_drive.move(0);
+
+
+    chassis.turnTo(68, 64, 2000, false, 50);
+    chassis.moveTo(68, 64, 2000, 50);
+    chassis.turnTo(68, 24, 2000, false, 50);
+    left_wing.set_value(false);
+    pros::delay(100);
+    intake.move(127);
+    chassis.moveTo(68, 24, 2000, 80);
+    left_drive.move(-50);
+    right_drive.move(-50);
+    pros::delay(150);
+    left_drive.move(0);
+    right_drive.move(0);
+    intake.move(0);
 }
 
 void skills(lemlib::Chassis chassis) {
