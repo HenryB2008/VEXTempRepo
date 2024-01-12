@@ -150,7 +150,7 @@ void autonomous() {
 	// chassis.turnTo(50, -50, 10000, false, 50);
 
 	int start = pros::millis();
-	opposite_side(chassis);
+	own_side(chassis);
 	pros::lcd::print(0, "Time: %d", pros::millis() - start);
 }
 

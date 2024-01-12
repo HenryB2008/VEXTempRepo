@@ -216,59 +216,48 @@ void elims(lemlib::Chassis chassis) {
 }
 
 void own_side(lemlib::Chassis chassis) {
-    chassis.setPose(0, 0, 0);
-    // while (cata.get_positions()[0] < 1600) {
-    //     cata.move(127);
-    //     pros::delay(50);
-    // }
-    // cata.move(15*127/100);
+    chassis.setPose(0, 17.1875, 45);
 
-    chassis.moveTo(0, -18, 1000, 40);
-    pros::delay(500);
+    blocker.set_value(false);
+    pros::delay(100);
 
-
-    chassis.setPose(0, 0, 45);
-    // chassis.turnTo(2, 40, 1000, false, 80);
-    right_drive.move(57);
-    left_drive.move(-23);
-    while (true) {
-        if (chassis.getPose().theta < 15) {
-            break;
-        }
-        pros::delay(25);
+    /*
+    while (chassis.getPose().theta < 85) {
+        right_drive.move(60);
     }
+    */
+    chassis.turnTo(5, 0, 2000, false, 60);
     right_drive.move(0);
-    left_drive.move(0);
 
+    blocker.set_value(true);
+    pros::delay(600);
 
+    chassis.turnTo(26, 2, 2000, false, 60);
+    chassis.moveTo(26, 2, 2000, 50);
+    chassis.turnTo(32, 2, 2000, false, 60);
+    //chassis.moveTo(-15, -10, 2000, 50);
+    //chassis.turnTo(15, 10, 2000, false, 60);
+    pros::delay(200);
 
-    pros::delay(500);
-    cata.move(-127);
-    pros::delay(500);
-    cata.move(0);
-    chassis.setPose(0, 0, 0);
-    chassis.moveTo(0, -20, 1500, 100);
-    pros::delay(500);
-    chassis.setPose(0, 0, 0);
-    chassis.moveTo(0, 4, 1000, 80);
-    chassis.setPose(0, 0, 0);
-    chassis.turnTo(43, 0, 3000, false, 40);
-    pros::delay(500);
-    chassis.moveTo(43, 0, 3000, 40);
-    
-    right_drive.move(60);
-    left_drive.move(-20);
-    right_wing.set_value(false);
+    // chassis.turnTo(0, 10, 2000, false, 60);
+
+    intake.move(127);
     pros::delay(1000);
-    right_drive.move(0);
+    intake.move(0);
+
+    left_drive.move(75);
+    right_drive.move(75);
+    pros::delay(500);
     left_drive.move(0);
-    
-    
-    chassis.setPose(0, 0, 0);
-    chassis.moveTo(0, 15, 1000, 40);
-    //right_drive.move(80);
-    //pros::delay(600);
-    //right_drive.move(0);
+    right_drive.move(0);
+
+    pros::delay(500);
+
+    left_drive.move(-50);
+    right_drive.move(-50);
+    pros::delay(100);
+    left_drive.move(0);
+    right_drive.move(0);
 }
 
 void skills(lemlib::Chassis chassis) {
