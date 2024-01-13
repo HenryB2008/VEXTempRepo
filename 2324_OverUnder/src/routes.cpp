@@ -185,85 +185,63 @@ void own_secondary(lemlib::Chassis chassis) {
 }
 
 void skills(lemlib::Chassis chassis) {
-    chassis.setPose(14.5, 20.5, -135);
+    //chassis.setPose(14.5, 20.5, -135);
+    chassis.setPose(0, 0, 0, 0);
 
     // Change angle to shoot
     left_drive.move(-35);
     pros::delay(475);
     left_drive.move(0);
+    /*
+    while (chassis.getPose().theta > -18) {
+        left_drive.move(-32);
+    }
+    pros::delay(475);
+    left_drive.move(0);
+    */
 
     pros::delay(1000);
 
     cata.move(127);
 
     // Firing break
-    pros::delay(35000);
-    // master.rumble("-");
-    pros::delay(12000);
+    pros::delay(41000); // 41 sec
 
     cata.move(0);
 
-    chassis.turnTo(60, 48, 800, true, 40);
-    chassis.moveTo(60, 48, 1000, 70);
-    pros::delay(500);
-    // chassis.turnTo()
-    // left_wing.set_value(false);
-    // right_wing.set_value(false);
-    chassis.turnTo(60, 120, 1000, false, 50);   // TODO
+    //chassis.moveTo(0, 48, 2000, 60);
+    chassis.turnTo(-150, 75, 1000, false, 50);
+    chassis.moveTo(-150, 75, 1000, 80);
     pros::delay(500);
 
-    int push_speed = 95;        // TODO: this was 80 on the last run but maybe didnt have enough push power
+    left_drive.move(53); // turn towards goal
+    pros::delay(730);
+    left_drive.move(0);
+
+    pros::delay(200);
 
     left_wing.set_value(false);
     right_wing.set_value(false);
-    left_drive.move(85);
-    right_drive.move(85);
-    pros::delay(1200);
-    right_drive.move(push_speed);
-    left_drive.move(push_speed);
-    pros::delay(1100);      // was 1200 - 1322
+    intake.move(127);
+
+    left_drive.move(95); // push triballs in
+    right_drive.move(95);
+    pros::delay(2300);
     left_drive.move(0);
     right_drive.move(0);
+    intake.move(0);
 
-    left_drive.move(-push_speed);
-    right_drive.move(-push_speed);
     pros::delay(500);
+
+    left_drive.move(-90); // back up
+    right_drive.move(-90);
+    pros::delay(200);
     left_drive.move(0);
     right_drive.move(0);
+    pros::delay(200);
 
-    left_drive.move(40);
-    pros::delay(500);
-    right_drive.move(0);
+    chassis.setPose(0, 0, 0, 0);
 
-    right_drive.move(push_speed);
-    left_drive.move(push_speed);        // added this and next
-    pros::delay(300);
-    left_drive.move(-55);
-    pros::delay(500);
-    left_drive.move(push_speed);
-    pros::delay(600);
-    left_drive.move(0);
-    right_drive.move(0);
-
-    left_drive.move(-push_speed);
-    right_drive.move(-push_speed);
-    pros::delay(800);
-    left_drive.move(0);
-    right_drive.move(0);
-
-    // left_drive.move(40);
-    // pros::delay(400);
-    // left_drive.move(0);
-
-    // left_drive.move(push_speed);
-    // right_drive.move(push_speed);
-    // pros::delay(1000);
-    // left_drive.move(0);
-    // right_drive.move(0);
-
-    // left_drive.move(-push_speed);
-    // right_drive.move(-push_speed);
-    // pros::delay(500);
-    // left_drive.move(0);
-    // right_drive.move(0);
+    //left_drive.move(-60);
+    //pros::delay(500);
 }
