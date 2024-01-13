@@ -189,8 +189,9 @@ void skills(lemlib::Chassis chassis) {
     chassis.setPose(0, 0, 0, 0);
 
     // Change angle to shoot
-    left_drive.move(-35);
-    pros::delay(475);
+    while (chassis.getPose().theta > -25) {
+        left_drive.move(-40);
+    }
     left_drive.move(0);
     /*
     while (chassis.getPose().theta > -18) {
@@ -200,33 +201,36 @@ void skills(lemlib::Chassis chassis) {
     left_drive.move(0);
     */
 
-    pros::delay(1000);
+    pros::delay(500);
 
     cata.move(127);
 
     // Firing break
-    pros::delay(41000); // 41 sec
+    pros::delay(46000); // 41 sec
 
     cata.move(0);
 
     //chassis.moveTo(0, 48, 2000, 60);
     chassis.turnTo(-150, 75, 1000, false, 50);
+    intake.move(127);
     chassis.moveTo(-150, 75, 1000, 80);
     pros::delay(500);
 
     left_drive.move(53); // turn towards goal
     pros::delay(730);
     left_drive.move(0);
+    intake.move(-127);
 
     pros::delay(200);
 
-    left_wing.set_value(false);
-    right_wing.set_value(false);
-    intake.move(127);
+    intake.move(-127);
 
-    left_drive.move(95); // push triballs in
-    right_drive.move(95);
-    pros::delay(2300);
+    left_drive.move(128); // push triballs in
+    right_drive.move(128);
+    pros::delay(1300);
+    intake.move(127);
+    left_wing.set_value(false);
+    pros::delay(1000);
     left_drive.move(0);
     right_drive.move(0);
     intake.move(0);
@@ -235,10 +239,53 @@ void skills(lemlib::Chassis chassis) {
 
     left_drive.move(-90); // back up
     right_drive.move(-90);
-    pros::delay(200);
+    pros::delay(500);
     left_drive.move(0);
     right_drive.move(0);
     pros::delay(200);
+
+    right_drive.move(40);
+    pros::delay(150);
+    right_drive.move(0);
+
+    left_drive.move(128); // push triballs in
+    right_drive.move(128);
+    pros::delay(1500);
+    left_drive.move(0);
+    right_drive.move(0);
+    intake.move(0);
+
+    pros::delay(500);
+
+    left_drive.move(-90); // back up
+    right_drive.move(-90);
+    pros::delay(300);
+    left_drive.move(0);
+    right_drive.move(0);
+    pros::delay(200);
+
+    left_drive.move(40);
+    pros::delay(350);
+    left_drive.move(0);
+
+    left_drive.move(128); // push triballs in
+    right_drive.move(128);
+    pros::delay(1500);
+    left_drive.move(0);
+    right_drive.move(0);
+    intake.move(0);
+
+    pros::delay(500);
+
+    left_drive.move(-90); // back up
+    right_drive.move(-90);
+    pros::delay(300);
+    left_drive.move(0);
+    right_drive.move(0);
+    pros::delay(200);
+
+
+
 
     chassis.setPose(0, 0, 0, 0);
 
