@@ -7,24 +7,27 @@ pros::Controller master(pros::E_CONTROLLER_MASTER);
 pros::MotorGroup left_drive({pros::Motor(6, pros::E_MOTOR_GEAR_BLUE), pros::Motor(-14, pros::E_MOTOR_GEAR_BLUE), pros::Motor(12, pros::E_MOTOR_GEAR_BLUE)});	// front mid back
 pros::MotorGroup right_drive({pros::Motor(-10, pros::E_MOTOR_GEAR_BLUE), pros::Motor(9, pros::E_MOTOR_GEAR_BLUE), pros::Motor(-20, pros::E_MOTOR_GEAR_BLUE)});
 
-pros::MotorGroup cata({pros::Motor(-18, pros::E_MOTOR_GEAR_GREEN)});	// left right
+pros::MotorGroup cata({pros::Motor(18, pros::E_MOTOR_GEAR_GREEN)});	// left right
 pros::MotorGroup intake({pros::Motor(1, pros::E_MOTOR_GEAR_BLUE)});
 
 pros::Rotation left_rot(16);
 // pros::Rotation right_rot(-17);
 pros::Imu imu(15);	// check this port
 
-lemlib::Drivetrain_t drivetrain {
+ASSET(under_txt);
+
+lemlib::Drivetrain drivetrain {
 	&left_drive,
 	&right_drive,
 	11.71875, // track width
-	4, // wheel diameter
-	300 // wheel rpm
+	lemlib::Omniwheel::NEW_4, // wheel diameter
+	300, // wheel rpm
+	1 // boomerang chase
 };
 
 lemlib::TrackingWheel left_tracking(
 	&left_rot, // rotation sensor object
-	2.75, // wheel diameter
+	2.744269794, // wheel diameter
 	1.1875, // tracking center offset (negative if to left of tracking center)
 	1 // TRACKING WHEEL gear ratio
 );
@@ -36,7 +39,7 @@ lemlib::TrackingWheel right_tracking(
 	1 // TRACKING WHEEL gear ratio
 );
 
-lemlib::OdomSensors_t odom_sensors {
+lemlib::OdomSensors odom_sensors {
 	&left_tracking, // &left_tracking, // parallel tracking wheel left
 	nullptr, // parallel tracking wheel right
 	nullptr, // perpendicular tracking wheel 1
@@ -45,9 +48,11 @@ lemlib::OdomSensors_t odom_sensors {
 };
 
 // forward/backward PID
-lemlib::ChassisController_t lateral_controller {
+lemlib::ControllerSettings lateral_controller {
     11, // kP
+	0, 	// kI
     40, // kD 80 pretty good
+	0, 	// anti windup I
     1, // smallErrorRange
     100, // smallErrorTimeout
     3, // largeErrorRange
@@ -56,9 +61,11 @@ lemlib::ChassisController_t lateral_controller {
 };
  
 // turning PID
-lemlib::ChassisController_t angular_controller {
+lemlib::ControllerSettings angular_controller {
     5, // kP
+	0,
     20, // 40 kD
+	0,
     1, // smallErrorRange		//1
     100, // smallErrorTimeout
     2, // largeErrorRange
@@ -68,12 +75,12 @@ lemlib::ChassisController_t angular_controller {
 
 lemlib::Chassis chassis(drivetrain, lateral_controller, angular_controller, odom_sensors);
 
-pros::ADIDigitalOut blocker('A'); // and descorer
-pros::ADIDigitalOut left_wing('B');
+pros::ADIDigitalOut blocker('B'); // and descorer
+pros::ADIDigitalOut left_wing('A');
 pros::ADIDigitalOut right_wing('C'); // not used
 
-bool wings_deployed = true;		// true is actually not deployed, it's just the piston state for not deployed is 1
-bool blocker_deployed = true;
+bool wings_deployed = false;		// true is actually not deployed, it's just the piston state for not deployed is 1
+bool blocker_deployed = false;
 
 int cata_retract_length = 250*4.2;
 int cata_retract_start = -cata_retract_length;
@@ -94,6 +101,7 @@ void initialize() {
 	blocker.set_value(blocker_deployed);
 
 	chassis.calibrate();
+	left_rot.set_data_rate(5);
 
 	cata.set_brake_modes(pros::E_MOTOR_BRAKE_HOLD);
 
@@ -145,12 +153,53 @@ void competition_initialize() {
  * from where it left off.
  */
 void autonomous() {
-	// chassis.moveTo(0, 24, 10000, 50);
+	// chassis.moveToPoint(0, 24, 10000, 50);
 
 	// chassis.turnTo(50, -50, 10000, false, 50);
 
+	chassis.setPose(-50.75, -57, 45);
 	int start = pros::millis();
-	skills(chassis);
+	// opposite_side(chassis);
+	while (chassis.getPose().theta < 90) {
+		left_drive.move(70);
+	}
+	left_drive.move(0);
+
+	chassis.follow(under_txt, 12, 18000, true, true);
+	while (chassis.getPose().x < -20) {
+		pros::delay(10);
+	}
+	cata.move(70);
+	pros::delay(1000);
+	cata.move(0);
+	
+	// while (chassis.getPose().x < 50) {
+	// 	pros::delay(10);
+	// }
+	// left_wing.set_value(true);
+
+	while (chassis.getPose().x < 35) {
+		printf("%f", chassis.getPose().x);
+		pros::delay(50);
+	}
+	intake.move(127);
+	pros::delay(2000);
+	chassis.cancelAllMotions();
+	pros::lcd::print(3, "Canceled");
+	pros::delay(100);
+
+	// slam right side
+	left_drive.move(-80);
+	right_drive.move(-60);
+	pros::delay(500);
+	left_drive.move(127);
+	right_drive.move(127);
+	pros::delay(350);
+	left_drive.move(0);
+	right_drive.move(0);
+	pros::lcd::print(4, "Slam");
+
+	// own_secondary(&chassis);
 	pros::lcd::print(0, "Time: %d", pros::millis() - start);
 }
 
@@ -168,10 +217,10 @@ void autonomous() {
  * task, not resume it from where it left off.
  */
 void opcontrol() {
-	// chassis.moveTo(0, 10, 0, 1000, false, true, 0, 0.6, 127, true);
+	// chassis.moveToPoint(0, 10, 0, 1000, false, true, 0, 0.6, 127, true);
 
 	// chassis.turnTo(30, 0, 10000);
-	// chassis.moveTo(0, 48, 10000, 40, true);
+	// chassis.moveToPoint(0, 48, 10000, 40, true);
 
 	/*
 	while (true) {
@@ -182,17 +231,38 @@ void opcontrol() {
 
 	cata.move(0);
 
+	// BEGIN SKILLS
+
+	// chassis.setPose(0, 0, 0, 0);
+
+    // Change angle to shoot
+    // while (chassis.getPose().theta > -25) {
+    //     left_drive.move(-40);
+    // }
+    // left_drive.move(0);
+
+	// END SKILLS
+
 	while (true) {
 		lemlib::Pose pose = chassis.getPose();
 		pros::lcd::print(0, "x: %f", pose.x);
 		pros::lcd::print(1, "y: %f", pose.y);
 		pros::lcd::print(2, "theta: %f", pose.theta);
+		pros::lcd::print(3, "left rot: %ld", left_rot.get_position());
 		
 		int left = master.get_analog(ANALOG_LEFT_Y);
 		int right = master.get_analog(ANALOG_RIGHT_Y);
 
 		left_drive.move(left);
 		right_drive.move(right); // right
+
+		if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_B)) {
+			chassis.setPose(0, 0, 0);
+			while (chassis.getPose().theta > -25) {
+        		left_drive.move(-40);
+    		}
+    		left_drive.move(0);
+		}
 
 		if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_R1)) {
 			wings_deployed = !wings_deployed;

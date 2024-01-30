@@ -1,11 +1,11 @@
 #ifndef ROUTES_H
 #define ROUTES_H
 
-void opposite_side(lemlib::Chassis chassis);
-void own_side(lemlib::Chassis chassis);
-void own_secondary(lemlib::Chassis chassis);
-void skills(lemlib::Chassis chassis);
-void awp(lemlib::Chassis chassis);
-void elims(lemlib::Chassis chassis);
+void opposite_side(lemlib::Chassis* chassis);
+void own_side(lemlib::Chassis* chassis);
+void own_secondary(lemlib::Chassis* chassis);
+void skills(lemlib::Chassis* chassis);
+void awp(lemlib::Chassis* chassis);
+void elims(lemlib::Chassis* chassis);
 
 #endif
