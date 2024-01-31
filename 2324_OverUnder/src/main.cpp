@@ -157,47 +157,45 @@ void autonomous() {
 
 	// chassis.turnTo(50, -50, 10000, false, 50);
 
-	chassis.setPose(-50.75, -57, 45);
+	chassis.setPose(-50.75, -57.5, 45);
 	int start = pros::millis();
 	// opposite_side(chassis);
-	while (chassis.getPose().theta < 90) {
-		left_drive.move(70);
-	}
-	left_drive.move(0);
+	// while (chassis.getPose().theta < 90) {
+	// 	left_drive.move(70);
+	// }
+	// left_drive.move(0);
 
 	chassis.follow(under_txt, 12, 18000, true, true);
-	while (chassis.getPose().x < -20) {
+	while (chassis.getPose().x < -24 || chassis.getPose().y < 50) {
 		pros::delay(10);
 	}
 	cata.move(70);
 	pros::delay(1000);
 	cata.move(0);
-	
-	// while (chassis.getPose().x < 50) {
-	// 	pros::delay(10);
-	// }
-	// left_wing.set_value(true);
 
-	while (chassis.getPose().x < 35) {
-		printf("%f", chassis.getPose().x);
-		pros::delay(50);
+	while (chassis.getPose().x < 24 || chassis.getPose().y < 36) {
+		pros::delay(10);
+	}
+	left_wing.set_value(true);
+
+	while (chassis.getPose().x < 44 || chassis.getPose().y < 40) {
+		pros::delay(10);
 	}
 	intake.move(127);
+	left_wing.set_value(false);
 	pros::delay(2000);
 	chassis.cancelAllMotions();
-	pros::lcd::print(3, "Canceled");
 	pros::delay(100);
 
 	// slam right side
 	left_drive.move(-80);
-	right_drive.move(-60);
-	pros::delay(500);
+	right_drive.move(-80);
+	pros::delay(250);
 	left_drive.move(127);
 	right_drive.move(127);
-	pros::delay(350);
+	pros::delay(500);
 	left_drive.move(0);
 	right_drive.move(0);
-	pros::lcd::print(4, "Slam");
 
 	// own_secondary(&chassis);
 	pros::lcd::print(0, "Time: %d", pros::millis() - start);
