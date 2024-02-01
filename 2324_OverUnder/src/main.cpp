@@ -15,6 +15,7 @@ pros::Rotation left_rot(16);
 pros::Imu imu(15);	// check this port
 
 ASSET(under_txt);
+ASSET(slam_txt);
 
 lemlib::Drivetrain drivetrain {
 	&left_drive,
@@ -184,7 +185,7 @@ void autonomous() {
 	intake.move(127);
 	left_wing.set_value(false);
 	pros::delay(2000);
-	chassis.cancelAllMotions();
+	chassis.cancelMotion();
 	pros::delay(100);
 
 	// slam right side
@@ -194,6 +195,25 @@ void autonomous() {
 	left_drive.move(127);
 	right_drive.move(127);
 	pros::delay(500);
+	left_drive.move(0);
+	right_drive.move(0);
+
+	pros::delay(650);
+	chassis.setPose(58, 33, 180);
+
+	chassis.moveToPoint(58, 40, 2000, {.forwards = false, .maxSpeed = 50});
+	chassis.turnTo(31.6, 23.4, 2000, true, 35);
+	intake.move(-127);
+	chassis.follow(slam_txt, 12, 10000, true, true);
+	pros::delay(2000);
+
+	chassis.waitUntilDone();
+
+	left_wing.set_value(true);
+	intake.move(127);
+	left_drive.move(127);
+	right_drive.move(127);
+	pros::delay(600);
 	left_drive.move(0);
 	right_drive.move(0);
 
