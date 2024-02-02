@@ -1,6 +1,9 @@
 #include "main.h"
 #include "lemlib/api.hpp"
 
+ASSET(underalt_txt);
+ASSET(left_txt);
+
 void opposite_side(lemlib::Chassis* chassis) {
     // chassis->setPose(129.4375, 24.6875, -45);
 
@@ -185,111 +188,136 @@ void own_side(lemlib::Chassis* chassis) {
 }
 
 void skills(lemlib::Chassis* chassis) {
-    // //chassis->setPose(14.5, 20.5, -135);
-    // chassis->setPose(0, 0, 0, 0);
+    chassis->setPose(-48.5, -55.5, 90);
+	
+	while (chassis->getPose().theta > 65) {
+        left_drive.move(-40);
+    }
+    left_drive.move(0);
+	pros::delay(300);
 
-    // // Change angle to shoot
-    // while (chassis->getPose().theta > -25) {
-    //     left_drive.move(-40);
-    // }
-    // left_drive.move(0);
-    // /*
-    // while (chassis->getPose().theta > -18) {
-    //     left_drive.move(-32);
-    // }
-    // pros::delay(475);
-    // left_drive.move(0);
-    // */
+	cata.move(127*.9);
+	pros::delay(3000);
+	cata.move(0);
 
-    // pros::delay(500);
+	double startTheta = chassis->getPose().theta;
+	while (chassis->getPose().theta < startTheta + 25) {
+        left_drive.move(40);
+    }
+	left_drive.move(0);
 
-    // cata.move(127);
+	pros::delay(300);
+	chassis->setPose(-47.5, -52.5, chassis->getPose().theta);
 
-    // // Firing break
-    // pros::delay(46000); // 41 sec
+	chassis->follow(underalt_txt, 12, 18000, true, true);
 
-    // cata.move(0);
+	while (chassis->getPose().x < -24) {
+	 	pros::delay(10);
+	}
+	cata.move(70);
+	pros::delay(1000);
+	cata.move(0);
+	chassis->waitUntilDone();
+	pros::delay(200);
 
-    // //chassis->moveToPoint(0, 48, 2000, 60);
-    // chassis->turnTo(-150, 75, 1000, false, 50);
-    // intake.move(127);
-    // chassis->moveToPoint(-150, 75, 1000, 80);
-    // pros::delay(500);
+	chassis->turnTo(72, 0, 2000, true, 50);
+	chassis->waitUntilDone();
+	pros::delay(200);
 
-    // left_drive.move(53); // turn towards goal
-    // pros::delay(730);
-    // left_drive.move(0);
-    // intake.move(-127);
+	left_wing.set_value(true);
+	left_drive.move(127);
+	right_drive.move(127);
 
-    // pros::delay(200);
+	while (chassis->getPose().x < 26) {
+		pros::delay(10);
+	}
+	intake.move(127);
 
-    // intake.move(-127);
+	pros::delay(500);
+	left_drive.move(0);
+	right_drive.move(0);
+	left_wing.set_value(false);
+	pros::delay(200);
+	left_drive.move(-70);
+	right_drive.move(-70);
+	pros::delay(500);
+	left_drive.move(0);
+	right_drive.move(0);
+	left_wing.set_value(true);
+	pros::delay(200);
+	left_drive.move(127);
+	right_drive.move(127);
+	pros::delay(600);
+	left_drive.move(-70);
+	right_drive.move(-70);
+	pros::delay(500);
+	left_drive.move(0);
+	right_drive.move(0);
+	left_wing.set_value(false);
+	pros::delay(200);
 
-    // left_drive.move(128); // push triballs in
-    // right_drive.move(128);
-    // pros::delay(1300);
-    // intake.move(127);
-    // left_wing.set_value(true);
-    // blocker.set_value(true);
-    // pros::delay(1000);
-    // left_drive.move(0);
-    // right_drive.move(0);
-    // intake.move(0);
+	// do question mark in front
+	right_drive.move(-75);
+	left_drive.move(-1);
+	pros::delay(500);
+	left_drive.move(-75);
+	right_drive.move(-1);
+	pros::delay(500);
+	left_drive.move(0);
+	right_drive.move(0);
+	left_wing.set_value(true);
+	pros::delay(100);
+	left_drive.move(127);
+	right_drive.move(127);
+	pros::delay(600);
+	left_drive.move(0);
+	right_drive.move(0);
+	left_wing.set_value(false);
+	pros::delay(200);
+	left_drive.move(-60);
+	right_drive.move(-60);
+	pros::delay(300);
+	left_drive.move(0);
+	right_drive.move(0);
 
-    // pros::delay(500);
+	// left part
+	pros::delay(100);
+	chassis->turnTo(chassis->getPose().x, 80, 2000, true, 50);
+	chassis->waitUntilDone();
+	pros::delay(300);
+	chassis->setPose(33, 11, chassis->getPose().theta);
+	chassis->follow(left_txt, 10, 12000, true, true);
+	pros::delay(2500);
+	left_wing.set_value(true);
+	pros::delay(1200);
+	left_wing.set_value(false);
 
-    // left_drive.move(-90); // back up
-    // right_drive.move(-90);
-    // pros::delay(500);
-    // left_drive.move(0);
-    // right_drive.move(0);
-    // pros::delay(200);
-
-    // right_drive.move(40);
-    // pros::delay(150);
-    // right_drive.move(0);
-
-    // left_drive.move(128); // push triballs in
-    // right_drive.move(128);
-    // pros::delay(1500);
-    // left_drive.move(0);
-    // right_drive.move(0);
-    // intake.move(0);
-
-    // pros::delay(500);
-
-    // left_drive.move(-90); // back up
-    // right_drive.move(-90);
-    // pros::delay(300);
-    // left_drive.move(0);
-    // right_drive.move(0);
-    // pros::delay(200);
-
-    // right_drive.move(40);
-    // pros::delay(225);
-    // left_drive.move(0);
-
-    // left_drive.move(128); // push triballs in
-    // right_drive.move(128);
-    // pros::delay(1500);
-    // left_drive.move(0);
-    // right_drive.move(0);
-    // intake.move(0);
-
-    // pros::delay(500);
-
-    // left_drive.move(-90); // back up
-    // right_drive.move(-90);
-    // pros::delay(300);
-    // left_drive.move(0);
-    // right_drive.move(0);
-    // pros::delay(200);
-
-
-
-
-    // chassis->setPose(0, 0, 0, 0);
-
-    // //left_drive.move(-60);
-    // //pros::delay(500);
+	pros::delay(1200);
+	chassis->cancelMotion();
+	left_drive.move(-60);
+	right_drive.move(-60);
+	pros::delay(500);
+	left_drive.move(0);
+	right_drive.move(0);
+	pros::delay(200);
+	left_drive.move(127);
+	right_drive.move(127);
+	pros::delay(700);
+	left_drive.move(-60);
+	right_drive.move(-60);
+	pros::delay(500);
+	left_drive.move(0);
+	right_drive.move(0);
+	
+	
+	// second identical ram (third total on left)
+	pros::delay(200);
+	left_drive.move(127);
+	right_drive.move(127);
+	pros::delay(700);
+	left_drive.move(-60);
+	right_drive.move(-60);
+	pros::delay(500);
+	left_drive.move(0);
+	right_drive.move(0);
 }

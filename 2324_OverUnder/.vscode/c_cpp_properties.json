@@ -12,8 +12,8 @@
         "_UNICODE"
       ],
       "compilerPath": "/Users/sophiacarcellar/Library/Application Support/Code/User/globalStorage/sigbots.pros/install/pros-toolchain-macos/bin/arm-none-eabi-g++",
-      "cStandard": "c17",
-      "cppStandard": "c++17",
+      "cStandard": "gnu11",
+      "cppStandard": "gnu++20",
       "intelliSenseMode": "gcc-arm",
       "compileCommands": "/Users/sophiacarcellar/Documents/GitHub/765A/2324_OverUnder/compile_commands.json",
       "macFrameworkPath": [

@@ -158,140 +158,41 @@ void autonomous() {
 
 	// chassis.turnTo(50, -50, 10000, false, 50);
 
-	chassis.setPose(-48.5, -55.5, 90);
 	int start = pros::millis();
-	
-	while (chassis.getPose().theta > 65) {
-        left_drive.move(-40);
-    }
-    left_drive.move(0);
-	pros::delay(300);
-
-	cata.move(127*.9);
-	pros::delay(3000);
-	cata.move(0);
-
-	double startTheta = chassis.getPose().theta;
-	while (chassis.getPose().theta < startTheta + 25) {
-        left_drive.move(40);
-    }
+    chassis.setPose(40.5, 58, 315);
+	while (chassis.getPose().x < 46) { // 49.69, 48.81
+		left_drive.move(-50);
+		right_drive.move(-43);
+	}
 	left_drive.move(0);
-
+	pros::delay(100);
+	right_drive.move(0);
 	pros::delay(300);
-	chassis.setPose(-47.5, -52.5, chassis.getPose().theta);
-
-	chassis.follow(underalt_txt, 12, 18000, true, true);
-
-	while (chassis.getPose().x < -24) {
-	 	pros::delay(10);
-	}
-	cata.move(70);
-	pros::delay(1000);
-	cata.move(0);
-	chassis.waitUntilDone();
-	pros::delay(200);
-
-	chassis.turnTo(72, 0, 2000, true, 50);
-	chassis.waitUntilDone();
-	pros::delay(200);
-
 	left_wing.set_value(true);
-	left_drive.move(127);
+	pros::delay(500);
 	right_drive.move(127);
-
-	while (chassis.getPose().x < 26) {
-		pros::delay(10);
-	}
+	left_drive.move(-60);
+	pros::delay(200);
+	right_drive.move(0);
+	left_drive.move(0);
+	pros::delay(500);
+	left_wing.set_value(false);
+	
+	chassis.turnTo(70, 24, 2000, true);
+	chassis.waitUntilDone();
+	left_drive.move(50);
+	right_drive.move(50);
+	pros::delay(700);
+	left_drive.move(0);
+	right_drive.move(0);
 	intake.move(127);
+	pros::delay(500);
 
-	pros::delay(500);
-	left_drive.move(0);
-	right_drive.move(0);
-	left_wing.set_value(false);
-	pros::delay(200);
-	left_drive.move(-70);
-	right_drive.move(-70);
-	pros::delay(500);
-	left_drive.move(0);
-	right_drive.move(0);
-	left_wing.set_value(true);
-	pros::delay(200);
 	left_drive.move(127);
-	right_drive.move(127);
-	pros::delay(600);
-	left_drive.move(-70);
-	right_drive.move(-70);
 	pros::delay(500);
 	left_drive.move(0);
-	right_drive.move(0);
-	left_wing.set_value(false);
-	pros::delay(200);
-
-	// do question mark in front
-	right_drive.move(-75);
-	left_drive.move(-1);
-	pros::delay(500);
-	left_drive.move(-75);
-	right_drive.move(-1);
-	pros::delay(500);
-	left_drive.move(0);
-	right_drive.move(0);
-	left_wing.set_value(true);
-	pros::delay(100);
-	left_drive.move(127);
-	right_drive.move(127);
-	pros::delay(600);
-	left_drive.move(0);
-	right_drive.move(0);
-	left_wing.set_value(false);
-	pros::delay(200);
-	left_drive.move(-60);
-	right_drive.move(-60);
-	pros::delay(300);
-	left_drive.move(0);
-	right_drive.move(0);
-
-	// left part
-	pros::delay(100);
-	chassis.turnTo(chassis.getPose().x, 80, 2000, true, 50);
-	chassis.waitUntilDone();
-	pros::delay(300);
-	chassis.setPose(33, 11, chassis.getPose().theta);
-	chassis.follow(left_txt, 10, 12000, true, true);
-	pros::delay(2500);
-	left_wing.set_value(true);
-	pros::delay(1200);
-	left_wing.set_value(false);
-
-	pros::delay(1200);
-	chassis.cancelMotion();
-	left_drive.move(-60);
-	right_drive.move(-60);
-	pros::delay(500);
-	left_drive.move(0);
-	right_drive.move(0);
-	pros::delay(200);
-	left_drive.move(127);
-	right_drive.move(127);
-	pros::delay(700);
-	left_drive.move(-60);
-	right_drive.move(-60);
-	pros::delay(500);
-	left_drive.move(0);
-	right_drive.move(0);
-	
-	
-	// second identical ram (third total on left)
-	pros::delay(200);
-	left_drive.move(127);
-	right_drive.move(127);
-	pros::delay(700);
-	left_drive.move(-60);
-	right_drive.move(-60);
-	pros::delay(500);
-	left_drive.move(0);
-	right_drive.move(0);
-
+	pros::delay(1000);
+	intake.move(0);
 	
 	pros::lcd::print(0, "Time: %d", pros::millis() - start);
 }
