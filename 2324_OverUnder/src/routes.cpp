@@ -144,7 +144,7 @@ void far_driver(lemlib::Chassis* chassis) {
 	pros::delay(500);
 	left_drive.move(40);
 	right_drive.move(40);
-	pros::delay(700);
+	pros::delay(1000);
 	left_drive.move(0);
 	right_drive.move(0);
 
@@ -304,7 +304,7 @@ void skills(lemlib::Chassis* chassis) {
 	pros::delay(300);
 
 	cata.move(127*.9);
-	pros::delay(30000);
+	pros::delay(28000);
 	cata.move(0);
 
 	double startTheta = chassis->getPose().theta;
@@ -327,7 +327,7 @@ void skills(lemlib::Chassis* chassis) {
 	chassis->waitUntilDone();
 	pros::delay(200);
 
-	chassis->turnTo(72, 0, 2000, true, 50);
+	chassis->turnTo(72, -6, 2000, true, 50);
 	chassis->waitUntilDone();
 	pros::delay(200);
 
@@ -355,21 +355,21 @@ void skills(lemlib::Chassis* chassis) {
 	left_drive.move(127);
 	right_drive.move(127);
 	pros::delay(600);
-	left_drive.move(-70);
-	right_drive.move(-70);
-	pros::delay(500);
+	left_drive.move(-50);
+	right_drive.move(-50);
+	pros::delay(400);
 	left_drive.move(0);
 	right_drive.move(0);
 	left_wing.set_value(false);
 	pros::delay(200);
 
 	// do question mark in front
-	right_drive.move(-75);
-	left_drive.move(-1);
-	pros::delay(500);
-	left_drive.move(-75);
-	right_drive.move(-1);
-	pros::delay(500);
+	right_drive.move(-90);
+	left_drive.move(0);
+	pros::delay(200);
+	left_drive.move(-90);
+	right_drive.move(0);
+	pros::delay(300);
 	left_drive.move(0);
 	right_drive.move(0);
 	left_wing.set_value(true);
@@ -383,7 +383,7 @@ void skills(lemlib::Chassis* chassis) {
 	pros::delay(200);
 	left_drive.move(-60);
 	right_drive.move(-60);
-	pros::delay(300);
+	pros::delay(200);
 	left_drive.move(0);
 	right_drive.move(0);
 
@@ -403,7 +403,7 @@ void skills(lemlib::Chassis* chassis) {
 	chassis->cancelMotion();
 	left_drive.move(-60);
 	right_drive.move(-60);
-	pros::delay(500);
+	pros::delay(300);
 	left_drive.move(0);
 	right_drive.move(0);
 	pros::delay(200);
@@ -412,7 +412,7 @@ void skills(lemlib::Chassis* chassis) {
 	pros::delay(700);
 	left_drive.move(-60);
 	right_drive.move(-60);
-	pros::delay(500);
+	pros::delay(300);
 	left_drive.move(0);
 	right_drive.move(0);
 	
@@ -424,7 +424,7 @@ void skills(lemlib::Chassis* chassis) {
 	pros::delay(700);
 	left_drive.move(-60);
 	right_drive.move(-60);
-	pros::delay(500);
+	pros::delay(300);
 	left_drive.move(0);
 	right_drive.move(0);
 	pros::delay(200);
