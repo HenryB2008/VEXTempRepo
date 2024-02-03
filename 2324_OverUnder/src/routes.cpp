@@ -24,9 +24,9 @@ void far_driver(lemlib::Chassis* chassis) {
 	left_drive.move(0);
 	right_drive.move(80);
 
-	while (chassis->getPose().theta > 35) {
-		pros::delay(10);
-	}
+	// while (chassis->getPose().theta > 40) {
+	// 	pros::delay(10);
+	// }
 	left_wing.set_value(false);
 
 	while (chassis->getPose().theta > 25) {	// actually 22.5
@@ -52,31 +52,16 @@ void far_driver(lemlib::Chassis* chassis) {
 	left_drive.move(0);
 	right_drive.move(0);
 	intake.move(0);
-	pros::delay(300);
-	left_drive.move(-30);
-	right_drive.move(-90);
-	pros::delay(600);	// was 700
-	left_drive.move(0);
-	right_drive.move(0);
+	pros::delay(400);
+	
+	chassis->setPose(57, -33.5, chassis->getPose().theta);
+	left_drive.move(-50);
+	right_drive.move(-50);
 	pros::delay(500);
-	intake.move(127);
-	left_drive.move(50);
-	right_drive.move(127);
-	pros::delay(600);
 	left_drive.move(0);
 	right_drive.move(0);
-	pros::delay(500);
 
-
-	chassis->setPose(63, -34, chassis->getPose().theta);
-	left_drive.move(-30);
-	right_drive.move(-90);
-	pros::delay(650);		// WAS 500, wasn't backing up enough
-	left_drive.move(0);
-	right_drive.move(0);
-	pros::delay(300);
-
-	chassis->moveToPoint(10, -29, 3000, {.maxSpeed = 60});
+	chassis->moveToPoint(10, -26, 3000, {.maxSpeed = 60});
 	intake.move(-127);
 	chassis->waitUntilDone();
 
@@ -86,17 +71,21 @@ void far_driver(lemlib::Chassis* chassis) {
 	left_drive.move(0);
 	right_drive.move(0);
 	pros::delay(200);
+	
+	chassis->setPose(8.5, -26, -90);
 
-	chassis->moveToPoint(24, -29, 3000, {.forwards = false, .maxSpeed = 60});
+	chassis->moveToPoint(24, -26, 3000, {.forwards = false, .maxSpeed = 60});
 	chassis->waitUntilDone();
 
+	pros::delay(150);
+
 	left_drive.move(70);
-	right_drive.move(35);
+	right_drive.move(1);
 
 	while (chassis->getPose().theta < -45) {
 		pros::delay(10);
 	}
-	right_drive.move(0);
+	right_drive.move(20);
 
 	while (chassis->getPose().theta < 45) {
 		pros::delay(10);
@@ -104,19 +93,61 @@ void far_driver(lemlib::Chassis* chassis) {
 	left_wing.set_value(true);
 	right_drive.move(0);
 
-	while (chassis->getPose().theta < 90) {
+	while (chassis->getPose().theta < 70) {
 		pros::delay(10);
 	}
+
+	left_drive.move(0);
+	right_drive.move(0);
+	pros::delay(500);
+	
+
 	intake.move(127);
 	left_drive.move(127);
 	right_drive.move(127);
-	pros::delay(500);	// ram goal
+	pros::delay(600);	// ram goal
+
+	left_drive.move(0);
+	right_drive.move(0);
+	intake.move(0);
+	pros::delay(300);
+
 
 	left_drive.move(-50);
 	right_drive.move(-50);
 	pros::delay(300);
 	left_drive.move(0);
 	right_drive.move(0);
+	pros::delay(200);
+
+	// left_drive.move(127);
+	// right_drive.move(127);
+	// pros::delay(500);
+	// left_drive.move(0);
+	// right_drive.move(0);
+	// pros::delay(300);
+	// left_drive.move(-50);
+	// right_drive.move(-50);
+	// pros::delay(300);
+	// left_drive.move(0);
+	// right_drive.move(0);
+	// pros::delay(300);
+
+	left_wing.set_value(false);
+
+	chassis->turnTo(5, -70, 2000, true, 50);
+	chassis->waitUntilDone();
+	pros::delay(10);
+	blocker.set_value(true);
+	left_drive.move(80);
+	right_drive.move(80);
+	pros::delay(500);
+	left_drive.move(40);
+	right_drive.move(40);
+	pros::delay(700);
+	left_drive.move(0);
+	right_drive.move(0);
+
 
 }
 
