@@ -160,7 +160,7 @@ void autonomous() {
 
 	int start = pros::millis();
     
-	far_driver(&chassis);
+	skills(&chassis);
 
 	
 	pros::lcd::print(0, "Time: %d", pros::millis() - start);
