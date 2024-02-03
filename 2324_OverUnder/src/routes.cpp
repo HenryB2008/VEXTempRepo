@@ -21,15 +21,19 @@ void far_driver(lemlib::Chassis* chassis) {
 	while (chassis->getPose().x < 50) {		// actually 52.5
 		pros::delay(10);
 	}
-	left_drive.move(-40);
+	left_drive.move(0);
 	right_drive.move(80);
+
+	while (chassis->getPose().theta > 35) {
+		pros::delay(10);
+	}
+	left_wing.set_value(false);
 
 	while (chassis->getPose().theta > 25) {	// actually 22.5
 		pros::delay(10);
 	}
 	left_drive.move(40);
 	right_drive.move(40);
-	left_wing.set_value(false);
 	pros::delay(200);
 	left_drive.move(0);
 
@@ -58,22 +62,21 @@ void far_driver(lemlib::Chassis* chassis) {
 	intake.move(127);
 	left_drive.move(50);
 	right_drive.move(127);
-	pros::delay(800);
+	pros::delay(600);
 	left_drive.move(0);
 	right_drive.move(0);
-	pros::delay(500);	// WAS 500
+	pros::delay(500);
 
 
 	chassis->setPose(63, -34, chassis->getPose().theta);
 	left_drive.move(-30);
 	right_drive.move(-90);
-	pros::delay(600);	// WAS 500
+	pros::delay(650);		// WAS 500, wasn't backing up enough
 	left_drive.move(0);
 	right_drive.move(0);
 	pros::delay(300);
 
-	chassis->turnTo(10, -29, 3000, true, 60);
-	chassis->moveToPoint(10, -29, 3000, {.maxSpeed = 85});
+	chassis->moveToPoint(10, -29, 3000, {.maxSpeed = 60});
 	intake.move(-127);
 	chassis->waitUntilDone();
 
@@ -82,7 +85,7 @@ void far_driver(lemlib::Chassis* chassis) {
 	pros::delay(400);
 	left_drive.move(0);
 	right_drive.move(0);
-	pros::delay(300);
+	pros::delay(200);
 
 	chassis->moveToPoint(24, -29, 3000, {.forwards = false, .maxSpeed = 60});
 	chassis->waitUntilDone();
@@ -109,19 +112,9 @@ void far_driver(lemlib::Chassis* chassis) {
 	right_drive.move(127);
 	pros::delay(500);	// ram goal
 
-	intake.move(0);
 	left_drive.move(-50);
 	right_drive.move(-50);
 	pros::delay(300);
-	left_drive.move(0);
-	right_drive.move(0);
-
-	chassis->turnTo(0, -48, 2000, true, 50);
-	pros::delay(200);
-	blocker.set_value(true);
-	left_drive.move(80);
-	right_drive.move(80);
-	pros::delay(500);
 	left_drive.move(0);
 	right_drive.move(0);
 
