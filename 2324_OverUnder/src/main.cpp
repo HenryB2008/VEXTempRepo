@@ -159,40 +159,9 @@ void autonomous() {
 	// chassis.turnTo(50, -50, 10000, false, 50);
 
 	int start = pros::millis();
-    chassis.setPose(40.5, 58, 315);
-	while (chassis.getPose().x < 46) { // 49.69, 48.81
-		left_drive.move(-50);
-		right_drive.move(-43);
-	}
-	left_drive.move(0);
-	pros::delay(100);
-	right_drive.move(0);
-	pros::delay(300);
-	left_wing.set_value(true);
-	pros::delay(500);
-	right_drive.move(127);
-	left_drive.move(-60);
-	pros::delay(200);
-	right_drive.move(0);
-	left_drive.move(0);
-	pros::delay(500);
-	left_wing.set_value(false);
-	
-	chassis.turnTo(70, 24, 2000, true);
-	chassis.waitUntilDone();
-	left_drive.move(50);
-	right_drive.move(50);
-	pros::delay(700);
-	left_drive.move(0);
-	right_drive.move(0);
-	intake.move(127);
-	pros::delay(500);
+    
+	far_driver(&chassis);
 
-	left_drive.move(127);
-	pros::delay(500);
-	left_drive.move(0);
-	pros::delay(1000);
-	intake.move(0);
 	
 	pros::lcd::print(0, "Time: %d", pros::millis() - start);
 }
