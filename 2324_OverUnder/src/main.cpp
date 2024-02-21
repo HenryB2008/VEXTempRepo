@@ -20,16 +20,16 @@ ASSET(left_txt);
 lemlib::Drivetrain drivetrain {
 	&left_drive,
 	&right_drive,
-	11.71875, // track width
+	17.37286228, // track width		11.71875
 	lemlib::Omniwheel::NEW_4, // wheel diameter
 	300, // wheel rpm
-	1 // boomerang chase
+	2 // boomerang chase
 };
 
 lemlib::TrackingWheel left_tracking(
 	&left_rot, // rotation sensor object
 	2.744269794, // wheel diameter
-	1.1875, // tracking center offset (negative if to left of tracking center)
+	1.729921405, // tracking center offset (negative if to left of tracking center)
 	1 // TRACKING WHEEL gear ratio
 );
 
@@ -78,9 +78,10 @@ lemlib::Chassis chassis(drivetrain, lateral_controller, angular_controller, odom
 
 pros::ADIDigitalOut blocker('B'); // and descorer
 pros::ADIDigitalOut left_wing('A');
-pros::ADIDigitalOut right_wing('C'); // not used
+pros::ADIDigitalOut vert_wing('C');
 
-bool wings_deployed = false;		// true is actually not deployed, it's just the piston state for not deployed is 1
+bool wings_deployed = false;
+bool vert_deployed = false;
 bool blocker_deployed = false;
 
 int cata_retract_length = 250*4.2;
@@ -98,7 +99,7 @@ void initialize() {
 	pros::lcd::initialize();
 
 	left_wing.set_value(wings_deployed);
-	right_wing.set_value(wings_deployed);
+	vert_wing.set_value(wings_deployed);
 	blocker.set_value(blocker_deployed);
 
 	chassis.calibrate();
@@ -142,6 +143,34 @@ void competition_initialize() {
 	
 }
 
+void get_tracking_wheel_msmt() {
+	left_drive.move(127);
+	right_drive.move(-127);
+	pros::delay(2000);
+	left_drive.set_encoder_units(pros::E_MOTOR_ENCODER_DEGREES);
+	right_drive.set_encoder_units(pros::E_MOTOR_ENCODER_DEGREES);
+	double start_theta = imu.get_rotation();
+	double start_enc = left_rot.get_position();
+	double start_left = left_drive.get_positions()[1];
+	double start_right = right_drive.get_positions()[1];
+
+	pros::delay(8000);
+	double end_theta = imu.get_rotation();
+	double end_enc = left_rot.get_position();
+	double end_left = left_drive.get_positions()[1];
+	double end_right = right_drive.get_positions()[1];
+	left_drive.move(0);
+	right_drive.move(0);
+
+	
+
+	pros::lcd::print(3, "theta: %f", end_theta - start_theta);
+	pros::lcd::print(4, "enc: %f", (end_enc - start_enc)/100);
+	pros::lcd::print(5, "left: %f", end_left - start_left);
+	pros::lcd::print(6, "right: %f", end_right - start_right);
+}
+
+
 /**
  * Runs the user autonomous code. This function will be started in its own task
  * with the default priority and stack size whenever the robot is enabled via
@@ -160,7 +189,9 @@ void autonomous() {
 
 	int start = pros::millis();
     
-	far_driver(&chassis);
+	skills(&chassis);
+
+	// get_tracking_wheel_msmt();
 
 	
 	pros::lcd::print(0, "Time: %d", pros::millis() - start);
@@ -233,6 +264,11 @@ void opcontrol() {
 		}
 
 		if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_R2)) {
+			vert_deployed = !vert_deployed;
+			vert_wing.set_value(vert_deployed);
+		}
+
+		if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_A)) {
 			blocker_deployed = !blocker_deployed;
 			blocker.set_value(blocker_deployed);
 		}

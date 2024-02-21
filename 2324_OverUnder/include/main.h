@@ -63,6 +63,7 @@
 extern "C" {
 #endif
 
+void get_tracking_wheel_msmt(void);
 void autonomous(void);
 void initialize(void);
 void disabled(void);
@@ -82,7 +83,7 @@ void opcontrol(void);
 #define OBJECTS
 extern pros::Controller master;
 extern pros::ADIDigitalOut left_wing;
-extern pros::ADIDigitalOut right_wing;
+extern pros::ADIDigitalOut vert_wing;
 extern pros::ADIDigitalOut blocker;
 extern pros::MotorGroup left_drive;
 extern pros::MotorGroup right_drive;
