@@ -30,11 +30,11 @@
             "-funwind-tables",
             "--std=gnu++17",
             "-o",
-            "bin/routes.cpp.o",
-            "src/routes.cpp"
+            "bin/main.cpp.o",
+            "src/main.cpp"
         ],
         "directory": "/Users/sophiacarcellar/Documents/GitHub/765A/2324_OverUnder",
-        "file": "src/routes.cpp"
+        "file": "src/main.cpp"
     },
     {
         "arguments": [
@@ -67,10 +67,10 @@
             "-funwind-tables",
             "--std=gnu++17",
             "-o",
-            "bin/main.cpp.o",
-            "src/main.cpp"
+            "bin/routes.cpp.o",
+            "src/routes.cpp"
         ],
         "directory": "/Users/sophiacarcellar/Documents/GitHub/765A/2324_OverUnder",
-        "file": "src/main.cpp"
+        "file": "src/routes.cpp"
     }
 ]

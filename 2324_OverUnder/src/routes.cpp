@@ -3,6 +3,7 @@
 
 ASSET(startsweep_txt);
 ASSET(leftmove_txt);
+ASSET(frontpush_txt);
 
 double RAM_PULLEY = 2.25; // gap between ramming area and intake pulleys
 double TC_RAM = 7.75; 	// gap between vertical tracking center and ramming area
@@ -341,6 +342,24 @@ void skills(lemlib::Chassis* chassis) {
 	left_drive.move(0);
 	right_drive.move(0);
 
-	chassis->turnToHeading(90, 1000, {.maxSpeed = 90});	// turn to red side for pure pursuit
+	//chassis->turnToHeading(90, 1000, {.maxSpeed = 90});	// turn to red side for pure pursuit
+	left_drive.move(-40);
+	right_drive.move(2);
+	pros::delay(300);
+	left_drive.move(0);
+	right_drive.move(0);
 
+	chassis->turnToHeading(90, 1000, {.maxSpeed = 90});
+	
+	chassis->follow(frontpush_txt, 11, 5000, false);
+	
+	pros::delay(300);
+	vert_wing.set_value(true);
+	//pros::delay(3000);
+
+	// intake 
+
+	chassis->waitUntilDone();
+
+	//push(127, 500, 50, 250, true);
 }
