@@ -294,14 +294,16 @@ void skills(lemlib::Chassis* chassis) {
 	pros::delay(150);
 
 	push(50, 200, 127, 300, false);
-	left_drive.move(50);
-	right_drive.move(-1);
-	pros::delay(400);
+	left_drive.move(40);
+	right_drive.move(40);
+	pros::delay(200);
 	left_drive.move(0);
 	right_drive.move(0);
 	pros::delay(50);
 
-	chassis->follow(startsweep_txt, 11, 5500, false);
+	chassis->turnToHeading(270, 1000, {.maxSpeed = 90});
+
+	chassis->follow(startsweep_txt, 11, 5000, false);
 
 	while (chassis->getPose().y < -24) {
 		pros::delay(10);
@@ -313,7 +315,32 @@ void skills(lemlib::Chassis* chassis) {
 	pros::delay(200);
 	chassis->setPose(-12.5, 39.5, chassis->getPose().theta);
 
-	chassis->follow(leftmove_txt, 9, 9000);
+	intake.move(127);
+	chassis->follow(leftmove_txt, 12, 8500);
+
+	while (chassis->getPose().x < 12) {
+		pros::delay(10);
+	}
+	cata.move(70);
+	pros::delay(500);
+	cata.move(0);
+
 	chassis->waitUntilDone();
+	left_wing.set_value(true);
+	pros::delay(100);
+	push(127, 500, 50, 250, true);		// second left push
+	intake.move(0);
+
+	left_wing.set_value(false);
+	pros::delay(100);
+	chassis->setPose(34.25, 61.5, chassis->getPose().theta);
+
+	left_drive.move(-40);
+	right_drive.move(-40);
+	pros::delay(200);
+	left_drive.move(0);
+	right_drive.move(0);
+
+	chassis->turnToHeading(90, 1000, {.maxSpeed = 90});	// turn to red side for pure pursuit
 
 }
