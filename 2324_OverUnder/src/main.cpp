@@ -252,9 +252,11 @@ void opcontrol() {
 		right_drive.move(right); // right
 
 		if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_B)) {
-			chassis.setPose(0, 0, 0);
-			while (chassis.getPose().theta > -28) {
+			chassis.setPose(0, 0, 90);
+			while (chassis.getPose().theta > 62) {
         		left_drive.move(-40);
+				pros::lcd::print(2, "theta: %f", pose.theta);
+				pros::delay(10);
     		}
     		left_drive.move(0);
 		}

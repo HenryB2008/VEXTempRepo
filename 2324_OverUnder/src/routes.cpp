@@ -302,9 +302,9 @@ void skills(lemlib::Chassis* chassis) {
 	right_drive.move(0);
 	pros::delay(50);
 
-	chassis->turnToHeading(270, 500, {.maxSpeed = 90});
+	chassis->turnToHeading(270, 600, {.maxSpeed = 90});
 
-	chassis->follow(startsweep_txt, 11, 5000, false);
+	chassis->follow(startsweep_txt, 11, 4300, false);
 
 	while (chassis->getPose().y < -24) {
 		pros::delay(10);
@@ -317,7 +317,7 @@ void skills(lemlib::Chassis* chassis) {
 	chassis->setPose(-12.5, 39.5, chassis->getPose().theta);
 
 	intake.move(127);
-	chassis->follow(leftmove_txt, 12, 8500);
+	chassis->follow(leftmove_txt, 12, 7000);
 
 	while (chassis->getPose().x < 12) {
 		pros::delay(10);
@@ -352,7 +352,7 @@ void skills(lemlib::Chassis* chassis) {
 	right_drive.move(0);
 	pros::delay(50);
 
-	chassis->turnToHeading(90, 1000, {.maxSpeed = 90});
+	chassis->turnToHeading(90, 500, {.maxSpeed = 90});
 	chassis->waitUntilDone();
 	
 	chassis->follow(frontpush_txt, 10, 5000, false);
@@ -362,15 +362,22 @@ void skills(lemlib::Chassis* chassis) {
 	
 	chassis->waitUntilDone();
 
-	chassis->turnToHeading(270, 2000, {.maxSpeed = 90});
+	chassis->turnToHeading(270, 500, {.maxSpeed = 90});
 	chassis->waitUntilDone();
 
 
 	left_drive.move(-127);
 	right_drive.move(-127);
-	pros::delay(500);
+	pros::delay(800);
 	left_drive.move(0);
 	right_drive.move(0);
+
+	push(50, 300, 127, 500, false);
+
+	// TODO: For the second left push have it a little more away from the wall and change
+	// the corresponding position reset to not mess up the rest of the route
+
+
 	//pros::delay(200);
 	//left_drive.move(0);
 	//right_drive.move(0);
