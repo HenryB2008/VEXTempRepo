@@ -262,7 +262,7 @@ void push(int fspd, int fdur, int bspd, int bdur, bool start_back) {
 void skills(lemlib::Chassis* chassis) {
     chassis->setPose(-49, -55.25, 90);  // width front bumper to front bumper is 14.25 in
 	
-	while (chassis->getPose().theta > 65) {
+	while (chassis->getPose().theta > 62) {
         left_drive.move(-40);
     }
     left_drive.move(0);
