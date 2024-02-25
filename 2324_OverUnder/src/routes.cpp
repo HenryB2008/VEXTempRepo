@@ -343,15 +343,17 @@ void skills(lemlib::Chassis* chassis) {
 	right_drive.move(0);
 
 	//chassis->turnToHeading(90, 1000, {.maxSpeed = 90});	// turn to red side for pure pursuit
-	left_drive.move(-40);
+	left_drive.move(-50);
 	right_drive.move(2);
-	pros::delay(300);
+	pros::delay(350);
 	left_drive.move(0);
 	right_drive.move(0);
+	pros::delay(50);
 
 	chassis->turnToHeading(90, 1000, {.maxSpeed = 90});
+	chassis->waitUntilDone();
 	
-	chassis->follow(frontpush_txt, 11, 5000, false);
+	chassis->follow(frontpush_txt, 9, 5000, false);
 	
 	pros::delay(300);
 	vert_wing.set_value(true);
