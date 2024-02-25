@@ -83,6 +83,7 @@ pros::ADIDigitalOut vert_wing('C');
 bool wings_deployed = false;
 bool vert_deployed = false;
 bool blocker_deployed = false;
+bool puncher_on = false;
 
 int cata_retract_length = 250*4.2;
 int cata_retract_start = -cata_retract_length;
@@ -252,7 +253,7 @@ void opcontrol() {
 
 		if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_B)) {
 			chassis.setPose(0, 0, 0);
-			while (chassis.getPose().theta > -25) {
+			while (chassis.getPose().theta > -28) {
         		left_drive.move(-40);
     		}
     		left_drive.move(0);
@@ -289,7 +290,14 @@ void opcontrol() {
 			cata.move(127 * .9);
 		} else if (master.get_digital(pros::E_CONTROLLER_DIGITAL_X)) {
 			cata.move(127 * .9);
-		} else {
+		} else if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_UP)) {
+			puncher_on = !puncher_on;
+			if (puncher_on) {
+				cata.move(127 * .9);
+			} else {
+				cata.move(0);
+			}
+		} else if (!puncher_on) {
 			cata.move(0);
 		}
 
