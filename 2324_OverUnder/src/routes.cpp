@@ -1,5 +1,6 @@
 #include "main.h"
 #include "lemlib/api.hpp"
+#include <math.h>
 
 ASSET(startsweep_txt);
 ASSET(leftmove_txt);
@@ -238,9 +239,8 @@ void push(int fspd, int fdur, int bspd, int bdur, bool start_back) {
 		pros::delay(bdur);
 		left_drive.move(0);
 		right_drive.move(0);
-		pros::delay(0);
+		pros::delay(50);
 	}
-	pros::delay(50);
 
 	left_drive.move(fspd);
 	right_drive.move(fspd);
@@ -249,7 +249,7 @@ void push(int fspd, int fdur, int bspd, int bdur, bool start_back) {
 	right_drive.move(0);
 
 	if (!start_back) {
-		pros::delay(0);
+		pros::delay(50);
 		left_drive.move(-bspd);
 		right_drive.move(-bspd);
 		pros::delay(bdur);
@@ -329,18 +329,20 @@ void skills(lemlib::Chassis* chassis) {
 	chassis->waitUntilDone();
 	left_wing.set_value(true);
 	pros::delay(100);
-	push(127, 500, 50, 250, true);		// second left push
+	push(127, 600, 50, 250, true);		// second left push
 	intake.move(0);
 
 	left_wing.set_value(false);
-	pros::delay(100);
-	chassis->setPose(34.25, 61.5, chassis->getPose().theta);
+	pros::delay(250);
+	chassis->setPose(61.5, 34.25, fmod(chassis->getPose().theta, 360));
 
 	left_drive.move(-40);
 	right_drive.move(-40);
 	pros::delay(200);
 	left_drive.move(0);
 	right_drive.move(0);
+
+	pros::delay(150);
 
 	//chassis->turnToHeading(90, 1000, {.maxSpeed = 90});	// turn to red side for pure pursuit
 	left_drive.move(-50);
@@ -350,10 +352,10 @@ void skills(lemlib::Chassis* chassis) {
 	right_drive.move(0);
 	pros::delay(50);
 
-	chassis->turnToHeading(90, 1000, {.maxSpeed = 90});
+	chassis->turnToHeading(90, 2000, {.maxSpeed = 90});
 	chassis->waitUntilDone();
 	
-	chassis->follow(frontpush_txt, 9, 5000, false);
+	chassis->follow(frontpush_txt, 10, 5000, false);
 	
 	pros::delay(300);
 	vert_wing.set_value(true);
