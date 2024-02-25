@@ -292,7 +292,7 @@ void skills(lemlib::Chassis* chassis) {
 
 	chassis->moveToPose(-57, -31, 180, 3000, {.forwards = false, .minSpeed = 127});
 	chassis->waitUntilDone();
-	pros::delay(150);
+	pros::delay(50);
 
 	push(50, 200, 127, 300, false);
 	left_drive.move(40);
@@ -302,7 +302,7 @@ void skills(lemlib::Chassis* chassis) {
 	right_drive.move(0);
 	pros::delay(50);
 
-	chassis->turnToHeading(270, 1000, {.maxSpeed = 90});
+	chassis->turnToHeading(270, 500, {.maxSpeed = 90});
 
 	chassis->follow(startsweep_txt, 11, 5000, false);
 
@@ -313,7 +313,7 @@ void skills(lemlib::Chassis* chassis) {
 	
 	chassis->waitUntilDone();
 	vert_wing.set_value(false);
-	pros::delay(200);
+	pros::delay(100);
 	chassis->setPose(-12.5, 39.5, chassis->getPose().theta);
 
 	intake.move(127);
@@ -328,12 +328,12 @@ void skills(lemlib::Chassis* chassis) {
 
 	chassis->waitUntilDone();
 	left_wing.set_value(true);
-	pros::delay(100);
+	pros::delay(50);
 	push(127, 600, 50, 250, true);		// second left push
 	intake.move(0);
 
 	left_wing.set_value(false);
-	pros::delay(250);
+	pros::delay(200);
 	chassis->setPose(61.5, 34.25, fmod(chassis->getPose().theta, 360));
 
 	left_drive.move(-40);
@@ -346,24 +346,37 @@ void skills(lemlib::Chassis* chassis) {
 
 	//chassis->turnToHeading(90, 1000, {.maxSpeed = 90});	// turn to red side for pure pursuit
 	left_drive.move(-50);
-	right_drive.move(2);
+	right_drive.move(0);
 	pros::delay(350);
 	left_drive.move(0);
 	right_drive.move(0);
 	pros::delay(50);
 
-	chassis->turnToHeading(90, 2000, {.maxSpeed = 90});
+	chassis->turnToHeading(90, 1000, {.maxSpeed = 90});
 	chassis->waitUntilDone();
 	
 	chassis->follow(frontpush_txt, 10, 5000, false);
 	
-	pros::delay(300);
+	pros::delay(400);
 	vert_wing.set_value(true);
-	//pros::delay(3000);
+	
+	chassis->waitUntilDone();
+
+	chassis->turnToHeading(270, 2000, {.maxSpeed = 90});
+	chassis->waitUntilDone();
+
+
+	left_drive.move(-127);
+	right_drive.move(-127);
+	pros::delay(500);
+	left_drive.move(0);
+	right_drive.move(0);
+	//pros::delay(200);
+	//left_drive.move(0);
+	//right_drive.move(0);
 
 	// intake 
 
-	chassis->waitUntilDone();
 
 	//push(127, 500, 50, 250, true);
 }
