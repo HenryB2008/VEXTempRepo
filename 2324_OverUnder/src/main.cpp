@@ -191,6 +191,7 @@ void autonomous() {
 	int start = pros::millis();
     
 	skills(&chassis);
+	//spiral(&chassis);
 
 	// get_tracking_wheel_msmt();
 
@@ -253,7 +254,7 @@ void opcontrol() {
 
 		if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_B)) {
 			chassis.setPose(0, 0, 90);
-			while (chassis.getPose().theta > 62) {
+			while (chassis.getPose().theta > 66) {
         		left_drive.move(-40);
 				pros::lcd::print(2, "theta: %f", pose.theta);
 				pros::delay(10);
