@@ -4,7 +4,7 @@
 
 pros::Controller master(pros::E_CONTROLLER_MASTER);
 
-pros::MotorGroup left_drive({pros::Motor(6, pros::E_MOTOR_GEAR_BLUE), pros::Motor(-14, pros::E_MOTOR_GEAR_BLUE), pros::Motor(12, pros::E_MOTOR_GEAR_BLUE)});	// front mid back
+pros::MotorGroup left_drive({pros::Motor(19, pros::E_MOTOR_GEAR_BLUE), pros::Motor(-14, pros::E_MOTOR_GEAR_BLUE), pros::Motor(12, pros::E_MOTOR_GEAR_BLUE)});	// front mid back
 pros::MotorGroup right_drive({pros::Motor(-10, pros::E_MOTOR_GEAR_BLUE), pros::Motor(9, pros::E_MOTOR_GEAR_BLUE), pros::Motor(-20, pros::E_MOTOR_GEAR_BLUE)});
 
 pros::MotorGroup cata({pros::Motor(18, pros::E_MOTOR_GEAR_GREEN)});	// left right
