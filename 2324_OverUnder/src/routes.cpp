@@ -1,10 +1,12 @@
 #include "main.h"
 #include "lemlib/api.hpp"
 #include <math.h>
+#include "routes.h"
 
 ASSET(startsweep_txt);
 ASSET(leftmove_txt);
 ASSET(frontpush_txt);
+ASSET(sixballright_txt);
 
 double RAM_PULLEY = 2.25; // gap between ramming area and intake pulleys
 double TC_RAM = 7.75; 	// gap between vertical tracking center and ramming area
@@ -157,6 +159,95 @@ void far_driver(lemlib::Chassis* chassis) {
 
 }
 
+void sixball(lemlib::Chassis* chassis) {
+	chassis->setPose(12, -60, 270);
+	
+	// pick up triball
+	intake.move(-127);
+	left_drive.move(50);
+	right_drive.move(50);
+	pros::delay(200);
+	left_drive.move(0);
+	right_drive.move(0);
+	pros::delay(400);
+
+	chassis->follow(sixballright_txt, 11, 2500, false);
+	pros::delay(200);
+	intake.move(0);
+
+	while (chassis->getPose().theta > 255) {
+		pros::delay(10);
+	}
+	vert_wing.set_value(true);
+
+	while (chassis->getPose().theta > 230) {
+		pros::delay(10);
+	}
+	vert_wing.set_value(false);
+
+	chassis->waitUntilDone();
+
+	// spin for other triball
+	left_drive.move(70);
+	right_drive.move(20);
+	pros::delay(250);
+	left_drive.move(0);
+	right_drive.move(0);
+	pros::delay(200);
+
+	chassis->turnToHeading(0, 1000, {.maxSpeed = 90});
+	chassis->waitUntilDone();
+	intake.move(127);
+	pros::delay(300);
+	push(127, 400, 60, 300, false);
+	intake.move(-127);
+	// chassis->turnToPoint(13, -20, 2000, {.maxSpeed = 90});
+	chassis->moveToPoint(13, -20, 2000, {.maxSpeed = 120});
+	chassis->waitUntilDone();
+
+	left_drive.move(-70);
+	right_drive.move(-70);
+	pros::delay(250);
+	left_drive.move(0);
+	right_drive.move(0);
+	chassis->turnToPoint(48, -9, 2000, {.maxSpeed = 90});
+	chassis->waitUntilDone();
+	intake.move(127);
+	pros::delay(200);
+	left_drive.move(70);
+	right_drive.move(70);
+	pros::delay(250);
+	left_drive.move(0);
+	right_drive.move(0);
+
+	// get first center ball
+	intake.move(0);
+	chassis->turnToPoint(7, -7, 2000, {.maxSpeed = 90});
+	chassis->waitUntilDone();
+	intake.move(-127);
+	chassis->moveToPose(7, -3, 315, 2000, {.maxSpeed = 120});
+	chassis->waitUntilDone();
+	pros::delay(300);
+
+	// back up to get 2nd center ball
+	left_drive.move(-70);
+	right_drive.move(-70);
+	pros::delay(250);
+	left_drive.move(0);
+	right_drive.move(0);
+
+	// turn to push all 3 in goal
+	chassis->turnToHeading(90, 2000, {.maxSpeed = 90});
+	chassis->waitUntilDone();
+	left_wing.set_value(true);
+	pros::delay(200);
+	intake.move(127);
+	
+	// ram
+	push(127, 600, 70, 200, false);
+
+}
+
 void awp(lemlib::Chassis* chassis) {
     
 }
@@ -270,14 +361,14 @@ void spiral(lemlib::Chassis* chassis) {
 void skills(lemlib::Chassis* chassis) {
     chassis->setPose(-49, -55.25, 90);  // width front bumper to front bumper is 14.25 in
 	
-	while (chassis->getPose().theta > 59) {		// was 66
+	while (chassis->getPose().theta > 62) {		// was 66
         left_drive.move(-40);
     }
     left_drive.move(0);
 	pros::delay(150);
 
 	cata.move(127*.9);
-	pros::delay(22000);
+	pros::delay(23000);
 	cata.move(0);
 
 	// double startTheta = chassis->getPose().theta;
