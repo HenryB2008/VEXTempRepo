@@ -270,14 +270,14 @@ void spiral(lemlib::Chassis* chassis) {
 void skills(lemlib::Chassis* chassis) {
     chassis->setPose(-49, -55.25, 90);  // width front bumper to front bumper is 14.25 in
 	
-	while (chassis->getPose().theta > 66) {
+	while (chassis->getPose().theta > 59) {		// was 66
         left_drive.move(-40);
     }
     left_drive.move(0);
 	pros::delay(150);
 
 	cata.move(127*.9);
-	pros::delay(2000);
+	pros::delay(22000);
 	cata.move(0);
 
 	// double startTheta = chassis->getPose().theta;
@@ -383,7 +383,7 @@ void skills(lemlib::Chassis* chassis) {
 	intake.move(-127);
 	chassis->follow(frontpush_txt, 10, 5000, false);
 	
-	pros::delay(400);
+	pros::delay(600);
 	vert_wing.set_value(true);
 	
 	chassis->waitUntilDone();
@@ -418,56 +418,52 @@ void skills(lemlib::Chassis* chassis) {
 	chassis->setPose(40.5, 2, chassis->getPose().theta);
 
 	// back up
-	chassis->moveToPoint(20.5, 2, 2000, {.forwards = true, .maxSpeed = 80});
+	chassis->moveToPoint(14, 2, 2000, {.forwards = true, .maxSpeed = 80});
 	pros::delay(100);
 	vert_wing.set_value(false);
 	chassis->waitUntilDone();
 
-	left_drive.move(1);
-	right_drive.move(65);
-	intake.move(-127);
+	chassis->turnToHeading(0, 2000, {.maxSpeed = 70});
+	chassis->moveToPoint(chassis->getPose().x, -24, 2500, {.forwards = false, .maxSpeed = 80});
+	chassis->waitUntilDone();
 
-	while (360 - fmod(fabs(chassis->getPose().theta), 360) > 94) {		// intended 270 -> 90
-		pros::delay(10);
-	}
-	left_drive.move(0);
-	right_drive.move(0);
-	intake.move(127);
-	
-	pros::delay(300);
-	intake.move(0);
-
-	// second point turn, starting at 90
+	vert_wing.set_value(true);
 	left_drive.move(-50);
 	right_drive.move(1);
 
-	while (fmod(fabs(chassis->getPose().theta), 360) > 2 ) {		// 0 front drive with right wheels
+	while (chassis->getPose().theta > -150) {	// was 142
 		pros::delay(10);
 	}
-	right_drive.move(50);
 
-	while (fmod(fabs(chassis->getPose().theta), 360) > 315 || fmod(fabs(chassis->getPose().theta), 360) < 110) {		// 315 deploy wings
+	left_drive.move(0);
+	right_drive.move(0);
+	pros::delay(200);
+	left_drive.move(-80);
+	right_drive.move(-80);
+	pros::delay(350);
+	left_drive.move(0);
+	right_drive.move(0);
+	pros::delay(200);
+	vert_wing.set_value(false);
+
+	left_drive.move(50);
+	right_drive.move(1);
+
+	while (chassis->getPose().theta < -53) {
 		pros::delay(10);
 	}
+
+	left_drive.move(50);
+	right_drive.move(60);
+	
+	while (chassis->getPose().theta > -88) {
+		pros::delay(10);
+	}
+	
+	left_drive.move(0);
+	right_drive.move(0);
 
 	vert_wing.set_value(true);
-
-	while (360 - fmod(fabs(chassis->getPose().theta), 360) < 225) {		// 225 stop
-		pros::delay(10);
-	}
-
-	left_drive.move(0);
-	right_drive.move(0);
-
-	pros::delay(150);
-
-	right_drive.move(-127);
-	left_drive.move(-127 * .7);
-	pros::delay(700);				// TODO: maybe can shorten
-	right_drive.move(0);
-	left_drive.move(0);
-	pros::delay(250);				// TODO: maybe can shorten
-
-	// begin right push
-	chassis->setPose(40.5, -12.5, chassis->getPose().theta);
+	push(60, 250, 127, 750, true);
+	push(60, 200, 127, 400, true);
 }
