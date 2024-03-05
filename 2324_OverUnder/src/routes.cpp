@@ -553,6 +553,7 @@ void skills(lemlib::Chassis* chassis) {
 
 	chassis->setPose(40.5, 2, chassis->getPose().theta);
 
+	intake.move(-127);
 	// back up
 	chassis->moveToPoint(14, 2, 2000, {.forwards = true, .maxSpeed = 80});
 	pros::delay(100);
@@ -560,7 +561,9 @@ void skills(lemlib::Chassis* chassis) {
 	chassis->waitUntilDone();
 
 	chassis->turnToHeading(0, 2000, {.maxSpeed = 70});
+	intake.move(127);
 	chassis->moveToPoint(chassis->getPose().x, -24, 2500, {.forwards = false, .maxSpeed = 80});
+	intake.move(0);
 	chassis->waitUntilDone();
 
 	vert_wing.set_value(true);
@@ -589,6 +592,7 @@ void skills(lemlib::Chassis* chassis) {
 		pros::delay(10);
 	}
 
+	intake.move(-127);
 	left_drive.move(50);
 	right_drive.move(60);
 	
@@ -601,5 +605,8 @@ void skills(lemlib::Chassis* chassis) {
 
 	vert_wing.set_value(true);
 	push(60, 250, 127, 750, true);
+	intake.move(0.6 * 127);
+	pros::delay(300);
+	intake.move(0);
 	push(60, 200, 127, 400, true);
 }
