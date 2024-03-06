@@ -7,6 +7,7 @@ ASSET(startsweep_txt);
 ASSET(leftmove_txt);
 ASSET(frontpush_txt);
 ASSET(sixballright_txt);
+ASSET(skillsend_txt);
 
 double RAM_PULLEY = 2.25; // gap between ramming area and intake pulleys
 double TC_RAM = 7.75; 	// gap between vertical tracking center and ramming area
@@ -413,7 +414,7 @@ void skills(lemlib::Chassis* chassis) {
 	pros::delay(150);
 
 	cata.move(127*.9);
-	pros::delay(23000);
+	pros::delay(22000);	// 23
 	cata.move(0);
 
 	// double startTheta = chassis->getPose().theta;
@@ -562,51 +563,71 @@ void skills(lemlib::Chassis* chassis) {
 
 	chassis->turnToHeading(0, 2000, {.maxSpeed = 70});
 	intake.move(127);
-	chassis->moveToPoint(chassis->getPose().x, -24, 2500, {.forwards = false, .maxSpeed = 80});
-	intake.move(0);
+	chassis->moveToPoint(chassis->getPose().x, -8, 2500, {.forwards = false, .maxSpeed = 80});
 	chassis->waitUntilDone();
+	intake.move(0);
 
+	chassis->turnToHeading(270, 2000, {.maxSpeed = 70});
+	chassis->waitUntilDone();
+	// back up a bit
+	left_drive.move(70);
+	right_drive.move(70);
+	pros::delay(300);
+	left_drive.move(0);
+	right_drive.move(0);
 	vert_wing.set_value(true);
-	left_drive.move(-50);
-	right_drive.move(1);
 
-	while (chassis->getPose().theta > -150) {	// was 142
-		pros::delay(10);
-	}
-
-	left_drive.move(0);
-	right_drive.move(0);
-	pros::delay(200);
-	left_drive.move(-80);
-	right_drive.move(-80);
-	pros::delay(350);
-	left_drive.move(0);
-	right_drive.move(0);
-	pros::delay(200);
-	vert_wing.set_value(false);
-
-	left_drive.move(50);
-	right_drive.move(1);
-
-	while (chassis->getPose().theta < -53) {
-		pros::delay(10);
-	}
-
-	intake.move(-127);
-	left_drive.move(50);
-	right_drive.move(60);
-	
-	while (chassis->getPose().theta > -88) {
-		pros::delay(10);
-	}
-	
-	left_drive.move(0);
-	right_drive.move(0);
-
-	vert_wing.set_value(true);
 	push(60, 250, 127, 750, true);
 	intake.move(0.6 * 127);
 	pros::delay(300);
 	intake.move(0);
-	push(60, 200, 127, 400, true);
+	
+	left_drive.move(-127);
+	right_drive.move(-127);
+	pros::delay(400);
+	left_drive.move(0);
+	right_drive.move(0);
+	pros::delay(300);
+
+	chassis->setPose(40.5, -11.25, chassis->getPose().theta);
+
+	chassis->moveToPoint(40.5-24, -11.25, 2500, {.maxSpeed = 80});
+	chassis->turnToHeading(0, 2000, {.maxSpeed = 70});
+	chassis->moveToPoint(chassis->getPose().x, -26, 2000, {.forwards = false, .maxSpeed = 70});
+	chassis->waitUntilDone();
+
+	vert_wing.set_value(true);
+	right_drive.move(2);
+	left_drive.move(-55);
+
+	while (chassis->getPose().theta > -70) {
+		pros::delay(10);
+	}
+	right_drive.move(0);
+	left_drive.move(0);
+	pros::delay(300);
+
+	chassis->follow(skillsend_txt, 10, 3500, false);
+	
+	while (chassis->getPose().theta > -135) {
+		pros::delay(10);
+	}
+	vert_wing.set_value(false);
+	chassis->waitUntilDone();
+
+	left_drive.move(70);
+	right_drive.move(70);
+	pros::delay(250);
+	left_drive.move(0);
+	right_drive.move(0);
+	pros::delay(50);
+	left_drive.move(-127);
+	right_drive.move(-127);
+	pros::delay(300);
+	left_drive.move(-70);
+	right_drive.move(-70);
+	pros::delay(200);
+	left_drive.move(0);
+	right_drive.move(0);
+
 }
