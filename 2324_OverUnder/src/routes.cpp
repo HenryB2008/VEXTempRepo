@@ -8,6 +8,8 @@ ASSET(leftmove_txt);
 ASSET(frontpush_txt);
 ASSET(sixballright_txt);
 ASSET(skillsend_txt);
+ASSET(disruptcenter_txt);
+ASSET(disruptend_txt);
 
 double RAM_PULLEY = 2.25; // gap between ramming area and intake pulleys
 double TC_RAM = 7.75; 	// gap between vertical tracking center and ramming area
@@ -362,6 +364,99 @@ void close_driver(lemlib::Chassis* chassis) {
 	// right_drive.move(0);
 }
 
+void disrupt(lemlib::Chassis* chassis) {
+   chassis->setPose(40.5, 58, 315);
+   while (chassis->getPose().x < 46) { // 49.69, 48.81
+       left_drive.move(-50);
+       right_drive.move(-43);
+   }
+   left_drive.move(0);
+   // pros::delay(100);
+   right_drive.move(0);
+   pros::delay(300);
+   left_wing.set_value(true);
+   pros::delay(700);
+   right_drive.move(127);      // move back to descore
+   left_drive.move(-127);
+   pros::delay(200);
+   right_drive.move(0);
+   left_drive.move(0);
+   pros::delay(500);
+   left_wing.set_value(false);
+  
+   chassis->turnToPoint(70, 24, 2000, true);   // turn towards inner corner of goal
+   chassis->waitUntilDone();
+   left_drive.move(50);
+   right_drive.move(50);
+   pros::delay(450);
+   left_drive.move(70);
+   right_drive.move(0);
+   pros::delay(75);
+   intake.move(127);
+   pros::delay(600);
+   left_drive.move(0);
+   pros::delay(300);
+   intake.move(0);
+   right_drive.move(50);
+   pros::delay(350);
+   right_drive.move(0);
+   pros::delay(400);
+   chassis->setPose(58, 34, chassis->getPose().theta);
+
+
+   // back up
+   left_drive.move(-40);
+   right_drive.move(-40);
+   pros::delay(500);
+   left_drive.move(0);
+   right_drive.move(0);
+   pros::delay(300);
+
+
+   // new stuff
+
+
+   // move in front of goal
+   chassis->turnToHeading(270, 2000, {.maxSpeed = 90});
+   chassis->waitUntilDone();
+   chassis->follow(disruptcenter_txt, 11, 4300, true);
+   chassis->waitUntilDone();
+   intake.move(-127);
+   pros::delay(3000);          // camp in the center
+   intake.move(0);
+   pros::delay(200);
+
+
+   // turn away and leave
+   chassis->turnToHeading(0, 2000, {.maxSpeed = 90});
+   pros::delay(500);
+   chassis->follow(disruptend_txt, 11, 4300, true);
+   chassis->waitUntilDone();
+   intake.move(127);
+   pros::delay(150);
+   intake.move(0);
+  
+   // chassis->moveToPoint(36, 67, 3000, {.maxSpeed = 65});
+   // chassis->turnToPoint(-72, 67, 2000, false, 50);
+
+
+   // chassis->waitUntilDone();
+   // pros::delay(300);
+   // pros::delay(100);
+   // left_drive.move(-80);
+   // right_drive.move(-80);
+   // pros::delay(800);
+   // left_drive.move(0);
+   // right_drive.move(0);
+   // pros::delay(400);
+   // left_drive.move(-30);
+   // right_drive.move(-30);
+   // pros::delay(400);
+   // left_drive.move(0);
+   // right_drive.move(0);
+}
+
+
 void push(int fspd, int fdur, int bspd, int bdur, bool start_back) {
 	if (start_back) {
 		left_drive.move(-bspd);
@@ -623,4 +718,9 @@ void skills(lemlib::Chassis* chassis) {
 	left_drive.move(0);
 	right_drive.move(0);
 
+	left_drive.move(90);
+	right_drive.move(60);
+	pros::delay(300);
+	left_drive.move(0);
+	right_drive.move(0);
 }

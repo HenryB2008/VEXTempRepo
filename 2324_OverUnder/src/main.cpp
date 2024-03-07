@@ -190,7 +190,7 @@ void autonomous() {
 
 	int start = pros::millis();
     
-	sixball(&chassis);
+	disrupt(&chassis);
 	//spiral(&chassis);
 
 	// get_tracking_wheel_msmt();
