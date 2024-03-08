@@ -365,95 +365,80 @@ void close_driver(lemlib::Chassis* chassis) {
 }
 
 void disrupt(lemlib::Chassis* chassis) {
-   chassis->setPose(40.5, 58, 315);
-   while (chassis->getPose().x < 46) { // 49.69, 48.81
-       left_drive.move(-50);
-       right_drive.move(-43);
-   }
-   left_drive.move(0);
-   // pros::delay(100);
-   right_drive.move(0);
-   pros::delay(300);
-   left_wing.set_value(true);
-   pros::delay(700);
-   right_drive.move(127);      // move back to descore
-   left_drive.move(-127);
-   pros::delay(200);
-   right_drive.move(0);
-   left_drive.move(0);
-   pros::delay(500);
-   left_wing.set_value(false);
-  
-   chassis->turnToPoint(70, 24, 2000, true);   // turn towards inner corner of goal
-   chassis->waitUntilDone();
-   left_drive.move(50);
-   right_drive.move(50);
-   pros::delay(450);
-   left_drive.move(70);
-   right_drive.move(0);
-   pros::delay(75);
-   intake.move(127);
-   pros::delay(600);
-   left_drive.move(0);
-   pros::delay(300);
-   intake.move(0);
-   right_drive.move(50);
-   pros::delay(350);
-   right_drive.move(0);
-   pros::delay(400);
-   chassis->setPose(58, 34, chassis->getPose().theta);
+	chassis->setPose(40.5, 58, 315);
+	while (chassis->getPose().x < 46) { // 49.69, 48.81
+		left_drive.move(-50);
+		right_drive.move(-43);
+	}
+	left_drive.move(0);
+	// pros::delay(100);
+	right_drive.move(0);
+	pros::delay(300);
+	left_wing.set_value(true);
+	pros::delay(700);
+	right_drive.move(127);      // move back to descore
+	left_drive.move(-127);
+	pros::delay(200);
+	right_drive.move(0);
+	left_drive.move(0);
+	pros::delay(300);
+	left_wing.set_value(false);
+
+	chassis->turnToPoint(70, 24, 1000, true);   // turn towards inner corner of goal
+	chassis->waitUntilDone();
+	intake.move(127);
+	left_drive.move(127);
+	right_drive.move(50);
+	pros::delay(500);
+	right_drive.move(0);
+	left_drive.move(0);
+	pros::delay(300);
+	intake.move(0);
+	chassis->setPose(59, 34, chassis->getPose().theta);	// was 62
 
 
-   // back up
-   left_drive.move(-40);
-   right_drive.move(-40);
-   pros::delay(500);
-   left_drive.move(0);
-   right_drive.move(0);
-   pros::delay(300);
+	// back up
+	left_drive.move(-70);
+	right_drive.move(-70);
+	pros::delay(300);
+	left_drive.move(0);
+	right_drive.move(0);
+	pros::delay(300);
 
 
-   // new stuff
+	// new stuff
 
 
-   // move in front of goal
-   chassis->turnToHeading(270, 2000, {.maxSpeed = 90});
-   chassis->waitUntilDone();
-   chassis->follow(disruptcenter_txt, 11, 4300, true);
-   chassis->waitUntilDone();
-   intake.move(-127);
-   pros::delay(3000);          // camp in the center
-   intake.move(0);
-   pros::delay(200);
+	// move in front of goal
+	chassis->turnToHeading(270, 750, {.maxSpeed = 90});
+	chassis->waitUntilDone();
+	chassis->follow(disruptcenter_txt, 13, 4300, true);
+	pros::delay(1000);
+	blocker.set_value(true);
+	intake.move(-127);
+	chassis->waitUntilDone();
+	pros::delay(1000);
+	chassis->setPose(24, 10, chassis->getPose().theta);
+	pros::delay(1400);          // camp in the center
+	left_drive.move(-65);
+	right_drive.move(-65);
+	pros::delay(300);
+	left_drive.move(0);
+	right_drive.move(0);
+	chassis->turnToHeading(0, 2000, {.maxSpeed = 90});
+
+	intake.move(0);
 
 
-   // turn away and leave
-   chassis->turnToHeading(0, 2000, {.maxSpeed = 90});
-   pros::delay(500);
-   chassis->follow(disruptend_txt, 11, 4300, true);
-   chassis->waitUntilDone();
-   intake.move(127);
-   pros::delay(150);
-   intake.move(0);
-  
-   // chassis->moveToPoint(36, 67, 3000, {.maxSpeed = 65});
-   // chassis->turnToPoint(-72, 67, 2000, false, 50);
-
-
-   // chassis->waitUntilDone();
-   // pros::delay(300);
-   // pros::delay(100);
-   // left_drive.move(-80);
-   // right_drive.move(-80);
-   // pros::delay(800);
-   // left_drive.move(0);
-   // right_drive.move(0);
-   // pros::delay(400);
-   // left_drive.move(-30);
-   // right_drive.move(-30);
-   // pros::delay(400);
-   // left_drive.move(0);
-   // right_drive.move(0);
+	// turn away and leave
+	chassis->follow(disruptend_txt, 11, 3600, true);
+	while (chassis->getPose().x > 40 || chassis->getPose().y < 50) {
+		pros::delay(10);
+	}
+	intake.move(127);
+	pros::delay(500);
+	chassis->waitUntilDone();
+	intake.move(0);
 }
 
 
