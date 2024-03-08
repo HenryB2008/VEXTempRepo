@@ -487,7 +487,7 @@ void skills(lemlib::Chassis* chassis) {
 	pros::delay(150);
 
 	cata.move(127*.9);
-	pros::delay(28000);	// 22
+	pros::delay(22000);	// 22
 	cata.move(0);
 
 	// double startTheta = chassis->getPose().theta;
@@ -591,7 +591,7 @@ void skills(lemlib::Chassis* chassis) {
 	chassis->waitUntilDone();
 	
 	intake.move(-127);
-	chassis->follow(frontpush_txt, 10, 5000, false);
+	chassis->follow(frontpush_txt, 10, 4700, false);
 	
 	pros::delay(600);
 	vert_wing.set_value(true);
@@ -634,7 +634,7 @@ void skills(lemlib::Chassis* chassis) {
 	vert_wing.set_value(false);
 	chassis->waitUntilDone();
 
-	chassis->turnToHeading(0, 2000, {.maxSpeed = 70});
+	chassis->turnToHeading(0, 1250, {.maxSpeed = 70});
 	intake.move(127);
 	chassis->moveToPoint(chassis->getPose().x, -10, 2500, {.forwards = false, .maxSpeed = 80});
 	chassis->waitUntilDone();
@@ -667,7 +667,7 @@ void skills(lemlib::Chassis* chassis) {
 	chassis->moveToPoint(40.5-24, -13.25, 2500, {.maxSpeed = 80});
 	chassis->waitUntilDone();
 	vert_wing.set_value(false);
-	chassis->turnToHeading(0, 1250, {.maxSpeed = 70});
+	chassis->turnToHeading(0, 750, {.maxSpeed = 70});
 	chassis->moveToPoint(chassis->getPose().x, -26, 2000, {.forwards = false, .maxSpeed = 70});
 	chassis->waitUntilDone();
 
