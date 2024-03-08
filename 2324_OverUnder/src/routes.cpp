@@ -495,14 +495,14 @@ void spiral(lemlib::Chassis* chassis) {
 void skills(lemlib::Chassis* chassis) {
     chassis->setPose(-49, -55.25, 90);  // width front bumper to front bumper is 14.25 in
 	
-	while (chassis->getPose().theta > 62) {		// was 66
+	while (chassis->getPose().theta > 56) {		// was 58
         left_drive.move(-40);
     }
     left_drive.move(0);
 	pros::delay(150);
 
 	cata.move(127*.9);
-	pros::delay(22000);	// 23
+	pros::delay(28000);	// 22
 	cata.move(0);
 
 	// double startTheta = chassis->getPose().theta;
@@ -537,7 +537,7 @@ void skills(lemlib::Chassis* chassis) {
 
 	chassis->turnToHeading(270, 600, {.maxSpeed = 90});
 
-	chassis->follow(startsweep_txt, 11, 4300, false);
+	chassis->follow(startsweep_txt, 11, 3900, false);
 
 	while (chassis->getPose().y < -24) {
 		pros::delay(10);
@@ -613,7 +613,7 @@ void skills(lemlib::Chassis* chassis) {
 	
 	chassis->waitUntilDone();
 
-	chassis->turnToHeading(270, 500, {.maxSpeed = 90});
+	chassis->turnToHeading(270, 400, {.maxSpeed = 90});
 	chassis->waitUntilDone();
 
 	intake.move(127);
@@ -629,11 +629,11 @@ void skills(lemlib::Chassis* chassis) {
 	pros::delay(150);
 	left_drive.move(-127);
 	right_drive.move(-30);
-	pros::delay(450);		// TODO: can maybe cut down
+	pros::delay(400);		// TODO: can maybe cut down
 	right_drive.move(0);
 	left_drive.move(0);
 
-	pros::delay(300);		// TODO: can maybe cut down
+	pros::delay(150);		// TODO: can maybe cut down
 	// spiral(chassis);
 
 	// TODO: For the second left push have it a little more away from the wall and change
@@ -651,7 +651,7 @@ void skills(lemlib::Chassis* chassis) {
 
 	chassis->turnToHeading(0, 2000, {.maxSpeed = 70});
 	intake.move(127);
-	chassis->moveToPoint(chassis->getPose().x, -8, 2500, {.forwards = false, .maxSpeed = 80});
+	chassis->moveToPoint(chassis->getPose().x, -10, 2500, {.forwards = false, .maxSpeed = 80});
 	chassis->waitUntilDone();
 	intake.move(0);
 
@@ -677,10 +677,12 @@ void skills(lemlib::Chassis* chassis) {
 	right_drive.move(0);
 	pros::delay(300);
 
-	chassis->setPose(40.5, -11.25, chassis->getPose().theta);
+	chassis->setPose(40.5, -13.25, chassis->getPose().theta);
 
-	chassis->moveToPoint(40.5-24, -11.25, 2500, {.maxSpeed = 80});
-	chassis->turnToHeading(0, 2000, {.maxSpeed = 70});
+	chassis->moveToPoint(40.5-24, -13.25, 2500, {.maxSpeed = 80});
+	chassis->waitUntilDone();
+	vert_wing.set_value(false);
+	chassis->turnToHeading(0, 1250, {.maxSpeed = 70});
 	chassis->moveToPoint(chassis->getPose().x, -26, 2000, {.forwards = false, .maxSpeed = 70});
 	chassis->waitUntilDone();
 
@@ -695,9 +697,9 @@ void skills(lemlib::Chassis* chassis) {
 	left_drive.move(0);
 	pros::delay(300);
 
-	chassis->follow(skillsend_txt, 10, 3500, false);
+	chassis->follow(skillsend_txt, 10, 2500, false);		// was 3500
 	
-	while (chassis->getPose().theta > -135) {
+	while (chassis->getPose().theta > -117) {		// was 135
 		pros::delay(10);
 	}
 	vert_wing.set_value(false);
@@ -711,15 +713,26 @@ void skills(lemlib::Chassis* chassis) {
 	pros::delay(50);
 	left_drive.move(-127);
 	right_drive.move(-127);
-	pros::delay(300);
-	left_drive.move(-70);
-	right_drive.move(-70);
-	pros::delay(200);
+	pros::delay(500);
 	left_drive.move(0);
 	right_drive.move(0);
 
+	intake.move(127);
 	left_drive.move(90);
 	right_drive.move(60);
+	pros::delay(300);
+	left_drive.move(0);
+	right_drive.move(0);
+
+	// 3rd push
+	left_drive.move(-127);
+	right_drive.move(-127);
+	pros::delay(300);
+	left_drive.move(0);
+	right_drive.move(0);
+
+	left_drive.move(127);
+	right_drive.move(127);
 	pros::delay(300);
 	left_drive.move(0);
 	right_drive.move(0);
