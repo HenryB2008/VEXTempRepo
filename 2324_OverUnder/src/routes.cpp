@@ -198,7 +198,7 @@ void sixball(lemlib::Chassis* chassis) {
 	right_drive.move(0);
 	pros::delay(200);
 
-	chassis->turnToHeading(0, 750, {.maxSpeed = 80});
+	chassis->turnToHeading(25, 750, {.maxSpeed = 80});
 	chassis->waitUntilDone();
 	intake.move(127);
 	pros::delay(300);
@@ -214,8 +214,8 @@ void sixball(lemlib::Chassis* chassis) {
 	left_drive.move(0);
 	right_drive.move(0);
 	intake.move(-127);
-	chassis->turnToPoint(13, -21, 750, {.maxSpeed = 90});
-	chassis->moveToPoint(13, -21, 1250, {.maxSpeed = 120});
+	chassis->turnToPoint(11, -21, 750, {.maxSpeed = 90});
+	chassis->moveToPoint(11, -21, 1250, {.maxSpeed = 120});
 	chassis->waitUntilDone();
 
 	left_drive.move(-70);
@@ -230,10 +230,10 @@ void sixball(lemlib::Chassis* chassis) {
 
 	// get first center ball
 	intake.move(0);
-	chassis->turnToPoint(3, -2, 1000, {.maxSpeed = 120, .minSpeed = 40});
+	chassis->turnToPoint(3, 0, 1000, {.maxSpeed = 120, .minSpeed = 40});
 	chassis->waitUntilDone();
 	intake.move(-127);
-	chassis->moveToPose(3, 4, 340, 1200, {.maxSpeed = 120, .minSpeed = 40});
+	chassis->moveToPose(3, 6, 340, 1200, {.maxSpeed = 120, .minSpeed = 40});
 	chassis->waitUntilDone();
 	pros::delay(300);
 
@@ -245,8 +245,10 @@ void sixball(lemlib::Chassis* chassis) {
 	right_drive.move(0);
 
 	// turn to push all 3 in goal
-	chassis->turnToHeading(90, 600, {.maxSpeed = 90});
+	chassis->turnToHeading(75, 600, {.maxSpeed = 90});
 	chassis->waitUntilDone();
+	blocker.set_value(true);
+	pros::delay(100);
 
 	// backup to avoid hitting second ball
 	left_drive.move(-80);
