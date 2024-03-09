@@ -283,7 +283,11 @@ void sixball(lemlib::Chassis* chassis) {
 
 	left_drive.move(127);
 	right_drive.move(127);
-	pros::delay(400);
+	pros::delay(250);
+
+	left_drive.move(60);
+	right_drive.move(60);
+	pros::delay(350);
 
 	left_drive.move(0);
 	right_drive.move(0);
@@ -480,8 +484,8 @@ void spiral(lemlib::Chassis* chassis) {
 void skills(lemlib::Chassis* chassis) {
     chassis->setPose(-49, -55.25, 90);  // width front bumper to front bumper is 14.25 in
 	
-	while (chassis->getPose().theta > 56) {		// was 58
-        left_drive.move(-40);
+	while (chassis->getPose().theta > 65) {		// was 56 before change
+        left_drive.move(-55);
     }
     left_drive.move(0);
 	pros::delay(150);
