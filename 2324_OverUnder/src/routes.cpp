@@ -486,7 +486,7 @@ void spiral(lemlib::Chassis* chassis) {
 void skills(lemlib::Chassis* chassis) {
     chassis->setPose(-49, -55.25, 90);  // width front bumper to front bumper is 14.25 in
 	
-	while (chassis->getPose().theta > 65) {		// was 56 before change
+	while (chassis->getPose().theta > 68) {		// was 56 before change
         left_drive.move(-55);
     }
     left_drive.move(0);
@@ -599,7 +599,7 @@ void skills(lemlib::Chassis* chassis) {
 	intake.move(-127);
 	chassis->follow(frontpush_txt, 10, 4700, false);
 	
-	pros::delay(600);
+	pros::delay(1200);
 	vert_wing.set_value(true);
 	
 	chassis->waitUntilDone();
@@ -642,7 +642,7 @@ void skills(lemlib::Chassis* chassis) {
 
 	chassis->turnToHeading(0, 1250, {.maxSpeed = 70});
 	intake.move(127);
-	chassis->moveToPoint(chassis->getPose().x, -10, 2500, {.forwards = false, .maxSpeed = 80});
+	chassis->moveToPoint(chassis->getPose().x, -12, 2500, {.forwards = false, .maxSpeed = 80});
 	chassis->waitUntilDone();
 	intake.move(0);
 
@@ -668,7 +668,7 @@ void skills(lemlib::Chassis* chassis) {
 	right_drive.move(0);
 	pros::delay(300);
 
-	chassis->setPose(40.5, -13.25, chassis->getPose().theta);
+	chassis->setPose(40.5, -15.25, chassis->getPose().theta);
 
 	chassis->moveToPoint(40.5-24, -13.25, 2500, {.maxSpeed = 80});
 	chassis->waitUntilDone();

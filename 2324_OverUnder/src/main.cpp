@@ -190,7 +190,7 @@ void autonomous() {
 
 	int start = pros::millis();
     
-	sixball(&chassis);
+	skills(&chassis);
 	//spiral(&chassis);
 
 	// get_tracking_wheel_msmt();
@@ -254,7 +254,7 @@ void opcontrol() {
 
 		if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_B)) {
 			chassis.setPose(0, 0, 90);
-			while (chassis.getPose().theta > 61) {
+			while (chassis.getPose().theta > 68) {
         		left_drive.move(-55);
     		}
     		left_drive.move(0);
