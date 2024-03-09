@@ -491,7 +491,7 @@ void skills(lemlib::Chassis* chassis) {
 	pros::delay(150);
 
 	cata.move(127*.9);
-	pros::delay(22000);	// 22
+	pros::delay(21000);	// 22
 	cata.move(0);
 
 	// double startTheta = chassis->getPose().theta;
@@ -644,7 +644,7 @@ void skills(lemlib::Chassis* chassis) {
 	chassis->waitUntilDone();
 	intake.move(0);
 
-	chassis->turnToHeading(270, 2000, {.maxSpeed = 70});
+	chassis->turnToHeading(270, 1000, {.maxSpeed = 70});
 	chassis->waitUntilDone();
 	// back up a bit
 	left_drive.move(70);
@@ -684,7 +684,7 @@ void skills(lemlib::Chassis* chassis) {
 	}
 	right_drive.move(0);
 	left_drive.move(0);
-	pros::delay(300);
+	pros::delay(150);
 
 	chassis->follow(skillsend_txt, 10, 2500, false);		// was 3500
 	
