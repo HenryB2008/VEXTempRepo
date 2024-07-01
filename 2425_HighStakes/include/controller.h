@@ -8,4 +8,3 @@
 extern pros::Controller controller;
 
 
-void opcontrol();
