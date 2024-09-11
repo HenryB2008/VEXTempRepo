@@ -1,10 +1,16 @@
-#pragma once 
+#pragma once
+
 
 #include "lemlib/api.hpp"
 #include "drivetrain.h"
-#include "intake.h"
+#include "otherMotors.h"
+
+
 
 
 extern pros::Controller controller;
 
 
+
+
+void opcontrol();
