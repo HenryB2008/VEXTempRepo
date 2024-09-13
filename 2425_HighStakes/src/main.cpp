@@ -40,6 +40,7 @@ lemlib::OdomSensors sensors(&vertical_tracking_wheel, // Vertical tracking wheel
 
 pros::adi::Pneumatics mogo('B', false);
 pros::adi::Pneumatics doinker('C', false);
+pros::ADIDigitalIn limit('D');
 
 MotorGroup left_motors({-8, -2, -10}, MotorGearset::blue);
 MotorGroup right_motors({11, 14, 17}, MotorGearset::blue);
@@ -172,13 +173,20 @@ void initialize() {
 
 }
 
-
-
+/*
+void limit_intake() {
+    IntakeMotor1.move(-90);
+    delay(2000);
+    IntakeMotor1.move(0);
+}
+*/
 
 
 void opcontrol() {
     bool intake_forward = false;
     bool intake_reverse = false;
+    //bool yPressed = false;
+
     //Loop
     while (true) {
         //Controller buttons
@@ -190,6 +198,7 @@ void opcontrol() {
         int L2Button = controller.get_digital(pros::E_CONTROLLER_DIGITAL_L2);
         int xButton = controller.get_digital(pros::E_CONTROLLER_DIGITAL_X);
         int yButton = controller.get_digital(pros::E_CONTROLLER_DIGITAL_Y);
+        int rightArrow = controller.get_digital(pros::E_CONTROLLER_DIGITAL_RIGHT);
        
        
 
@@ -250,7 +259,26 @@ void opcontrol() {
         if(controller.get_digital_new_press(E_CONTROLLER_DIGITAL_B)){
             doinker.toggle();
         }
-       
+
+        /*
+        // when right arrow is pressed, wait until limit switch is unpressed and repressed
+        if (controller.get_digital_new_press(E_CONTROLLER_DIGITAL_RIGHT)){
+            thread(limit_intake).detach();
+            //yPressed = true;
+        }
+
+        
+        if (yPressed){
+            if (limit.get_new_press()){
+                //IntakeMotor1.move(-90);
+                //delay(2000);
+                //IntakeMotor1.move(0);
+                IntakeMotor1.move_relative(-1080, 90);
+                yPressed = false;
+            }
+        }
+        */
+
         // stops brain from using too much resources
         pros::delay(25);
     }
