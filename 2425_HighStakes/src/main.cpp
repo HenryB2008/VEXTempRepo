@@ -1,13 +1,15 @@
 #include "lemlib/api.hpp" // IWYU pragma: keep
 #include "main.h"
+#include "autons.h"
 #include "pros/misc.h"
 
-using namespace pros; 
-
+using namespace pros;
 
 ASSET(IntakeRedRing_txt);
-
-
+ASSET(left_five_txt);
+ASSET(cross_field_first_txt);
+ASSET(right_five_txt);
+ASSET(cross_field_second_txt);
 
 pros::Controller controller(pros::E_CONTROLLER_MASTER);
 
@@ -41,6 +43,8 @@ lemlib::OdomSensors sensors(&vertical_tracking_wheel, // Vertical tracking wheel
 
 pros::adi::Pneumatics mogo('B', false);
 pros::adi::Pneumatics doinker('C', false);
+
+pros::ADIDigitalIn limit('D');
 
 MotorGroup left_motors({-8, -2, -10}, MotorGearset::blue);
 MotorGroup right_motors({11, 14, 17}, MotorGearset::blue);
@@ -240,6 +244,9 @@ void initialize() {
 void opcontrol() {
     bool intake_forward = false;
     bool intake_reverse = false;
+    int macro_step = 0;
+    double timer_start;
+
     //Loop
     while (true) {
         //Controller buttons
@@ -311,6 +318,47 @@ void opcontrol() {
         if(controller.get_digital_new_press(E_CONTROLLER_DIGITAL_B)){
             doinker.toggle();
         }
+
+        /*
+           MACRO FOR LIMIT SWITCH
+           1. right arrow is pressed --> intake at 75%
+           2. limit switch is unpressed --> intake at 50%
+           3. limit switch is repressed --> outtake at 100% for 2 seconds
+           NOTE simplify later
+       */
+       if (macro_step == 0){
+
+        if (controller.get_digital_new_press(E_CONTROLLER_DIGITAL_RIGHT)){
+               limit.get_new_press();      // resets last press
+               macro_step++;
+        }
+
+       } else if (macro_step == 1){
+
+        IntakeMotor1.move(-90);         // intake until outtake
+        if (limit.get_value() == 0) { macro_step++; }
+          
+       } else if (macro_step == 2){
+
+        IntakeMotor1.move(-60);         // slow down when limit comes up
+        if (limit.get_new_press()) { macro_step++; }
+
+       } else if (macro_step == 3){
+
+        timer_start = pros::millis();
+        macro_step++;
+
+       } else if (macro_step == 4){
+
+        IntakeMotor1.move(127); // outtake is positive
+        if (pros::millis() - timer_start > 2000){ macro_step++; }
+
+       } else if (macro_step == 5){
+
+        IntakeMotor1.move(0);
+        macro_step = 0;
+        
+       }
        
         // stops brain from using too much resources
         pros::delay(25);
