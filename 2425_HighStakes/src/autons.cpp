@@ -6,6 +6,8 @@ ASSET(left_five_txt);
 ASSET(cross_field_first_txt);
 ASSET(right_five_txt);
 ASSET(cross_field_second_txt);
+ASSET(last_rings_txt);
+ASSET(final_mogo_txt);
 
 void skills()
 {
@@ -88,7 +90,6 @@ void skills()
     left_motors.move(0);                        // back up into corner
     right_motors.move(0);
 
-
     // reset odom
     left_motors.move(40);
     right_motors.move(40);
@@ -103,13 +104,6 @@ void skills()
     right_motors.move(0);
     chassis.setPose(-162, -120, 90);
 
-
-    /*
-        TODO:
-        get a bunch of rings
-        score on mogo and push mogo to far corner
-        push remaining mogo into last corner
-    *
 
     // more red rings + mogo
     IntakeMotor1.move(-90);
@@ -134,7 +128,50 @@ void skills()
     delay(200);
     IntakeMotor1.move(-127);
     delay(100);
-*/
+
+
+    // more red rings second phase
+    chassis.turnToHeading(230, 3000);
+    chassis.waitUntilDone();
+    left_motors.move(40);
+    right_motors.move(40);
+    delay(500);
+    left_motors.move(0);
+    right_motors.move(0);
+    delay(100);
+    chassis.follow(last_rings_txt, 10, 5000);
+    chassis.waitUntilDone();
+    delay(500);
+    chassis.turnToHeading(240, 3000);
+    chassis.waitUntilDone();
+    delay(100);
+    left_motors.move(-40);
+    right_motors.move(-40);
+    delay(1000);
+    left_motors.move(0);
+    right_motors.move(0);
+    mogo.toggle();                      // release mogo
+    IntakeMotor1.move(0);
+    delay(500);
+    left_motors.move(40);
+    right_motors.move(40);
+    delay(200);
+    left_motors.move(0);
+    right_motors.move(0);
+    delay(100);
+
+
+    // push final mogo
+    chassis.follow(final_mogo_txt, 10, 5000);
+    chassis.waitUntilDone();
+    left_motors.move(-40);
+    right_motors.move(-40);
+    delay(200);
+    left_motors.move(0);
+    right_motors.move(0);
+
+    */
+
 
     lcd::print(0, "Time: %d", millis() - start);
 }
