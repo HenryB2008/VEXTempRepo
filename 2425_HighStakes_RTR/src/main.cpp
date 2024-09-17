@@ -4,9 +4,10 @@
 
 using namespace pros; 
 
-ASSET(moveToWallStake_txt);
-ASSET(firstReverse_txt);
-ASSET(collectFirstRing_txt);
+
+ASSET(IntakeRedRing_txt);
+
+
 
 pros::Controller controller(pros::E_CONTROLLER_MASTER);
 
@@ -40,15 +41,14 @@ lemlib::OdomSensors sensors(&vertical_tracking_wheel, // Vertical tracking wheel
 
 pros::adi::Pneumatics mogo('B', false);
 pros::adi::Pneumatics doinker('C', false);
-pros::ADIDigitalIn limit('D');
 
 MotorGroup left_motors({-8, -2, -10}, MotorGearset::blue);
 MotorGroup right_motors({11, 14, 17}, MotorGearset::blue);
 
 
-lemlib::ControllerSettings lateral_controller(10, // proportional gain (kP)
+lemlib::ControllerSettings lateral_controller(13, // proportional gain (kP)
                                               0, // integral gain (kI)
-                                              3, // derivative gain (kD)
+                                              35, // derivative gain (kD)
                                               3, // anti windup
                                               1, // small error range, in inches
                                               100, // small error range timeout, in milliseconds
@@ -59,9 +59,9 @@ lemlib::ControllerSettings lateral_controller(10, // proportional gain (kP)
 
 
 // angular PID controller
-lemlib::ControllerSettings angular_controller(10, // proportional gain (kP)
+lemlib::ControllerSettings angular_controller(3.5, // proportional gain (kP)
                                               0, // integral gain (kI)
-                                              10, // derivative gain (kD)
+                                              25, // derivative gain (kD)
                                               3, // anti windup
                                               1, // small error range, in degrees
                                               100, // small error range timeout, in milliseconds
@@ -91,49 +91,110 @@ lemlib::Chassis chassis(drivetrain, // drivetrain settings
 
 void autonomous()
 {   
+
+
+
+
+    //pick up red ring and setup
+    LiftMotor.move(127);
+    doinker.extend();   
+    pros::delay(300);
+    LiftMotor.brake();
     
-    chassis.setPose(52.339, -13.475, 315);
-    doinker.extend();
-    pros::delay(1500);
-    chassis.follow(firstReverse_txt, 15, 2000, false);
+    chassis.setPose(-52.339, 13.475, 140);
+
+    //deposit ring on field
+    chassis.turnToHeading(75, 2000);
     chassis.waitUntilDone();
-    pros::delay(1500);
-    chassis.setPose(58.271, -19.203, 315);
-    pros::delay(1500);
-    chassis.follow(collectFirstRing_txt, 15, 2000, true);
-    chassis.waitUntilDone();
-    pros::delay(1500);
-    chassis.setPose(48.862, -10.816, 315);
-    pros::delay(1500);
-    chassis.turnToHeading(0, 2000);
-    chassis.waitUntilDone();
-    pros::delay(1500);
-    chassis.follow(moveToWallStake_txt, 15, 2000); 
+
+    chassis.setPose(-52.339, 13.475, 75);
+    doinker.retract();
+    pros::delay(500);
     
+
+
+    // get ready to reverse
+    chassis.turnToHeading(15, 2000);
+    chassis.waitUntilDone();
+
+    chassis.setPose(-52.339, 13.475, 15);
+    pros::delay(250);
+
+    chassis.moveToPoint(-57.911, -4.68,2000, {.forwards = false});
+    chassis.waitUntilDone();
+    chassis.moveToPoint(-57.092, -2.021, 2000);
+    pros::delay(300);
+    chassis.turnToHeading(90, 2000  );
+    //chassis.moveToPoint(-55.661, -0.794, 3000);
+    chassis.waitUntilDone();
+
+    chassis.setPose(-57.092, -2.021, 90);
+
+    pros::delay(20);
     
+    chassis.moveToPoint(-62.65, -2.021, 2000, {.forwards = false});
+    mogo.extend();
+    chassis.waitUntilDone();
+    chassis.moveToPoint(-65, -2.021, 2000, {.forwards = false});
+    IntakeMotor1.move(-127);
+    pros::delay(900);
+    mogo.retract();
+    chassis.setPose(-61.077, 0, 90);
    
+
+
+    chassis.follow(IntakeRedRing_txt, 8, 3000);
+    chassis.waitUntilDone();
+    chassis.setPose(-44.002, 7.388, 40);
+    pros::delay(1000);  
+    IntakeMotor1.brake();
+
+    chassis.turnToHeading(220, 2000);
+    chassis.waitUntilDone();
+    chassis.setPose(-39.911, 7.338,220);
+
+    chassis.moveToPoint(-30.093, 22.554, 2000, {.forwards = false}); 
+    chassis.waitUntil(14);
+    IntakeMotor1.move(-127);
+    LiftMotor.move(-127);
+    mogo.extend();
+    chassis.waitUntilDone();
+    pros::delay(200);
+    chassis.setPose(-30.093, 22.554, 220);
+    pros::delay(20);
+    chassis.turnToHeading(90, 2000);
+    chassis.waitUntilDone();
+    chassis.setPose(-30.093, 22.554, 90);
+    pros::delay(20);
+    chassis.moveToPoint(-10.865, 22.524, 2000, {.forwards=true});  
+
+
+
+
+
     
 
-
-    //mogo.toggle();
-    // LiftMotor.move(127);
-    // pros::delay(500);
-    // chassis.moveToPose(-32.343, -18.589, 140, 2000, {.forwards=false});
-    // chassis.moveToPose(-46.047, -1.407, 140, 2000, {.forwards =true} );
-    // IntakeMotor1.move(127);
+    // IntakeMotor1.brake();
     // pros::delay(1000);
 
-    // chassis.follow(furthestdonut_txt, 10, 1500, true);
+    // chassis.setPose(-53.002, 8.615, 135);
+    // chassis.turnToHeading(180, 2000);
+    // chassis.waitUntilDone();
     // pros::delay(500);
-    // chassis.follow(seconddonut_txt, 10, 2500, false);
+    // chassis.setPose(-53.002, 8.615, 180);
+    // chassis.moveToPose(-53.002, -0.025, 180, 2000);
+    // chassis.waitUntilDone();
+    // pros::delay(1000);
+    // chassis.setPose(-53.002, -0.025, 180);
+    // chassis.turnToHeading(95, 2000);
+    // chassis.waitUntilDone();
     // pros::delay(500);
-    // chassis.follow(thirddonut_txt, 10, 2500, false);
-    // doinker.toggle();
-    // pros::delay(500);
-    // LiftMotor.brake();
-    // doinker.toggle();
-    // chassis.follow(finaltouchdown_txt, 10, 2500, false);
-    // IntakeMotor1.brake(); 
+    // chassis.setPose(-53.002, -0.025, 95);
+    // chassis.moveToPose(-61.077, -0.025, 95, 2000, {.forwards = false});
+    // chassis.waitUntilDone();
+    // chassis.setPose(-61.077, -0.025, 95); 
+    // IntakeMotor1.move(-127);
+    // pros::delay(2000);
 
 
     
@@ -141,15 +202,13 @@ void autonomous()
 }
 
 
-
-
-
-
 void initialize() {
     mogo.retract();
     pros::lcd::initialize(); // initialize brain screen
     chassis.setBrakeMode(pros::E_MOTOR_BRAKE_COAST);    
     chassis.calibrate(); // calibrate sensors
+    
+  
     // print position to brain screen
 
 
@@ -166,6 +225,7 @@ void initialize() {
 
             // delay to save resources  
             pros::delay(20);
+
         }
     });
 
@@ -173,20 +233,13 @@ void initialize() {
 
 }
 
-/*
-void limit_intake() {
-    IntakeMotor1.move(-90);
-    delay(2000);
-    IntakeMotor1.move(0);
-}
-*/
+
+
 
 
 void opcontrol() {
     bool intake_forward = false;
     bool intake_reverse = false;
-    //bool yPressed = false;
-
     //Loop
     while (true) {
         //Controller buttons
@@ -198,7 +251,6 @@ void opcontrol() {
         int L2Button = controller.get_digital(pros::E_CONTROLLER_DIGITAL_L2);
         int xButton = controller.get_digital(pros::E_CONTROLLER_DIGITAL_X);
         int yButton = controller.get_digital(pros::E_CONTROLLER_DIGITAL_Y);
-        int rightArrow = controller.get_digital(pros::E_CONTROLLER_DIGITAL_RIGHT);
        
        
 
@@ -259,26 +311,7 @@ void opcontrol() {
         if(controller.get_digital_new_press(E_CONTROLLER_DIGITAL_B)){
             doinker.toggle();
         }
-
-        /*
-        // when right arrow is pressed, wait until limit switch is unpressed and repressed
-        if (controller.get_digital_new_press(E_CONTROLLER_DIGITAL_RIGHT)){
-            thread(limit_intake).detach();
-            //yPressed = true;
-        }
-
-        
-        if (yPressed){
-            if (limit.get_new_press()){
-                //IntakeMotor1.move(-90);
-                //delay(2000);
-                //IntakeMotor1.move(0);
-                IntakeMotor1.move_relative(-1080, 90);
-                yPressed = false;
-            }
-        }
-        */
-
+       
         // stops brain from using too much resources
         pros::delay(25);
     }
