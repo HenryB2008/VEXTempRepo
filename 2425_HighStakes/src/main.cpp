@@ -90,8 +90,17 @@ pros::Rotation rotation_sensor(9);
 
 
 
+double kP = 0.0; 
+double kI = 0.0; 
+double kD = 0.0; 
 
 
+int error; 
+int prevError = 0; 
+int derivative; 
+int totalError = 0; 
+
+bool enableLiftPID = true; 
 
 
 
@@ -104,12 +113,12 @@ void opcontrol() {
 
     bool intake_forward = false;
     bool intake_reverse = false;
-
-    bool move_to_low = false;
-    bool move_to_default = false;
-    bool move_to_high = false;
     int macro_step = 0;
     double timer_start;
+
+    
+
+    
 
     //Loop
     while (true) {
@@ -149,100 +158,26 @@ void opcontrol() {
             IntakeMotor1.brake();
         }
 
+        if(controller.get_digital_new_press(E_CONTROLLER_DIGITAL_UP)){
+            enableLiftPID = true; 
+            liftPID(30500); 
 
-
-    
-        printf("Angle: %ld \n", rotation_sensor.get_angle());
-
-
-        if (controller.get_digital_new_press(E_CONTROLLER_DIGITAL_UP)) {
-            move_to_low = true;
-            move_to_default = false;                
-            move_to_high = false;                                                                                                                                                                             
         } else if (controller.get_digital_new_press(E_CONTROLLER_DIGITAL_L2)) {
-            move_to_low = false;
-            move_to_default = true;                
-            move_to_high = false;
-        } else if (controller.get_digital_new_press(E_CONTROLLER_DIGITAL_L1)) {
-            move_to_low = false;
-            move_to_default = false;
-            move_to_high = true;
+            enableLiftPID = true; 
+            liftPID(29500);
+        } else if  (controller.get_digital_new_press(E_CONTROLLER_DIGITAL_L1)){
+            enableLiftPID = true; 
+            liftPID(4890);
         }
+
+
         
 
-        // Moves the lift into the lowest loading state (305 degrees)
-        if (move_to_low ) 
-        {
-            if (rotation_sensor.get_angle() <  36000 ) 
-            {
-                LiftMotor.move(127);
-            } 
-            else if (rotation_sensor.get_angle() > 30000 ) 
-            {
-                LiftMotor.move(-127);
-            } 
-            else 
-            {
-                LiftMotor.brake(); 
-                move_to_low = false;
-            }
-        }
-
-        // Moves the lift into the default game state (295 degrees)
-        else if (move_to_default) 
-        {
-            if (rotation_sensor.get_angle() < 26550) 
-            {
-                LiftMotor.move(127);
-            } 
-            else if (rotation_sensor.get_angle() > 32450 ) 
-            {
-                LiftMotor.move(-127);
-
-            } 
-            else 
-            {
-                LiftMotor.brake();
-                move_to_default = false; 
-            }
-        }
-
-        // Moves the lift into the highest state (48.9 degrees)
-        else if (move_to_high) 
-        {
-            if (rotation_sensor.get_angle() < 48.9) 
-            {
-                LiftMotor.move(127);
-            } 
-            else if (rotation_sensor.get_angle() > 48.9) 
-            {
-                LiftMotor.move(-127);
-            } 
-            else 
-            {
-                LiftMotor.brake();
-                move_to_high = false;
-            }
-        }
-        // If no button is pressed, stop the lift
-        else 
-        {
-            LiftMotor.brake();
-        }
+        
     
 
         
-        //intake code
-        /*if(R2Button)
-        {
-            IntakeMotor1.move(127);
-        } else if (R1Button)
-        {
-            IntakeMotor1.move(-127);
-        } else
-        {
-            IntakeMotor1.brake();
-        }*/
+    
 
         
         if(controller.get_digital_new_press(E_CONTROLLER_DIGITAL_Y)) {
@@ -299,10 +234,21 @@ void opcontrol() {
        }
        
         // stops brain from using too much resources
-        pros::delay(25);
+        pros::delay(20);
 
 }
 
+int liftPID(int desiredValue) {
+    while(enableLiftPID) {
+        int LiftMotorPosition = rotation_sensor.get_angle(); 
+        error = LiftMotorPosition - desiredValue; 
+        derivative = error - prevError; 
+        totalError += error; 
+        double liftMotorPower = error * kP + derivative * kP + totalError * kI;
+        LiftMotor.move(liftMotorPower);     
+        pros::delay(20); 
+    }
+}
 
 void autonomous()
 {   
