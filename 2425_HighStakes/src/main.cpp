@@ -260,7 +260,7 @@ void initialize() {
     pros::lcd::initialize(); // initialize brain screen
     chassis.setBrakeMode(pros::E_MOTOR_BRAKE_COAST);    
     chassis.calibrate(); // calibrate sensors
-    LiftMotor.set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
+    LiftMotor.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
     rotation_sensor.reset_position();  
 
 
