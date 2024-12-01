@@ -81,7 +81,7 @@ lemlib::Chassis chassis(drivetrain, // drivetrain settings
 pros::Optical colorSensor(5);
 pros::Motor IntakeMotor1 (15);
 pros::Motor LiftMotor(20);
-pros::adi::Pneumatics mogo('A', false); 
+pros::adi::Pneumatics mogo('B', false); 
 pros::adi::Pneumatics intakeSolenoid('C', false);
 pros::adi::Pneumatics doinker('D', false);
 pros::ADIDigitalIn limit('E');
