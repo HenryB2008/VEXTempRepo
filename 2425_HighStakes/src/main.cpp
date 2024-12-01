@@ -8,6 +8,7 @@ using namespace pros;
 
 
 
+
        
 
 //Odometry 
@@ -90,7 +91,8 @@ pros::Rotation rotation_sensor(9);
 
 
 
-double kP = 0.0; 
+
+double kP = 0.001; 
 double kI = 0.0; 
 double kD = 0.0; 
 
@@ -105,34 +107,47 @@ bool enableLiftPID = true;
 
 
 
+void liftPID(int desiredValue) {
+    while(enableLiftPID) {
+        int LiftMotorPosition = rotation_sensor.get_angle(); 
+        error = LiftMotorPosition - desiredValue; 
+        derivative = error - prevError; 
+        totalError += error; 
+        double liftMotorPower = error * kP + derivative * kP + totalError * kI;
+        LiftMotor.move(liftMotorPower);     
+
+        std::cout << LiftMotorPosition << std::endl; 
+
+
+        pros::delay(20); 
+        
+        
+    }
+}
+
+
+
+
 
 void opcontrol() {
 // Controller Buttons
     pros::Controller controller(pros::E_CONTROLLER_MASTER);
     
 
+
     bool intake_forward = false;
     bool intake_reverse = false;
-    int macro_step = 0;
-    double timer_start;
 
-    
+
+    int leftY = controller.get_analog(pros::E_CONTROLLER_ANALOG_LEFT_Y);
+    int rightY = controller.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_Y);
 
     
 
     //Loop
-    while (true) {
-
-
-        
-        int leftY = controller.get_analog(pros::E_CONTROLLER_ANALOG_LEFT_Y);
-        int rightY = controller.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_Y);
-        int R2Button = controller.get_digital(E_CONTROLLER_DIGITAL_R2);
-        int R1Button = controller.get_digital(E_CONTROLLER_DIGITAL_R1);
-        int L1Button = controller.get_digital(E_CONTROLLER_DIGITAL_L1);
-        int L2Button = controller.get_digital(pros::E_CONTROLLER_DIGITAL_L2);
-        int xButton = controller.get_digital(pros::E_CONTROLLER_DIGITAL_X);
-        int yButton = controller.get_digital(pros::E_CONTROLLER_DIGITAL_Y);
+    while (true) {  
+        int LiftMotorPosition = rotation_sensor.get_angle();
+        printf("Angle: %ld \n", LiftMotorPosition);
         
         //move drivetrain
         chassis.tank(leftY, rightY);
@@ -169,17 +184,6 @@ void opcontrol() {
             enableLiftPID = true; 
             liftPID(4890);
         }
-
-
-        
-
-        
-    
-
-        
-    
-
-        
         if(controller.get_digital_new_press(E_CONTROLLER_DIGITAL_Y)) {
             mogo.toggle(); 
         }
@@ -190,68 +194,18 @@ void opcontrol() {
             intakeSolenoid.toggle();
         } 
 
-        
 
-        /*
-           MACRO FOR LIMIT SWITCH
-           1. right arrow is pressed --> intake at 75%
-           2. limit switch is unpressed --> intake at 50%
-           3. limit switch is repressed --> outtake at 100% for 2 seconds
-           NOTE simplify later
-       */
-       if (macro_step == 0){
-
-        if (controller.get_digital_new_press(E_CONTROLLER_DIGITAL_RIGHT)){
-               limit.get_new_press();      // resets last press
-               macro_step++;
-        }
-
-       } else if (macro_step == 1){
-
-        IntakeMotor1.move(-90);         // intake until outtake
-        if (limit.get_value() == 0) { macro_step++; }
-          
-       } else if (macro_step == 2){
-
-        IntakeMotor1.move(-60);         // slow down when limit comes up
-        if (limit.get_new_press()) { macro_step++; }
-
-       } else if (macro_step == 3){
-
-        timer_start = pros::millis();
-        macro_step++;
-
-       } else if (macro_step == 4){
-
-        IntakeMotor1.move(127); // outtake is positive
-        if (pros::millis() - timer_start > 2000){ macro_step++; }
-
-       } else if (macro_step == 5){
-
-        IntakeMotor1.move(0);
-        macro_step = 0;
-        
-       }
-       
         // stops brain from using too much resources
         pros::delay(20);
 
 }
 
-int liftPID(int desiredValue) {
-    while(enableLiftPID) {
-        int LiftMotorPosition = rotation_sensor.get_angle(); 
-        error = LiftMotorPosition - desiredValue; 
-        derivative = error - prevError; 
-        totalError += error; 
-        double liftMotorPower = error * kP + derivative * kP + totalError * kI;
-        LiftMotor.move(liftMotorPower);     
-        pros::delay(20); 
-    }
-}
+
+
 
 void autonomous()
 {   
+
 }
 
 void initialize() {
@@ -261,12 +215,12 @@ void initialize() {
     chassis.setBrakeMode(pros::E_MOTOR_BRAKE_COAST);    
     chassis.calibrate(); // calibrate sensors
     LiftMotor.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
-    rotation_sensor.reset_position();  
+    
 
 
 
 
-    pros::Task screen_task([&]() {
+     pros::Task screen_task([&]() {
         while (true) {
             // print robot location to the brain screen
             pros::lcd::print(0, "X: %f", chassis.getPose().x); // x
