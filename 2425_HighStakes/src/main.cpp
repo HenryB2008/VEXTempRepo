@@ -4,7 +4,8 @@
 using namespace pros; 
 
 
-
+ASSET(bigGrab_txt); 
+ASSET(test_txt);
 
 
 
@@ -13,11 +14,11 @@ using namespace pros;
 
 //Odometry 
 
-pros::Imu imu(16); //imu
-pros::Rotation horizontal_encoder(6);  // vertical tracking wheel encoder
-pros::Rotation vertical_encoder(5);    //horizontal tracking wheel encoder
-lemlib::TrackingWheel horizontal_tracking_wheel(&horizontal_encoder, lemlib::Omniwheel::NEW_275, -5.75);  // Horizontal tracking wheel
-lemlib::TrackingWheel vertical_tracking_wheel(&vertical_encoder, lemlib::Omniwheel::NEW_275, -2.5); // Vertical tracking wheel
+pros::Imu imu(16); //imu.
+pros::Rotation horizontal_encoder(5); 
+pros::Rotation vertical_encoder(7);   
+lemlib::TrackingWheel horizontal_tracking_wheel(&horizontal_encoder, lemlib::Omniwheel::NEW_2, 5);  // Horizontal tracking wheel
+lemlib::TrackingWheel vertical_tracking_wheel(&vertical_encoder, lemlib::Omniwheel::NEW_2, -2.5); // Vertical tracking wheel
 // OdomSensors setup
 lemlib::OdomSensors sensors(&vertical_tracking_wheel, // Vertical tracking wheel 1, set to null
                             nullptr, // Vertical tracking wheel 2, set to nullptr as we are using IMEs
@@ -29,9 +30,9 @@ lemlib::OdomSensors sensors(&vertical_tracking_wheel, // Vertical tracking wheel
 
 //PID
 // latetral PID controller
-lemlib::ControllerSettings lateral_controller(13, // proportional gain (kP)
+lemlib::ControllerSettings lateral_controller(2, // proportional gain (kP)
                                               0, // integral gain (kI)
-                                              35, // derivative gain (kD)
+                                              10, // derivative gain (kD)
                                               3, // anti windup
                                               1, // small error range, in inches
                                               100, // small error range timeout, in milliseconds
@@ -41,9 +42,9 @@ lemlib::ControllerSettings lateral_controller(13, // proportional gain (kP)
 );
 
 // angular PID controller
-lemlib::ControllerSettings angular_controller(3.5, // proportional gain (kP)
+lemlib::ControllerSettings angular_controller(2, // proportional gain (kP)
                                               0, // integral gain (kI)
-                                              25, // derivative gain (kD)
+                                              10, // derivative gain (kD)
                                               3, // anti windup
                                               1, // small error range, in degrees
                                               100, // small error range timeout, in milliseconds
@@ -61,7 +62,7 @@ MotorGroup right_motors({-12, 13, 14}, MotorGearset::blue);
 lemlib::Drivetrain drivetrain (
    &left_motors,
    &right_motors,
-   12,       // track width          // this might be wrong
+   11.75,       // track width          // this might be wrong
    2.75,              // wheel diameter      
    600,            // wheel rpm            
    2               // horizontal drift
@@ -82,7 +83,7 @@ pros::Optical colorSensor(5);
 pros::Motor IntakeMotor1 (15);
 pros::Motor LiftMotor(20);
 pros::adi::Pneumatics mogo('B', false); 
-pros::adi::Pneumatics intakeSolenoid('C', false);
+pros::adi::Pneumatics intakeSolenoid('H', false);
 pros::adi::Pneumatics doinker('D', false);
 pros::ADIDigitalIn limit('E');
 pros::Rotation rotation_sensor(9);
@@ -92,36 +93,45 @@ pros::Rotation rotation_sensor(9);
 
 
 
-double kP = 0.001; 
-double kI = 0.0; 
-double kD = 0.0; 
+double liftkP = 0.5; 
+double liftkI = 0.0; 
+double liftkD = 3; 
 
 
-int error; 
-int prevError = 0; 
-int derivative; 
-int totalError = 0; 
+int liftError; 
+int liftPrevError = 0; 
+int liftDerivative; 
+int liftTotalError = 0; 
 
 bool enableLiftPID = true; 
 
 
 
 
-void liftPID(int desiredValue) {
-    while(enableLiftPID) {
-        int LiftMotorPosition = rotation_sensor.get_angle(); 
-        error = LiftMotorPosition - desiredValue; 
-        derivative = error - prevError; 
-        totalError += error; 
-        double liftMotorPower = error * kP + derivative * kP + totalError * kI;
-        LiftMotor.move(liftMotorPower);     
+int desiredLiftValue = 0; // Shared desired value for the lift
+bool liftPIDRunning = false; // Flag to indicate if the liftPID is active
 
-        std::cout << LiftMotorPosition << std::endl; 
+void liftPIDTask(void* param) {
+    while (true) {
+        if (liftPIDRunning) {
+            int LiftMotorPosition = rotation_sensor.get_angle();
+            liftError = LiftMotorPosition - desiredLiftValue;
+            liftDerivative = liftError - liftPrevError;
+            liftTotalError += liftError;
 
+            double liftMotorPower = liftError * liftkP + liftDerivative * liftkD + liftTotalError * liftkI;
+            LiftMotor.move(liftMotorPower);
 
-        pros::delay(20); 
-        
-        
+            // Stop condition
+            if (abs(liftError) < 1000) {
+                liftPIDRunning = false;
+                LiftMotor.brake();
+            }
+
+            liftPrevError = liftError;
+        }
+
+        pros::delay(20); // Save resources
     }
 }
 
@@ -139,19 +149,19 @@ void opcontrol() {
     bool intake_reverse = false;
 
 
-    int leftY = controller.get_analog(pros::E_CONTROLLER_ANALOG_LEFT_Y);
-    int rightY = controller.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_Y);
+   
 
-    
 
     //Loop
     while (true) {  
+
+        int leftY = controller.get_analog(pros::E_CONTROLLER_ANALOG_LEFT_Y);
+        int rightY = controller.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_Y);
         int LiftMotorPosition = rotation_sensor.get_angle();
-        printf("Angle: %ld \n", LiftMotorPosition);
-        
+
+
         //move drivetrain
         chassis.tank(leftY, rightY);
-
         
         if(controller.get_digital_new_press(E_CONTROLLER_DIGITAL_R1)){
             intake_reverse = false;
@@ -172,41 +182,64 @@ void opcontrol() {
         else{
             IntakeMotor1.brake();
         }
+        
 
-        if(controller.get_digital_new_press(E_CONTROLLER_DIGITAL_UP)){
-            enableLiftPID = true; 
-            liftPID(30500); 
-
-        } else if (controller.get_digital_new_press(E_CONTROLLER_DIGITAL_L2)) {
-            enableLiftPID = true; 
-            liftPID(29500);
-        } else if  (controller.get_digital_new_press(E_CONTROLLER_DIGITAL_L1)){
-            enableLiftPID = true; 
-            liftPID(4890);
+        
+        if (controller.get_digital_new_press(E_CONTROLLER_DIGITAL_L2)) {
+            desiredLiftValue = 2000;
+            liftPIDRunning = true;
+        } else if (controller.get_digital_new_press(E_CONTROLLER_DIGITAL_LEFT)) {
+            desiredLiftValue = 4100;
+            liftPIDRunning = true;
+        } else if (controller.get_digital_new_press(E_CONTROLLER_DIGITAL_L1)) {
+            desiredLiftValue = 13800;
+            liftPIDRunning = true;
         }
+        
+    
+        
+
         if(controller.get_digital_new_press(E_CONTROLLER_DIGITAL_Y)) {
             mogo.toggle(); 
         }
-        if(controller.get_digital_new_press(E_CONTROLLER_DIGITAL_RIGHT))
+        if(controller.get_digital_new_press(E_CONTROLLER_DIGITAL_RIGHT)) { 
             doinker.toggle();
         } 
-        if(controller.get_digital_new_press(E_CONTROLLER_DIGITAL_B)) {
-            intakeSolenoid.toggle();
-        } 
+        if(controller.get_digital_new_press(E_CONTROLLER_DIGITAL_B)){
+            intakeSolenoid.toggle(); 
+        }
 
 
-        // stops brain from using too much resources
+        // stops brain from using too much resources    
         pros::delay(20);
+    }
+}
+
+
+
+void test() {
+    chassis.setPose(48, 48, 180); 
+    pros::delay(5);
+    chassis.moveToPose(36, 0, 180, 2000);   
+}
+void redLeft()
+{
+    doinker.extend(); 
+    chassis.setPose(-45, 30, 66);    
+    pros::delay(5);
+    chassis.moveToPoint(-9.885, 45.634, 2000);
+    chassis.waitUntilDone(); 
+}
+
+void autonomous() {
+    redLeft(); 
+    
 
 }
 
 
 
 
-void autonomous()
-{   
-
-}
 
 void initialize() {
     mogo.retract(); 
@@ -215,10 +248,10 @@ void initialize() {
     chassis.setBrakeMode(pros::E_MOTOR_BRAKE_COAST);    
     chassis.calibrate(); // calibrate sensors
     LiftMotor.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
-    
 
+   
 
-
+    pros::Task liftPIDController(liftPIDTask, nullptr, "Lift PID Task");
 
      pros::Task screen_task([&]() {
         while (true) {
@@ -233,7 +266,7 @@ void initialize() {
 
         }
     });
-    opcontrol(); 
+    autonomous(); 
 }
 
 
