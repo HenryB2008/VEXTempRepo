@@ -3,9 +3,8 @@
 #include "pros/misc.h"
 using namespace pros; 
 
-
-ASSET(bigGrab_txt); 
-ASSET(test_txt);
+ASSET(firstRing_txt);
+ASSET(followRoute_txt);
 
 
 
@@ -17,9 +16,8 @@ ASSET(test_txt);
 pros::Imu imu(16); //imu.
 pros::Rotation horizontal_encoder(5); 
 pros::Rotation vertical_encoder(7);   
-lemlib::TrackingWheel horizontal_tracking_wheel(&horizontal_encoder, lemlib::Omniwheel::NEW_2, 5);  // Horizontal tracking wheel
-lemlib::TrackingWheel vertical_tracking_wheel(&vertical_encoder, lemlib::Omniwheel::NEW_2, -2.5); // Vertical tracking wheel
-// OdomSensors setup
+lemlib::TrackingWheel horizontal_tracking_wheel(&horizontal_encoder, 2, -2);  
+lemlib::TrackingWheel vertical_tracking_wheel(&vertical_encoder, 2, 5); 
 lemlib::OdomSensors sensors(&vertical_tracking_wheel, // Vertical tracking wheel 1, set to null
                             nullptr, // Vertical tracking wheel 2, set to nullptr as we are using IMEs
                             &horizontal_tracking_wheel, // Horizontal tracking wheel 1
@@ -28,28 +26,28 @@ lemlib::OdomSensors sensors(&vertical_tracking_wheel, // Vertical tracking wheel
 );
 
 
-//PID
+//PID-
 // latetral PID controller
-lemlib::ControllerSettings lateral_controller(2, // proportional gain (kP)
+lemlib::ControllerSettings lateral_controller(5.9, // proportional gain (kP)
                                               0, // integral gain (kI)
-                                              10, // derivative gain (kD)
-                                              3, // anti windup
-                                              1, // small error range, in inches
-                                              100, // small error range timeout, in milliseconds
-                                              3, // large error range, in inches
-                                              500, // large error range timeout, in milliseconds
-                                              20 // maximum acceleration (slew)
+                                              2.2, // derivative gain (kD)
+                                              0, // anti windup
+                                              0, // small error range, in inches
+                                              0, // small error range timeout, in milliseconds
+                                              0, // large error range, in inches
+                                              0, // large error range timeout, in milliseconds
+                                              0 // maximum acceleration (s5lew)
 );
 
-// angular PID controller
-lemlib::ControllerSettings angular_controller(2, // proportional gain (kP)
+// angular PID controller (1.9, 9)
+lemlib::ControllerSettings angular_controller(3, // proportional gain (kP)
                                               0, // integral gain (kI)
-                                              10, // derivative gain (kD)
-                                              3, // anti windup
-                                              1, // small error range, in degrees
-                                              100, // small error range timeout, in milliseconds
-                                              3, // large error range, in degrees
-                                              500, // large error range timeout, in milliseconds
+                                              14, // derivative gain (kD)
+                                              0, // anti windup
+                                              0, // small error range, in degrees
+                                              0, // small error range timeout, in milliseconds
+                                              0, // large error range, in degrees
+                                              0       , // large error range timeout, in milliseconds
                                               0 // maximum acceleration (slew)
 );
 
@@ -65,7 +63,7 @@ lemlib::Drivetrain drivetrain (
    11.75,       // track width          // this might be wrong
    2.75,              // wheel diameter      
    600,            // wheel rpm            
-   2               // horizontal drift
+   8             // horizontal drift
 );
 
 lemlib::Chassis chassis(drivetrain, // drivetrain settings
@@ -87,15 +85,16 @@ pros::adi::Pneumatics intakeSolenoid('H', false);
 pros::adi::Pneumatics doinker('D', false);
 pros::ADIDigitalIn limit('E');
 pros::Rotation rotation_sensor(9);
+pros::Optical intakeDistance (4);
 
 
 
 
 
 
-double liftkP = 0.5; 
+double liftkP = 3; 
 double liftkI = 0.0; 
-double liftkD = 3; 
+double liftkD = 0.05; 
 
 
 int liftError; 
@@ -123,7 +122,7 @@ void liftPIDTask(void* param) {
             LiftMotor.move(liftMotorPower);
 
             // Stop condition
-            if (abs(liftError) < 1000) {
+            if (abs(liftError) < 500) {
                 liftPIDRunning = false;
                 LiftMotor.brake();
             }
@@ -134,6 +133,33 @@ void liftPIDTask(void* param) {
         pros::delay(20); // Save resources
     }
 }
+
+
+int distance; 
+bool monitorDistanceRunning = false; 
+void monitorDistance(void* param) {
+    
+  while (true) {
+    
+    if(monitorDistanceRunning) {
+        distance = intakeDistance.get_proximity(); 
+        
+        if(distance == 255) {
+            monitorDistanceRunning = false;
+            pros::delay(625);
+            IntakeMotor1.brake(); 
+            
+        } else {
+            IntakeMotor1.move(-127);    
+        }
+        
+    }
+    pros::delay(5);
+  }
+}
+
+
+
 
 
 
@@ -186,13 +212,13 @@ void opcontrol() {
 
         
         if (controller.get_digital_new_press(E_CONTROLLER_DIGITAL_L2)) {
-            desiredLiftValue = 2000;
+            desiredLiftValue = 21200;
             liftPIDRunning = true;
-        } else if (controller.get_digital_new_press(E_CONTROLLER_DIGITAL_LEFT)) {
-            desiredLiftValue = 4100;
+        } else if (controller.get_digital_new_press(E_CONTROLLER_DIGITAL_DOWN)) {
+            desiredLiftValue = 22800;
             liftPIDRunning = true;
         } else if (controller.get_digital_new_press(E_CONTROLLER_DIGITAL_L1)) {
-            desiredLiftValue = 13800;
+            desiredLiftValue = 32000;
             liftPIDRunning = true;
         }
         
@@ -218,22 +244,137 @@ void opcontrol() {
 
 
 void test() {
-    chassis.setPose(48, 48, 180); 
-    pros::delay(5);
-    chassis.moveToPose(36, 0, 180, 2000);   
+    
+    chassis.setPose(-11, 50, 235);
+    pros::delay(10); 
+    chassis.follow(followRoute_txt, 8, 2500);
+    
+    
+    
 }
+
+
+void blueRight() {
+    chassis.setPose(0,0,0); //set initial position
+    liftPIDRunning = true; 
+    desiredLiftValue = 22800; 
+    doinker.extend();       
+    chassis.moveToPoint(0,39.5,  2000);   //move up to knock the pair of blue rings off
+    chassis.waitUntil(38.7);            
+    chassis.cancelMotion();
+    pros::delay(175);
+    chassis.moveToPoint(0,29,800, {.forwards = false});
+    chassis.waitUntil(10.3); 
+    chassis.cancelMotion(); 
+    doinker.retract();
+    pros::delay(300);
+    chassis.turnToHeading(62.5, 700); 
+    chassis.waitUntil(61.5);
+    chassis.cancelMotion();
+    pros::delay(20);    
+    chassis.setPose(24, 30, 0);
+    pros::delay(250);
+    chassis.moveToPoint(24, 19, 800, {.forwards = false, .minSpeed = 10, .earlyExitRange = 0.8, }, false);
+    mogo.toggle();  
+    pros::delay(20);
+    IntakeMotor1.move(-127);
+    pros::delay(200);
+    chassis.turnToHeading(-55, 800, {.minSpeed=15, .earlyExitRange = 0.9}, false);
+    chassis.setPose(0,0,0);
+    pros::delay(100);
+    chassis.moveToPoint(0, 14   , 1500, {.minSpeed = 10, .earlyExitRange = 0.8}, false);
+    pros::delay(100);
+    chassis.turnToHeading(52.5, 1000, {.minSpeed=15, .earlyExitRange = 0.9}, false);
+    pros::delay(100);
+    chassis.setPose(0,0,0);
+    pros::delay(10);
+    chassis.moveToPoint(0,8,1000, {.maxSpeed = 40, .minSpeed = 10, .earlyExitRange = 0.8}, false);
+    pros::delay(500);
+    chassis.turnToHeading(-165, 800, {}, false); 
+    chassis.waitUntilDone();
+    chassis.setPose(0,0,0);
+    pros::delay(50);
+    chassis.moveToPoint(0,32, 1500, {.maxSpeed = 80}, false);
+
+}
+
+
 void redLeft()
-{
-    doinker.extend(); 
-    chassis.setPose(-45, 30, 66);    
-    pros::delay(5);
-    chassis.moveToPoint(-9.885, 45.634, 2000);
-    chassis.waitUntilDone(); 
+{   
+    chassis.setPose(0,0,0); //set initial position
+    liftPIDRunning = true; 
+    desiredLiftValue = 22800; 
+    doinker.extend();       
+    chassis.moveToPoint(0,39.5,  2000);   //move up to knock the pair of blue rings off
+    chassis.waitUntil(38.7);            
+    chassis.cancelMotion();
+    pros::delay(175);
+    chassis.moveToPoint(0,29,800, {.forwards = false});
+    chassis.waitUntil(10.3); 
+    chassis.cancelMotion(); 
+    doinker.retract();
+    pros::delay(300);
+    chassis.turnToHeading(-62.5, 700); 
+    chassis.waitUntil(61.5);
+    chassis.cancelMotion();
+    pros::delay(20);    
+    chassis.setPose(-24, 30, 0);
+    pros::delay(250);
+    chassis.moveToPoint(-24, 19, 800, {.forwards = false, .minSpeed = 10, .earlyExitRange = 0.8, }, false);
+    mogo.toggle();  
+    pros::delay(20);
+    IntakeMotor1.move(-127);
+    pros::delay(200);
+    chassis.turnToHeading(55, 800, {.minSpeed=15, .earlyExitRange = 0.9}, false);
+    chassis.setPose(0,0,0);
+    pros::delay(100);
+    chassis.moveToPoint(0, 14   , 1500, {.minSpeed = 10, .earlyExitRange = 0.8}, false);
+    pros::delay(100);
+    chassis.turnToHeading(-52.5, 1000, {.minSpeed=15, .earlyExitRange = 0.9}, false);
+    pros::delay(100);
+    chassis.setPose(0,0,0);
+    pros::delay(10);
+    chassis.moveToPoint(0,8,1000, {.maxSpeed = 40, .minSpeed = 10, .earlyExitRange = 0.8}, false);
+    pros::delay(500);
+    chassis.turnToHeading(-165, 800, {}, false); 
+    chassis.waitUntilDone();
+    chassis.setPose(0,0,0);
+    pros::delay(50);
+    chassis.moveToPoint(0,32, 1500, {.maxSpeed = 80}, false);
+    
+    /*
+    chassis.turnToHeading(-115, 800, {.minSpeed=15, .earlyExitRange = 0.9}, false);
+    pros::delay(20);
+    liftPIDRunning = true; 
+    desiredLiftValue = 21200; 
+    pros::delay(250);
+    chassis.setPose(0,0,0);
+    pros::delay(10);
+    chassis.moveToPoint(0, 20, 1500, {.minSpeed=72, .earlyExitRange = 1}, false);
+    mogo.toggle();
+    monitorDistanceRunning = true; 
+    chassis.moveToPoint(0, 57, 1500, {.minSpeed=10, .earlyExitRange = 1});
+    if(!chassis.isInMotion())
+    {
+        pros::delay(200);   
+    }
+    */
+
+
+
+    //chassis.turnToHeading(28, 800, {.minSpeed=15, .earlyExitRange = 0.9}, false);
+    
+    
+
+
+
+    
+    
+
 }
 
 void autonomous() {
     redLeft(); 
-    
 
 }
 
@@ -247,11 +388,18 @@ void initialize() {
     pros::lcd::initialize(); // initialize brain screen
     chassis.setBrakeMode(pros::E_MOTOR_BRAKE_COAST);    
     chassis.calibrate(); // calibrate sensors
+    rotation_sensor.set_data_rate(5);
     LiftMotor.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
+    
+
+
 
    
-
     pros::Task liftPIDController(liftPIDTask, nullptr, "Lift PID Task");
+    pros::Task distanceTask(monitorDistance, nullptr, "Intake Distance Task"); 
+    
+
+    //pros::Task toggleDoinker(toggleDoinkerTask, nullptr, "Toggle Doinker");
 
      pros::Task screen_task([&]() {
         while (true) {
@@ -259,13 +407,14 @@ void initialize() {
             pros::lcd::print(0, "X: %f", chassis.getPose().x); // x
             pros::lcd::print(1, "Y: %f", chassis.getPose().y); // y
             pros::lcd::print(2, "Theta: %f", chassis.getPose().theta); // heading
+            pros::lcd::print(3, "distance:  %d", intakeDistance.get_proximity());
             lemlib::telemetrySink()->info("Chassis pose: {}", chassis.getPose());
 
             // delay to save resources  
             pros::delay(20);
 
         }
-    });
+    });    
     autonomous(); 
 }
 
