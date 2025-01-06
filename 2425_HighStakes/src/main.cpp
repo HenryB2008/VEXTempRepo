@@ -315,30 +315,39 @@ void red(){
     chassis.turnToHeading(304, 1200, {}, false);         //turn to face the mogo
     pros::delay(200);
     */
+
+    //Clamp onto first mogo
     chassis.setPose(0,0,0);         
     liftPIDRunning = true;  
-    desiredLiftValue = 22800;       //lift arm for intakex   
+    desiredLiftValue = 22800;       
     pros::delay(20);
-    chassis.moveToPoint(0, -30, 1400, {.forwards = false, .maxSpeed=75, .minSpeed = 1,  .earlyExitRange = 1});          //theta
+    chassis.moveToPoint(0, -30, 1400, {.forwards = false, 
+    .maxSpeed=75, .minSpeed = 1,  .earlyExitRange = 1});          
     chassis.waitUntil(16);
     intakeRunning = true; 
     chassis.waitUntilDone(); 
     pros::delay(50);
     mogo.toggle(); 
     pros::delay(300); 
-    chassis.turnToHeading(253, 1200, {}, false);         //-28.365, -20.951, 180
+
+    //Score preload and bottom ring from ring stack onto mogo
+    chassis.turnToHeading(253, 1200, {}, false);         
     pros::delay(10);            
     chassis.setPose(0,0,0); 
     pros::delay(150);
-    chassis.moveToPoint(0, 26, 900, {}, false);     //y: -44.951 
+    chassis.moveToPoint(0, 26, 900, {}, false);     
     pros::delay(1000);
     chassis.turnToHeading(139, 800, {}, false);
     pros::delay(10);
-    chassis.setPose(0,0,0);  //theta 337 
+    chassis.setPose(0,0,0);  
+
+    //Unclamp mogo  
     mogo.toggle(); 
     pros::delay(500);
     reverse = true; 
-    chassis.moveToPoint(0, 55, 1200, {.maxSpeed = 110}, false);    //-38.274, 0.434, 329 
+
+    //Move to second mogo and clamp
+    chassis.moveToPoint(0, 55, 1200, {.maxSpeed = 110}, false);    
     pros::delay(10);
     chassis.setPose(0,0,0);
     pros::delay(300);
@@ -346,9 +355,11 @@ void red(){
     pros::delay(10);
     chassis.setPose(0,0,0);     
     pros::delay(200);
-    chassis.moveToPoint(0,-31, 1100, {.forwards = false, .maxSpeed = 75}, false);     //gets the second mogo 
+    chassis.moveToPoint(0,-31, 1100, {.forwards = false, .maxSpeed = 75}, false);     
     mogo.toggle(); 
     pros::delay(350);
+
+    //Score bottom ring from ring stack onto second mogo
     chassis.turnToHeading(125, 800, {}, false); 
     chassis.setPose(0,0,0);
     pros::delay(300); 
@@ -357,6 +368,8 @@ void red(){
     pros::delay(500);
     chassis.turnToHeading(147, 800, {}, false);
     pros::delay(10);
+
+    //Move to the ladder and touch it with arm
     chassis.setPose(0,0,0);
     chassis.moveToPoint(0, 40, 1200,{}, false);
     pros::delay(2000);
