@@ -1,5 +1,6 @@
 #include "lemlib/api.hpp" // IWYU pragma: keep
 #include "main.h"
+#include "lemlib/chassis/chassis.hpp"
 #include "lemlib/util.hpp"
 #include "pros/misc.h"
 #include <stdio.h>
@@ -38,7 +39,7 @@ lemlib::ControllerSettings lateral_controller(6.2 , // proportional gain (kP)6.2
                                               0 // maximum acceleration (s5lew)
 );
 
-// angular PID controller (1.9, 9) SET TO 3, 14 FOR THE OTHER AUTON 
+// angular PID controller (8, 44 FOR SKILLS) 1.9, 9SET TO 3, 14 FOR THE OTHER AUTON 
 lemlib::ControllerSettings angular_controller(8,  // proportional gain (kP) 12.5
                                               0, // integral gain (kI)
                                                 44                   , // derivative gain (kD) 30
@@ -61,7 +62,7 @@ lemlib::Drivetrain drivetrain (
    &right_motors,
    11.75,       // track width          // this might be wrong
    2.75,              // wheel diameter      
-   600,            // wheel rpm            
+   450,            // wheel rpm            
    8             // horizontal drift
 );
 
@@ -252,23 +253,26 @@ void test() {
 
 
 void skills() {
-
+    
     chassis.setPose(0,0,0);     //INITIAL POSITION. this is where the imu is located 
     
-    /*
+    
     liftPIDRunning = true; 
     desiredLiftValue = 32000; 
     pros::delay(1000);
-    */
+    
     liftPIDRunning = true; 
-    desiredLiftValue = 23000; 
+    desiredLiftValue = 23500; 
     
     chassis.moveToPoint(0, -11, 800, {.forwards = false}, false);
     chassis.turnToHeading(90, 1300, {}, false);
     
-    chassis.moveToPoint(-5, chassis.getPose().y, 750, {.forwards = false}, false);
+    chassis.moveToPoint(-5, chassis.getPose().y, 750, {.forwards = false});
+    chassis.waitUntil( 10);
     mogo.extend();
-    pros::delay(750);   
+    chassis.waitUntilDone(); 
+    pros::delay(400);   
+    
     chassis.turnToHeading(180, 1300, {}, false);
     IntakeMotor1.move(-127);
     chassis.moveToPoint(chassis.getPose().x, -44, 1200, {}, false);
@@ -276,49 +280,49 @@ void skills() {
     chassis.turnToHeading(270, 1800, {}, false);
     chassis.moveToPoint(-38,  chassis.getPose().y, 1300, {.maxSpeed = 80}, false);
     pros::delay(700);
-    chassis.turnToPoint(-45.5, -8, 1300, {}, false);
+    chassis.turnToPoint(-40, -5, 1400, {}, false);
     
+    chassis.moveToPoint(-40, -3, 1400, {.maxSpeed = 90}, false);
+    pros::delay(1500);
+    chassis.moveToPoint(-40, -11, 900, {.forwards = false}, false);
+    chassis.turnToHeading(122.5, 1200, {}, false);
+    chassis.moveToPoint(-35.5, -2.25, 900, {.forwards = false}, false);
+    mogo.retract(); 
+    pros::delay(300);
     
+    chassis.moveToPose(20, -4, 86.5 , 2800,  {}, false);
+    chassis.turnToHeading(chassis.getPose().theta - 180, 1600, {}, false);
+    chassis.setPose(chassis.getPose().x, chassis.getPose().y, 270);
+    pros::delay(10);
+    chassis.moveToPoint(36, chassis.getPose().y, 1400, {.forwards = false, .maxSpeed = 60});
+    chassis.waitUntil(13.5);
+    mogo.toggle();
+    chassis.waitUntilDone();  
+    chassis.turnToHeading(chassis.getPose().theta + 178, 1500, {}, false);
+    chassis.moveToPoint(76, chassis.getPose().y, 2000, {.maxSpeed = 60}, false); 
+    pros::delay(500);
+    chassis.moveToPoint(72, chassis.getPose().y, 1000, {.forwards = false}, false);
+    chassis.turnToHeading(213, 1500, {}, false);
+    chassis.moveToPoint(76.5, -14, 1000, {.forwards = false}, false);
+    mogo.retract();
+    pros::delay(350);
+    //chassis.moveToPose(63, -70.5, 198.5, 2000, {.minSpeed = 70, .earlyExitRange = 10});
+    chassis.moveToPose(31, -120,  230, 5000, {}, false);
+    chassis.turnToHeading(122, 1400, {}, false);
+    IntakeMotor1.brake();   
+    chassis.moveToPose(75, -113, 91, 3500, {.minSpeed = 30}, false);
+    chassis.moveToPose(-37, -113, 87, 4000, {.forwards = false, .minSpeed = 50}, false);
 
 
-
     
-
-    /*  
-    
-    chassis.turnToPoint(-58, -15, 1000, {.forwards = false}, false);
-    chassis.moveToPoint(-58, -15, 1000, {.forwards = false}, false);
-    */
-    
- 
-    /*
-    chassis.turnToPoint(-53.759, -17.845, 800, {.forwards = false}, false); 
-    chassis.moveToPoint(-53.759, -17.845, 1000, {.forwards = false}, false);
-   
-    mogo.toggle(); 
-    chassis.turnToPoint(-24, -24,1000);
-    */
 }
 
 void red(){
-    /*
-    chassis.setPose(0,0,0);     //calibrate position  
-    
-   
-    pros::delay(10);             
-    chassis.moveToPoint(0,-8, 1200, {.forwards = false, .minSpeed = 72}, false); //move up to edge the other bot
-    pros::delay(100);
-    chassis.moveToPoint(0,4,1200, {}, false);           //move back to the original position
-
-    pros::delay(200);
-    
-    chassis.turnToHeading(304, 1200, {}, false);         //turn to face the mogo
-    pros::delay(200);
-    */
     chassis.setPose(0,0,0);         
     liftPIDRunning = true;  
-    desiredLiftValue = 22800;       //lift arm for intakex   
+    desiredLiftValue = 23500;      //lift arm for intakex   
     pros::delay(20);
+    /*
     chassis.moveToPoint(0, -30, 1400, {.forwards = false, .maxSpeed=75, .minSpeed = 1,  .earlyExitRange = 1});          //theta
     chassis.waitUntil(16);
     intakeRunning = true; 
@@ -360,14 +364,14 @@ void red(){
     chassis.setPose(0,0,0);
     chassis.moveToPoint(0, 40, 1200,{}, false);
     pros::delay(2000);
-    
+    */
 
 }
     
     
 
 void autonomous() {
-    skills(); 
+    red(); 
 }
 
 
