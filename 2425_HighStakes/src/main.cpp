@@ -322,49 +322,71 @@ void red(){
     liftPIDRunning = true;  
     desiredLiftValue = 23500;      //lift arm for intakex   
     pros::delay(20);
-    /*
     chassis.moveToPoint(0, -30, 1400, {.forwards = false, .maxSpeed=75, .minSpeed = 1,  .earlyExitRange = 1});          //theta
     chassis.waitUntil(16);
-    intakeRunning = true; 
+    IntakeMotor1.move(-127);
+    chassis.waitUntil(25);
+    mogo.toggle();
+    chassis.waitUntilDone();
+    chassis.turnToHeading(250, 1500, {}, false);
+    chassis.setPose(chassis.getPose().x, chassis.getPose().y, 90);
+    chassis.moveToPoint(30, chassis.getPose().y, 1050, {}, false); 
+    pros::delay(750);
+    chassis.turnToPoint(-28, -92.5, 1400, {}, false);
+    pros::delay(250);
+    
+    mogo.toggle();
+    IntakeMotor1.move(127);
+    chassis.moveToPoint(-28, -92.5, 2200,{.maxSpeed = 85},  false);
+
+    chassis.turnToPoint(-40, -52, 1200, {.forwards = false}, false);
+    chassis.moveToPoint(-37.5, -50.8, 1500, {.forwards = false});
+    
+
+    chassis.waitUntil(30);
+    mogo.toggle(); 
+
+    chassis.waitUntilDone();
+    //chassis.moveToPoint(-37.5, -50.8, 800, {}, false);
+
+    
+    chassis.turnToHeading(253, 1400, {}, false);
+    IntakeMotor1.move(-127);
+
+    chassis.moveToPoint(-70.5, -71, 1200, {}, false); 
+    chassis.turnToHeading(chassis.getPose().theta + 180, 1600,{}, false);
+    chassis.moveToPose(-29, -41, 70, 1500, {.minSpeed = 50}, false);
+    
+
+    
+    
+    /*
+    chassis.moveToPose(-37, -58, 144,   1200, {.forwards = false});
+    
+    chassis.waitUntil(25);
+    mogo.toggle(); 
     chassis.waitUntilDone(); 
-    pros::delay(50);
-    mogo.toggle(); 
-    pros::delay(300); 
-    chassis.turnToHeading(253, 1200, {}, false);         //-28.365, -20.951, 180
-    pros::delay(10);            
-    chassis.setPose(0,0,0); 
-    pros::delay(150);
-    chassis.moveToPoint(0, 26, 900, {}, false);     //y: -44.951 
-    pros::delay(1000);
-    chassis.turnToHeading(139, 800, {}, false);
-    pros::delay(10);
-    chassis.setPose(0,0,0);  //theta 337 
-    mogo.toggle(); 
-    pros::delay(500);
-    reverse = true; 
-    chassis.moveToPoint(0, 55, 1200, {.maxSpeed = 110}, false);    //-38.274, 0.434, 329 
-    pros::delay(10);
-    chassis.setPose(0,0,0);
-    pros::delay(300);
-    chassis.turnToHeading(267, 800, {}, false);
-    pros::delay(10);
-    chassis.setPose(0,0,0);     
-    pros::delay(200);
-    chassis.moveToPoint(0,-31, 1100, {.forwards = false, .maxSpeed = 75}, false);     //gets the second mogo 
-    mogo.toggle(); 
-    pros::delay(350);
-    chassis.turnToHeading(125, 800, {}, false); 
-    chassis.setPose(0,0,0);
-    pros::delay(300); 
-    reverse = false; 
-    chassis.moveToPoint(0, 28, 900, {}, false);
-    pros::delay(500);
-    chassis.turnToHeading(147, 800, {}, false);
-    pros::delay(10);
-    chassis.setPose(0,0,0);
-    chassis.moveToPoint(0, 40, 1200,{}, false);
-    pros::delay(2000);
+    
+    chassis.turnToHeading(266,  1400, {}, false); 
+    chassis.setPose(chassis.getPose().x, chassis.getPose().y, 270);
+
+    chassis.moveToPoint(-75, chassis.getPose().y, 1600, {}, false);
+    */  
+
+
+    /*
+    chassis.turnToPoint(-37, -59, 1400, {.forwards = false}, false);
+    chassis.moveToPoint(-37, -59, 1800, {.forwards = false}); 
+    chassis.waitUntil(24);
+    mogo.toggle();
+    chassis.waitUntilDone(); 
+    IntakeMotor1.move(-127);
     */
+
+    pros::delay(1000);
+
+
+    
 
 }
     
