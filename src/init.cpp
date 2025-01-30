@@ -6,11 +6,11 @@
 void init() {
     mogo.retract(); 
     doinker.retract();
+    raiseSolenoid.retract();
     pros::lcd::initialize(); // initialize brain screen
-    chassis.setBrakeMode(MOTOR_BRAKE_BRAKE);    
+    chassis.setBrakeMode(MOTOR_BRAKE_COAST);    
     chassis.calibrate(); // calibrate sensors
     liftMotor.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
-    
 
     pros::Task liftPIDController(liftPIDTask, nullptr, "Lift PID Task");
 
@@ -29,6 +29,9 @@ void init() {
             pros::delay(20);
 
         }
+
+
+    
     });    
     autonomous(); 
 }

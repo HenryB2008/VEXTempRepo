@@ -1,5 +1,17 @@
 #include "ramsete.h"
 
+
+
+
+//ALL COMMENTS IN THIS FILE TAKEN FROM PURDUE SIGBOTS WIKI
+/* 
+The first step with any control algorithm is determining the current error value. 
+We can easily compute the robot's error in the global frame by subtracting the desired position from the current position. 
+*/
+
+
+
+
 void printPath(std::vector<squiggles::ProfilePoint> path) {
     std::cout << "PRINTING PATH POINTTS"; 
     for(int i = 0; i < path.size(); i++) {
@@ -23,17 +35,15 @@ void driveRamsete(
     size_t index = 0;   
 
     while(true)   {
-        
         double elapsedSec = (pros::millis() - startTime) / 1000.0; 
-        
+
         if(elapsedSec >= path.back().time) {
             break; 
         }
-        
+
         while((index + 1 < path.size()) && path[index+1].time <= elapsedSec) {
             index++; 
         }
-        
 
         const auto& targetPoint = path[index];
 
@@ -75,7 +85,7 @@ void driveRamsete(
         float omega = angularDesired + k * errorTheta +  ((b * linearDesired * std::sin(errorTheta) * errorY) / denom);
 
  
-        //robot width: 0.14605
+        //robot width: 0.2921, then multiply by 0.5
 
 
         float wheelVelLeftMps = v + (omega * 0.14605);
@@ -86,11 +96,12 @@ void driveRamsete(
         float leftRevPerSecond = (wheelVelLeftMps / wheelCircumference);
         float rightRevPerSecond = (wheelVelRightMps / wheelCircumference);
 
-        float leftRPM = leftRevPerSecond * 60.0;
-        float rightRPM = rightRevPerSecond * 60.0; 
+        float leftRPM = leftRevPerSecond * 60.0 * 0.75;
+        float rightRPM = rightRevPerSecond * 60.0 * 0.75; 
 
         drivetrain.leftMotors->move_velocity(leftRPM);
         drivetrain.rightMotors->move_velocity(rightRPM);
+
 
         //error checking 
         float xFinal = path.back().vector.pose.x;
@@ -103,11 +114,11 @@ void driveRamsete(
             break;
         }
 
-
-
+        // 12) Small delay for the control loop (e.g. 10ms)
+        pros::delay(10);
         std::cout<< "errorX: " << errorX << " errorY: " << errorY << " ErrorTheta: " << errorTheta
         << " leftRPM: " << leftRPM << " rightRPM: " << rightRPM << " ElapsedSec:  " << elapsedSec << std::endl;
-        pros::delay(10);
+    
 
     }
     chassis.tank(0,0);

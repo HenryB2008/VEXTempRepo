@@ -4,6 +4,7 @@
 #include "squiggles.hpp"
 #include "lemlibSetup.h"
 #include "ramsete.h"
+#include "liftArm.h"
 
 
 
@@ -19,6 +20,7 @@ extern squiggles::SplineGenerator generator;
 
 
 extern void testing();
+extern void qualAuto(); 
 
 
 

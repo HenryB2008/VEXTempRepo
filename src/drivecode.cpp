@@ -14,6 +14,7 @@ void driver()
     // Loop
     while (true)
     {
+        controller.print(0,0, "Intake: %d", liftMotor.get_temperature());
 
         leftY = controller.get_analog(pros::E_CONTROLLER_ANALOG_LEFT_Y);
         rightY = controller.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_Y);
@@ -77,6 +78,10 @@ void driver()
         if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_DOWN))
         {
             intakeSolenoid.toggle();
+        }
+        if(controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_A))
+        {
+            raiseSolenoid.toggle(); 
         }
 
         // stops brain from using too much resources

@@ -13,7 +13,7 @@ void initialize() {
 
 
 void autonomous() {
-	testing(); 
+	qualAuto(); 
 }
 void opcontrol() {
 	driver(); 
