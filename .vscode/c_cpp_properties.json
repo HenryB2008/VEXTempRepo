@@ -5,7 +5,8 @@
       "includePath": [
         "${workspaceFolder}/**",
         "c:\\Users\\SebFors\\Documents\\Coding\\VEX\\LemlibRamsete\\LemlibRamsete\\include",
-        "c:\\Users\\SebFors\\Documents\\Coding\\VEX\\LemlibRamsete\\include"
+        "c:\\Users\\SebFors\\Documents\\Coding\\VEX\\LemlibRamsete\\include",
+        "c:\\Users\\SebFors\\Documents\\Coding\\VEX\\VEXTempRepo\\include"
       ],
       "defines": [
         "_DEBUG",
@@ -18,7 +19,7 @@
       "intelliSenseMode": "gcc-arm",
       "browse": {
         "path": [
-          "c:\\Users\\SebFors\\Documents\\Coding\\VEX\\LemlibRamsete"
+          "c:\\Users\\SebFors\\Documents\\Coding\\VEX\\VEXTempRepo"
         ],
         "limitSymbolsToIncludedHeaders": true,
         "databaseFilename": ""

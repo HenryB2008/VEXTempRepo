@@ -7,6 +7,7 @@
 #include "liftArm.h"
 
 
+extern void skills(); 
 
 extern const float MAX_VEL;
 extern const float MAX_ACCEL;
@@ -20,7 +21,8 @@ extern squiggles::SplineGenerator generator;
 
 
 extern void testing();
-extern void qualAuto(); 
+extern void qualAutoRed();
+
 
 
 

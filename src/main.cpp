@@ -3,9 +3,6 @@
 #include "drivecode.h"
 #include "autons.h"
 
-
-
-
 void initialize() {
 	init();
 }
@@ -13,7 +10,7 @@ void initialize() {
 
 
 void autonomous() {
-	qualAuto(); 
+	skills(); 
 }
 void opcontrol() {
 	driver(); 

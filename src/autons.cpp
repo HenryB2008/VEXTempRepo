@@ -23,18 +23,96 @@ squiggles::SplineGenerator generator = squiggles::SplineGenerator(
     std::make_shared<squiggles::TankModel>(ROBOT_WIDTH, constraints));
 
 
-void qualAutoActual() {
+void skills() {
+    //score preload onto alliance stake
+    chassis.setPose(0,0,270);
+    liftPIDRunning = true;
+    desiredLiftValue = 31500;
+    pros::delay(900);
+    liftPIDRunning = true;
+    desiredLiftValue = 23500; 
+
+
+    //first mogo
+    chassis.moveToPoint(11, 0, 800, {.forwards = false}, false);
+    chassis.turnToHeading(180, 800, {}, false);
+    chassis.moveToPoint(chassis.getPose().x, 23, 800, {.forwards = false}, false);
+    mogo.toggle();
+    pros::delay(250);
+    chassis.turnToHeading(360, 1300, {}, false);
+    intakeMotor1.move(-127);
+    chassis.moveToPose(chassis.getPose().x, 52, 0, 1100, {.maxSpeed = 55}, false);
+    chassis.moveToPose(chassis.getPose().x, 63.5, 0, 1000, {.maxSpeed = 55}, false);
+    pros::delay(2000);
+    chassis.moveToPoint(chassis.getPose().x, 55, 600, {.forwards = false}, false);
+    chassis.turnToHeading(-114, 800, {}, false);
+
+
     
 }
 
-//screw white line on corner, wiggly screw on intersection 
-void qualAuto(){
+
+void qualAutoRed() {
     liftPIDRunning = true; 
     desiredLiftValue = 22800; 
     chassis.setPose(0, 0, 0);
     pros::delay(5);
     chassis.moveToPose(0,-35,0,2000, {.forwards = false, .minSpeed = 95, .earlyExitRange = 3, });
-    chassis.moveToPose(0,-47, 8.5, 1350, {.forwards = false});
+    chassis.moveToPose(0,-46.3, 8.5, 1175, {.forwards = false});
+    chassis.waitUntilDone(); 
+    mogo.toggle(); 
+    pros::delay(100);
+    intakeMotor1.move(-127);
+    chassis.moveToPoint(0, -36, 850, {}, false); 
+    mogo.toggle();
+    pros::delay(150);
+    chassis.turnToHeading(-123, 1000, {}, false);
+    chassis.moveToPoint(10, -28.3, 1000, {.forwards = false}, false);
+    mogo.toggle(); 
+    pros::delay(300);
+    chassis.turnToHeading(-112, 650, {}, false); 
+    chassis.moveToPoint(-14, -38.4, 1200, {},false); 
+    
+
+    /*
+    pros::delay(500);
+    chassis.turnToHeading(-76, 1100, {}, false);
+    chassis.moveToPoint(4, -38.5, 800, {.forwards = false}, false);
+    mogo.toggle(); 
+    pros::delay(100);
+    chassis.moveToPoint(-3.3, -37.2, 800, {}, false); 
+    chassis.turnToHeading(-127, 850, {}, false); 
+    chassis.moveToPoint(10.9, -28, 800, {.forwards = false}, false);
+    mogo.toggle();
+    pros::delay(500);
+    chassis.turnToHeading(-113, 450, {}, false);
+    chassis.moveToPoint(-15, -37, 1100, {}, false);
+    */
+    
+    
+
+    chassis.moveToPose(12, -2.5, -108, 2900, {.forwards = false}, false);
+    
+    chassis.turnToHeading(chassis.getPose().theta +180, 1200, {}, false);
+    raiseSolenoid.toggle(); 
+    chassis.moveToPose(26, 0.6, 68.3, 900, {}, false);
+    
+
+    raiseSolenoid.toggle(); 
+    
+    pros::delay(250);
+    chassis.moveToPose(18.3, -2.4, 68.7, 900, {.forwards = false}, false);
+    chassis.moveToPose(34, -30  , -220, 2000, {.minSpeed = 75}, false);
+}
+
+//screw white line on corner, wiggly screw on intersection 
+void qualAutoFail(){
+    liftPIDRunning = true; 
+    desiredLiftValue = 22800; 
+    chassis.setPose(0, 0, 0);
+    pros::delay(5);
+    chassis.moveToPose(0,-35,0,2000, {.forwards = false, .minSpeed = 95, .earlyExitRange = 3, });
+    chassis.moveToPose(0,-46.3, 8.5, 1175, {.forwards = false});
     chassis.waitUntilDone(); 
     mogo.toggle(); 
     pros::delay(300);
@@ -42,7 +120,7 @@ void qualAuto(){
     chassis.moveToPoint(0, -36, 600, {}, false); 
     pros::delay(500);
     chassis.turnToHeading(-76, 1100, {}, false);
-    chassis.moveToPoint(4, -38.5, 800, {.forwards = false}, false);
+    chassis.moveToPoint(4, -38.5, 1050, {.forwards = false}, false);
     mogo.toggle(); 
     pros::delay(100);
     chassis.moveToPoint(-3.3, -37.2, 800, {}, false); 
@@ -51,120 +129,26 @@ void qualAuto(){
     mogo.toggle(); 
     pros::delay(500);
     chassis.moveToPose(-18.5, -43.7, -125.6, 2000, {}, false);
-    chassis.moveToPose(16.7, -0.5, -106, 3800, {.forwards = false}, false);
-    chassis.turnToHeading(chassis.getPose().theta + 180, 1000, {}, false);
+    chassis.moveToPose(12, -2.5, -108, 3200, {.forwards = false}, false);
+    
+    chassis.turnToHeading(chassis.getPose().theta +180, 1200, {}, false);
+    raiseSolenoid.toggle(); 
+    chassis.moveToPose(25.1, 0., 67.25, 900, {}, false);
+
+    raiseSolenoid.toggle(); 
+    
+    pros::delay(250);
+    chassis.moveToPose(18.3, -2.4, 68.7, 900, {.forwards = false}, false);
+
+    chassis.moveToPose(34, -30  , -220, 2000, {.minSpeed = 75}, false);
+
+
+
 
     
 }
 
-void skills() {
-    //score preload onto alliance stake
-    chassis.setPose(0,0,0);
-    liftPIDRunning = true;
-    desiredLiftValue = 31500;
-    pros::delay(900);
-    liftPIDRunning = true;
-    desiredLiftValue = 22800; 
 
-    //clamp onto first mogo
-    chassis.moveToPoint(0, 16, 1000, {}, false);
-    chassis.turnToHeading(90, 800, {}, false);
-    chassis.moveToPoint(-24, chassis.getPose().y, 1000, {.forwards = false, .earlyExitRange = 4});
-    mogo.toggle(); 
-    
-    //score 3 rings onto mogo 
-    chassis.turnToHeading(chassis.getPose().theta + 180, 800);
-    intakeMotor1.move(-127);
-    chassis.moveToPoint(-47, chassis.getPose().y, 1000, {}, false);
-    chassis.moveToPoint(-59, 15.5, 1000, {}, false);
-    chassis.turnToPoint(-48, 3, 800, {}, false);
-    chassis.moveToPoint(-48, 3, 100, {}, false); 
-    chassis.turnToPoint(-62, -3, 800, {.forwards = false}, false); 
-
-    //place mogo onto corner 
-    chassis.moveToPoint(-62, -3, 1000,  {.forwards = false});
-    chassis.waitUntil(8);
-    mogo.toggle(); 
-    chassis.waitUntilDone(); 
-
-
-    //move to second mogo and clamp 
-    chassis.turnToPoint(21.484, 15.365, 800, {.forwards = false}, false); 
-    chassis.moveToPoint(21.484, 15.365, 1300, {.forwards = false});
-    chassis.waitUntil(75);
-    mogo.toggle(); 
-    chassis.waitUntilDone(); 
-
-    //score 3 rings onto second mogo 
-    chassis.turnToPoint(59, 14, 800, {}, false);
-    chassis.moveToPoint(59, 14, 1200, {.maxSpeed = 65}, false);
-    chassis.turnToPoint(47, 1, 800, {}, false);
-    chassis.moveToPoint(47, 1, 800, {}, false);
-
-    //place second mogo into corner 
-    chassis.turnToPoint(64, -3, 800, {.forwards = false}, false);
-    chassis.moveToPoint(64, -3, 1000, {.forwards = false});
-    chassis.waitUntil(8);
-    mogo.toggle(); 
-    chassis.waitUntilDone(); 
-
-    //move to wallstake and score
-    chassis.turnToPoint(58, 61, 800, {}, false);
-    chassis.moveToPoint(58, 62, 1300, {}, false);
-    chassis.turnToHeading(90, 800, {}, false);
-    chassis.moveToPoint(65, chassis.getPose().y, 800, {.forwards = false}, false);
-    liftPIDRunning = true;
-    desiredLiftValue = 31500;
-    pros::delay(900);
-    liftPIDRunning = true;
-    desiredLiftValue = 22800; 
-
-    //move to third mogo and intake red
-    chassis.turnToPoint(46, 84, 800, {}, false);
-    chassis.moveToPoint(46, 84, 1200, {}, false);
-    chassis.turnToPoint(-1, 107, 800, {.forwards = false}, false);
-
-    //clamp and score ring
-    chassis.moveToPoint(-1, 107, 1200, {.forwards = false});
-    chassis.waitUntil(45);
-    mogo.toggle();
-    chassis.waitUntilDone(); 
-    pros::delay(900);
-    
-    //move to second ring and intake and score
-    chassis.turnToPoint(23, 82, 800, {}, false);
-    chassis.moveToPoint(23, 82, 1200, {}, false);
-    pros::delay(500);
-    
-    //clamp third mogo 
-    chassis.turnToPoint(64, 127, 800, {.forwards = false}, false); 
-    chassis.moveToPoint(64, 127, 1100, {.forwards = false}, false);
-    mogo.toggle(); 
-
-    //move to fourth  mogo and push into corner
-    chassis.turnToPoint(23, 101, 800, {}, false);
-    chassis.moveToPoint(23, 101, 1000, {}, false);
-    chassis.turnToPoint(-24, 121, 800, {.forwards = false}, false);
-    chassis.moveToPoint(-24, 121, 800, {.forwards = false});
-    chassis.waitUntil(40);
-    mogo.toggle();
-    chassis.waitUntilDone(); 
-    chassis.turnToPoint(-66, 127, 800, {.forwards = false}, false);
-    chassis.moveToPoint(-66, 127, 800, {.forwards = false}, false);
-    mogo.toggle(); 
-
-    //move to second wall stake and score
-    chassis.turnToPoint(-60, 61, 800, {}, false);
-    chassis.moveToPoint(-60, 61, 1200, {}, false);
-    chassis.turnToHeading(90, 800, {}, false);
-    chassis.moveToPoint(-70, chassis.getPose().y, 800, {}, false); 
-    liftPIDRunning = true;
-    desiredLiftValue = 31500;
-    pros::delay(900);
-    liftPIDRunning = true;
-    desiredLiftValue = 22800; 
-    
-}
     
 
 
