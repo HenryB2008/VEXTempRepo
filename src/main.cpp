@@ -10,7 +10,7 @@ void initialize() {
 
 
 void autonomous() {
-	skills(); 
+	qualAutoBlue(); 
 }
 void opcontrol() {
 	driver(); 

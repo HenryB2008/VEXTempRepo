@@ -7,12 +7,11 @@
 #include "liftArm.h"
 
 
-extern void skills(); 
-
 extern const float MAX_VEL;
 extern const float MAX_ACCEL;
 extern const float MAX_JERK;
 extern const float ROBOT_WIDTH;
+
 
 extern std::vector<float> convertUnits(lemlib::Pose position); 
 
@@ -22,6 +21,8 @@ extern squiggles::SplineGenerator generator;
 
 extern void testing();
 extern void qualAutoRed();
+extern void skills(); 
+extern void qualAutoBlue(); 
 
 
 
