@@ -5,6 +5,7 @@
 #include "ports.h"
 #include "liftArm.h"
 #include "lemlibSetup.h"
+#include "colorSort.h"
 
 
 extern void init();    

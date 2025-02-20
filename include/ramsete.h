@@ -4,8 +4,7 @@
 #include <cmath> 
 #include <vector> 
 #include "lemlibSetup.h"
-#include "autons.h"
-
+#include "autonTemplate.h"
 
 
 

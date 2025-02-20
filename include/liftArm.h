@@ -9,6 +9,7 @@
 extern double liftkP;
 extern double liftkI;
 extern double liftkD;
+extern double antiWindup; 
 
 
 extern int liftError; 

@@ -1,17 +1,19 @@
 #include "main.h"
 #include "init.h"
 #include "drivecode.h"
-#include "autons.h"
+#include "autons\test.h"
+#include "autons\redRingRush.h"
 
 void initialize() {
 	init();
 }
 
-
-
-void autonomous() {
-	qualAutoBlue(); 
-}
 void opcontrol() {
+	colorSortOn = false; 
 	driver(); 
+}
+
+void autonomous(){
+	colorSortOn = true; 
+	redRingRush(); 
 }

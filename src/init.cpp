@@ -4,15 +4,16 @@
 
 
 void init() {
-    mogo.retract(); 
-    doinker.retract();
-    raiseSolenoid.retract();
+    
     pros::lcd::initialize(); // initialize brain screen
     chassis.setBrakeMode(MOTOR_BRAKE_COAST);    
     chassis.calibrate(); // calibrate sensors
     liftMotor.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
+    colorSensor.set_led_pwm(100);
+
 
     pros::Task liftPIDController(liftPIDTask, nullptr, "Lift PID Task");
+    pros::Task colorSorting(colorSortTask, nullptr, "Color Sort Task");
 
     //pros::Task toggleDoinker(toggleDoinkerTask, nullptr, "Toggle Doinker");
 
@@ -24,15 +25,14 @@ void init() {
             pros::lcd::print(2, "Theta: %f", chassis.getPose().theta); // heading
             lemlib::telemetrySink()->info("Chassis pose: {}", chassis.getPose());
 
-
+            //std::cout << "distance: " << colorSensor.get_proximity() << " color: " << colorSensor.get_hue() << std::endl; 
             // delay to save resources  
             pros::delay(20);
 
         }
 
-
-    
     });    
+    autonomous(); 
  
  
 }

@@ -1,17 +1,5 @@
 #include "ramsete.h"
 
-
-
-
-//ALL COMMENTS IN THIS FILE TAKEN FROM PURDUE SIGBOTS WIKI
-/* 
-The first step with any control algorithm is determining the current error value. 
-We can easily compute the robot's error in the global frame by subtracting the desired position from the current position. 
-*/
-
-
-
-
 void printPath(std::vector<squiggles::ProfilePoint> path) {
     std::cout << "PRINTING PATH POINTTS"; 
     for(int i = 0; i < path.size(); i++) {
