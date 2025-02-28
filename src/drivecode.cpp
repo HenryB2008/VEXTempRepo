@@ -69,6 +69,10 @@ void driver()
         if(controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_LEFT)){
             driveState = !driveState; 
         }
+
+        if(controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_A)){
+            gRushClamp.toggle(); 
+        }
         
 
 

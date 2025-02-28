@@ -5,8 +5,10 @@
 
 extern bool colorSortOn;
 extern int allianceColor; 
+extern bool stopTransition; 
 
-extern void colorSortTask(void* param); 
+extern void colorSortTask(void* param);
+ 
 
 
 #endif

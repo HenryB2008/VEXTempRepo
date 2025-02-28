@@ -24,10 +24,11 @@ pros::Rotation vertical_encoder(14);
 pros::Distance leftDistance(16);
 pros::Imu imu(17);
 pros::Rotation horizontal_encoder(19);
-pros::Motor intakeMotor1(20); 
+pros::Motor intakeMotor1(18); 
 pros::Motor liftMotor(21);  
 pros::adi::Pneumatics mogo('A', false);
 pros::adi::Pneumatics leftDoinker('B', false);
 pros::adi::Pneumatics rightDoinker('C', false);
+pros::adi::Pneumatics gRushClamp('E', true);
 pros::Controller controller(pros::E_CONTROLLER_MASTER);
 

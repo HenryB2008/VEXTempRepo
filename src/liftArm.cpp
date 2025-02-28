@@ -1,10 +1,10 @@
 #include "liftArm.h"
 
 
-double liftkP = 0.0285; 
-double liftkI = 0.000275; 
-double liftkD = 0.04; 
-double antiWindUp = 500; 
+double liftkP = 1; 
+double liftkI = 0; 
+double liftkD = 0; 
+double antiWindUp = 4; 
 
 
 int liftError; 
@@ -21,8 +21,10 @@ bool liftPIDRunning = false; // Flag to indicate if the liftPID is active
 void liftPIDTask(void* param) {
     double liftMotorPower; 
     while (true) {
+       
         if (liftPIDRunning) {
-            int LiftMotorPosition = rotation_sensor.get_angle();
+
+            int LiftMotorPosition = rotation_sensor.get_angle()/ 100;
             liftError = LiftMotorPosition - desiredLiftValue;
             liftDerivative = liftError - liftPrevError;
             liftTotalError += liftError;
@@ -36,12 +38,16 @@ void liftPIDTask(void* param) {
             }
             liftMotor.move(liftMotorPower);
             // Stop 350
-            if (abs(liftError) < 400    ) {
+            if (abs(liftError) < 1    ) {
                 liftMotor.brake();
                 liftPIDRunning = false; 
             }
-
+            
             liftPrevError = liftError;
+            if(controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_L1) || controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_L2)){
+                liftPIDRunning = false;
+            }
+
         }
 
         pros::delay(20); // Save resources

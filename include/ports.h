@@ -50,6 +50,8 @@ extern pros::adi::Pneumatics mogo;
 extern pros::adi::Pneumatics leftDoinker;
 extern pros::adi::Pneumatics rightDoinker;
 extern pros::Controller controller;
+extern pros::adi::Pneumatics gRushClamp;
+
 
 
 

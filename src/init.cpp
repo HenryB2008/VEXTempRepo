@@ -9,6 +9,7 @@ void init() {
     chassis.setBrakeMode(MOTOR_BRAKE_COAST);    
     chassis.calibrate(); // calibrate sensors
     liftMotor.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
+    colorSensor.set_integration_time(3);
     colorSensor.set_led_pwm(100);
 
 
@@ -25,7 +26,7 @@ void init() {
             pros::lcd::print(2, "Theta: %f", chassis.getPose().theta); // heading
             lemlib::telemetrySink()->info("Chassis pose: {}", chassis.getPose());
 
-            //std::cout << "distance: " << colorSensor.get_proximity() << " color: " << colorSensor.get_hue() << std::endl; 
+            std::cout << "distance: " << colorSensor.get_proximity() << " color: " << colorSensor.get_hue() << std::endl; 
             // delay to save resources  
             pros::delay(20);
 

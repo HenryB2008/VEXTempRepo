@@ -23,15 +23,17 @@ void driveRamsete(
     size_t index = 0;   
 
     while(true)   {
+        
         double elapsedSec = (pros::millis() - startTime) / 1000.0; 
-
+        
         if(elapsedSec >= path.back().time) {
             break; 
         }
-
+        
         while((index + 1 < path.size()) && path[index+1].time <= elapsedSec) {
             index++; 
         }
+        
 
         const auto& targetPoint = path[index];
 
@@ -50,15 +52,15 @@ void driveRamsete(
         //robot current position from odom 
         std::vector<float> currentPose = convertUnits(chassis.getPose()); 
 
-        float xCurrent = currentPose[0];
-        float yCurrent = currentPose[1];
-        float thetaCurrent = currentPose[2];
+        float xCurrent = currentPose[0]; // the robots x position
+        float yCurrent = currentPose[1]; // the robots y position 
+        float thetaCurrent = currentPose[2]; 
 
-        //calculate global error 
-        float globalErrorX = xDesired - xCurrent;
+        //calculate global error. Desired = point from path, Current = current robot position from odometry
+        float globalErrorX = xDesired - xCurrent; 
         float globalErrorY = yDesired - yCurrent;
 
-        //Calculate locale rror
+        //Calculate local error
         float errorX = std::cos(thetaCurrent) * globalErrorX  + std::sin(thetaCurrent) * globalErrorY; 
         float errorY = -std::sin(thetaCurrent) * globalErrorX + std::cos(thetaCurrent) * globalErrorY; 
         float errorTheta = thetaDesired - thetaCurrent; 
@@ -69,27 +71,26 @@ void driveRamsete(
         //ramsete formulas
         float k = 2 * zeta * std::sqrt(b * std::pow(linearDesired, 2) + std::pow(angularDesired, 2));
         float v = linearDesired * std::cos(errorTheta) + k * errorX; 
-        float denom = (std::fabs(errorTheta) < 1e-6) ? 1e-6f : errorTheta;
+        float denom = (std::fabs(errorTheta) < 1e-6) ? 1e-6f : errorTheta; //simply prevents any divide by 0 errors
         float omega = angularDesired + k * errorTheta +  ((b * linearDesired * std::sin(errorTheta) * errorY) / denom);
 
  
-        //robot width: 0.2921, then multiply by 0.5
+        //robot width: 0.14605
 
 
-        float wheelVelLeftMps = v + (omega * 0.14605);
-        float wheelVelRightMps = v - (omega * 0.14605);
-        
-        float wheelCircumference = 0.219329; 
+        float wheelCircumference = 0.219329; //meters
+        float trackWidth = 0.14605;//meters
+        float wheelVelLeftMps = v + (omega * trackWidth);//m/s
+        float wheelVelRightMps = v - (omega * trackWidth); //m/s
 
-        float leftRevPerSecond = (wheelVelLeftMps / wheelCircumference);
-        float rightRevPerSecond = (wheelVelRightMps / wheelCircumference);
+        float leftRevPerSecond = (wheelVelLeftMps / wheelCircumference); 
+        float rightRevPerSecond = (wheelVelRightMps / wheelCircumference); 
 
-        float leftRPM = leftRevPerSecond * 60.0 * 0.75;
-        float rightRPM = rightRevPerSecond * 60.0 * 0.75; 
+        float leftRPM = leftRevPerSecond * 60.0;
+        float rightRPM = rightRevPerSecond * 60.0; 
 
         drivetrain.leftMotors->move_velocity(leftRPM);
         drivetrain.rightMotors->move_velocity(rightRPM);
-
 
         //error checking 
         float xFinal = path.back().vector.pose.x;
@@ -102,11 +103,11 @@ void driveRamsete(
             break;
         }
 
-        // 12) Small delay for the control loop (e.g. 10ms)
-        pros::delay(10);
+
+
         std::cout<< "errorX: " << errorX << " errorY: " << errorY << " ErrorTheta: " << errorTheta
         << " leftRPM: " << leftRPM << " rightRPM: " << rightRPM << " ElapsedSec:  " << elapsedSec << std::endl;
-    
+        pros::delay(10);
 
     }
     chassis.tank(0,0);
