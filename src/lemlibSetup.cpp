@@ -1,38 +1,56 @@
 #include "lemlibSetup.h"
 
+class CustomIMU : public pros::IMU {
+  public:
+  CustomIMU(int port, double scalar)
+  : pros::IMU(port),
+  m_port(port),
+  m_scalar(scalar) {}                         
+  virtual double get_rotation() const {
+  return pros::c::imu_get_rotation(m_port) * m_scalar;
+  }
+  private:
+  const int m_port;
+  const double m_scalar;
+  };
+  
+  // create custom IMU with a scalar of 1.1
+  CustomIMU my_imu(17, 1.01); 
 
 
-lemlib::TrackingWheel horizontal_tracking_wheel(&horizontal_encoder, 2, 0.7);  
-lemlib::TrackingWheel vertical_tracking_wheel(&vertical_encoder, 2, -3.5); 
-lemlib::OdomSensors sensors(&vertical_tracking_wheel, // Vertical tracking wheel 1, set to null
+
+
+lemlib::TrackingWheel horizontal_tracking_wheel(&horizontal_encoder, 2, 1.3);  
+lemlib::TrackingWheel vertical_tracking_wheel(&vertical_encoder, 2, -3);
+lemlib::OdomSensors sensors(&vertical_tracking_wheel, // Vertical tracing wheel 1, set to null
                             nullptr, // Vertical tracking wheel 2, set to nullptr as we are using IMEs
                            &horizontal_tracking_wheel, // Horizontal tracking wheel 1
                             nullptr, // Horizontal tracking wheel 2, set to nullptr as we don't have a second one
-                            &imu // Inertial sensor
+                            &my_imu // Inertial sensor
 );
 
 
 // latetral PID controller
-lemlib::ControllerSettings lateral_controller(10.75 , // proportional gain (kP)6.2
+lemlib::ControllerSettings lateral_controller(7.25, // proportional gain (kP)6.2
                                               0, // integral gain (kI)
-                                              29    , // derivative gain (kD) 1.9
-                                              0, // anti windup
-                                              0.5, // small error range, in inches
-                                              450, // small error range timeout, in milliseconds
-                                              1.5, // large error range, in inches
-                                              900, // large error range timeout, in milliseconds
-                                              0 // maximum acceleration (s5lew)
+                                                13, // derivative gain (kD) 1.9
+                                              5, // anti windup
+                                              0, // small error range, in inches
+                                              0, // small error range timeout, in milliseconds
+                                              0, // large error range, in inches
+                                              0, // large error range timeout, in milliseconds
+                                              20 // maximum acceleration (s5lew)
 );
 
-// angular PID controller (8, 44 FOR SKILLS) 1.9, 9SET TO 3, 14 FOR THE OTHER AUTON 
-lemlib::ControllerSettings angular_controller(8.5,  // proportional gain (kP) 12.5
-                                              0, // integral gain (kI)
-                                            59,               // derivative gain (kD) 30
-                                              0, // anti windup
-                                              0.5, // small error range, in degrees
-                                              450, // small error range timeout, in milliseconds
-                                              1.5, // large error range, in degrees
-                                              900, // large error range timeout, in milliseconds
+// angular PID controller 5.3, 47 
+lemlib::ControllerSettings angular_controller(5.3,  // proportional gain (kP) 12.5
+                                            0,// integral gain (kI)
+                                            47,               // derivative gain (kD) 30
+                                             15, // anti windup
+                                              0, // small error range, in degrees
+                                              0, // small error range timeout, in milliseconds
+                                              0, // large error range, in degrees
+                                              0, // large error range timeout, in milliseconds
                                                 0 // maximum acceleration (slew)
 );
 

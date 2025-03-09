@@ -17,6 +17,8 @@ extern int liftPrevError;
 extern int liftDerivative; 
 extern int liftTotalError;
 
+extern int iterations; 
+
 extern int desiredLiftValue;
 extern bool liftPIDRunning;
 

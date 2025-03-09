@@ -51,6 +51,7 @@ extern pros::adi::Pneumatics leftDoinker;
 extern pros::adi::Pneumatics rightDoinker;
 extern pros::Controller controller;
 extern pros::adi::Pneumatics gRushClamp;
+extern pros::Imu imu; 
 
 
 

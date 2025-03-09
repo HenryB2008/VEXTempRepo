@@ -22,13 +22,15 @@ pros::Optical colorSensor(12);
 pros::Rotation rotation_sensor(13);
 pros::Rotation vertical_encoder(14);
 pros::Distance leftDistance(16);
-pros::Imu imu(17);
 pros::Rotation horizontal_encoder(19);
 pros::Motor intakeMotor1(18); 
 pros::Motor liftMotor(21);  
 pros::adi::Pneumatics mogo('A', false);
 pros::adi::Pneumatics leftDoinker('B', false);
 pros::adi::Pneumatics rightDoinker('C', false);
-pros::adi::Pneumatics gRushClamp('E', true);
+pros::adi::Pneumatics gRushClamp('E', false);
 pros::Controller controller(pros::E_CONTROLLER_MASTER);
+pros::Imu imu(17);
+
+
 

@@ -3,6 +3,6 @@
 
 #include "autonTemplate.h"
 
-extern void skills(); 
+extern void skills();
 
 #endif

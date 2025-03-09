@@ -60,14 +60,14 @@ class PID {
          * @endcode
          */
         void reset();
-    protected:
+    public:
         // gains
-        const float kP;
-        const float kI;
-        const float kD;
+         float kP;
+         float kI;
+         float kD;
 
         // optimizations
-        const float windupRange;
+         float windupRange;
         const bool signFlipReset;
 
         float integral = 0;

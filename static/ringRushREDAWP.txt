@@ -1,0 +1,31 @@
+-31.2, 21.2, 61.887
+-29.312, 21.858, 66.049
+-27.423, 22.518, 62.084
+-25.567, 23.26, 59.903
+-23.767, 24.131, 58.216
+-22.053, 25.16, 57.368
+-20.456, 26.362, 56.631
+-18.997, 27.728, 56.571
+-17.706, 29.254, 57.159
+-16.586, 30.91, 57.934
+-15.636, 32.669, 58.907
+-14.849, 34.506, 59.696
+-14.207, 36.4, 55.279
+-13.706, 38.336, 50.477
+-13.32, 40.297, 45.166
+-13.041, 42.278, 39.142
+-12.849, 44.268, 32.002
+-12.744, 46.265, 22.72
+-12.706, 48.297, 0
+-12.706, 48.297, 0
+-12.334, 68.294, 0
+endData
+127
+67
+200
+-31.2, 21.2, -25.299, 23.42, -12.706, 25.388, -12.706, 48.297
+#PATH.JERRYIO-DATA {"appVersion":"0.8.3","format":"LemLib v0.5","gc":{"robotWidth":12,"robotHeight":12,"robotIsHolonomic":false,"showRobot":false,"uol":2.54,"pointDensity":2,"controlMagnetDistance":1.968503937007874,"fieldImage":{"displayName":"V5RC 2025 - High Stakes","signature":"V5RC 2025 - High Stakes","origin":{"__type":"built-in"}},"coordinateSystem":"VEX Gaming Positioning System"},"paths":[{"segments":[{"controls":[{"uid":"yxVW3Va10I","x":-31.200000000000024,"y":21.2,"lock":false,"visible":true,"heading":68,"__type":"end-point"},{"uid":"wr0AiqsC4A","x":-25.298522779937457,"y":23.419928154040925,"lock":false,"visible":true,"__type":"control"},{"uid":"IerzYz9EaH","x":-12.70629601971076,"y":25.388046715494195,"lock":false,"visible":true,"__type":"control"},{"uid":"3MjqJUMoMA","x":-12.70629601971076,"y":48.29701571432879,"lock":false,"visible":true,"heading":0,"__type":"end-point"}],"speedProfiles":[],"lookaheadKeyframes":[],"uid":"IYueYmTiD8"}],"pc":{"speedLimit":{"minLimit":{"value":0,"label":"0"},"maxLimit":{"value":127,"label":"127"},"step":1,"from":20,"to":67},"bentRateApplicableRange":{"minLimit":{"value":0,"label":"0"},"maxLimit":{"value":1,"label":"1"},"step":0.001,"from":0,"to":0.1},"maxDecelerationRate":127},"name":"Path","uid":"G309mczLV0","lock":false,"visible":true}]}
+
+
+
+RED SOLOAWP 

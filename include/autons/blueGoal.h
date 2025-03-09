@@ -1,4 +1,4 @@
-#ifndef BLUEGOAL_H
+#ifndef RED
 #define BLUEGOAL_H
 
 #include "autonTemplate.h"

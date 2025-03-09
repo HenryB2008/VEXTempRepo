@@ -4,5 +4,5 @@
 #include "autonTemplate.h"
 
 extern void test(); 
-
+extern void RAMSETE();
 #endif

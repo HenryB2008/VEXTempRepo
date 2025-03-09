@@ -15,8 +15,7 @@ extern void driveRamsete(
     float zeta, 
     float b,
     bool backward,
-    float errorDistance,
-    int timeout
+    float errorDistance
 ); 
 
 #endif 

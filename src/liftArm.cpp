@@ -1,10 +1,10 @@
 #include "liftArm.h"
 
 
-double liftkP = 1; 
+double liftkP = 4; 
 double liftkI = 0; 
-double liftkD = 0; 
-double antiWindUp = 4; 
+double liftkD = 2; 
+double antiWindUp = 8; 
 
 
 int liftError; 
@@ -12,18 +12,20 @@ int liftPrevError = 0;
 int liftDerivative; 
 int liftTotalError = 0; 
 
-
 int desiredLiftValue = 0; // Shared desired value for the lift
 bool liftPIDRunning = false; // Flag to indicate if the liftPID is active
+
+int iterations = 0; 
 
 
 
 void liftPIDTask(void* param) {
     double liftMotorPower; 
     while (true) {
+
        
         if (liftPIDRunning) {
-
+            iterations++; 
             int LiftMotorPosition = rotation_sensor.get_angle()/ 100;
             liftError = LiftMotorPosition - desiredLiftValue;
             liftDerivative = liftError - liftPrevError;
@@ -38,7 +40,7 @@ void liftPIDTask(void* param) {
             }
             liftMotor.move(liftMotorPower);
             // Stop 350
-            if (abs(liftError) < 1    ) {
+            if (abs(liftError) < 1 || iterations > 75) {
                 liftMotor.brake();
                 liftPIDRunning = false; 
             }
