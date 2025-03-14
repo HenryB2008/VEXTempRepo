@@ -30,24 +30,31 @@ void driver()
 
         if(driveState){
 
-            /*
+            
             chassis.tank(leftY, rightY);
-            */
+            
+           /*
             chassis.arcade(rightY, // throttle
                 rightX, // steer
                 false, // enable drive curves
                 0.75 // slightly prioritize steering
             );
+            */
+            
         } else {
-            /*
+            
             
             chassis.tank(leftY * 0.5, rightY * 0.5);
-            */
+            
+           /*
            chassis.arcade(leftY * 0.5, // throttle
             rightX * 0.5, // steer
             false, // enable drive curves
             0.75 // slightly prioritize steering
+            
         );
+        */
+        
         }
 
 

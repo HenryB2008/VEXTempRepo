@@ -8,18 +8,18 @@ void colorSortTask(void* param) {
      while(true){
         if(colorSortOn) {
             intakeMotor1.move(-127);
-                if(allianceColor == 0 && colorSensor.get_proximity() >= 140 && (colorSensor.get_hue() > 180 && colorSensor.get_hue() < 255)){
+                if(allianceColor == 0 && colorSensor.get_proximity() >= 120 && (colorSensor.get_hue() > 180 && colorSensor.get_hue() < 255)){
                     intakeMotor1.move(-127);
-                    pros::delay(110);
+                    pros::delay(103);
                     intakeMotor1.move(127);
                     pros::delay(20);
                     intakeMotor1.brake();
                     pros::delay(250);
                     power = -127; 
 
-                } else if(allianceColor == 1 && colorSensor.get_proximity() >= 140 && (colorSensor.get_hue() < 30 || colorSensor.get_hue()> 350)) {
+                } else if(allianceColor == 1 && colorSensor.get_proximity() >= 120 && (colorSensor.get_hue() < 30 || colorSensor.get_hue()> 330)) {
                     intakeMotor1.move(-127);
-                    pros::delay(110);
+                    pros::delay(103);
                     intakeMotor1.move(127);
                     pros::delay(20);
                     intakeMotor1.brake();
@@ -43,7 +43,10 @@ void colorSortTask(void* param) {
                 } else if (allianceColor == 4 && colorSensor.get_proximity() >= 140 && (colorSensor.get_hue() > 180 && colorSensor.get_hue()< 255)){
                     intakeMotor1.move(32);
                     pros::delay(100);
-                    intakeMotor1.brake(); 
+                    intakeMotor1.brake();
+                    
+                    power = -127;
+                    colorSortOn = false; 
                 }
         }
         pros::delay(10); // Save resources

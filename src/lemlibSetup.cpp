@@ -20,8 +20,8 @@ class CustomIMU : public pros::IMU {
 
 
 
-lemlib::TrackingWheel horizontal_tracking_wheel(&horizontal_encoder, 2, 1.3);  
-lemlib::TrackingWheel vertical_tracking_wheel(&vertical_encoder, 2, -3);
+lemlib::TrackingWheel horizontal_tracking_wheel(&horizontal_encoder, 2, 1);  
+lemlib::TrackingWheel vertical_tracking_wheel(&vertical_encoder, 2, -2 );
 lemlib::OdomSensors sensors(&vertical_tracking_wheel, // Vertical tracing wheel 1, set to null
                             nullptr, // Vertical tracking wheel 2, set to nullptr as we are using IMEs
                            &horizontal_tracking_wheel, // Horizontal tracking wheel 1
@@ -35,10 +35,10 @@ lemlib::ControllerSettings lateral_controller(7.25, // proportional gain (kP)6.2
                                               0, // integral gain (kI)
                                                 13, // derivative gain (kD) 1.9
                                               5, // anti windup
-                                              0, // small error range, in inches
-                                              0, // small error range timeout, in milliseconds
-                                              0, // large error range, in inches
-                                              0, // large error range timeout, in milliseconds
+                                              1, // small error range, in inches
+                                              100, // small error range timeout, in milliseconds
+                                              2, // large error range, in inches
+                                              400, // large error range timeout, in milliseconds
                                               20 // maximum acceleration (s5lew)
 );
 
@@ -47,10 +47,10 @@ lemlib::ControllerSettings angular_controller(5.3,  // proportional gain (kP) 12
                                             0,// integral gain (kI)
                                             47,               // derivative gain (kD) 30
                                              15, // anti windup
-                                              0, // small error range, in degrees
-                                              0, // small error range timeout, in milliseconds
-                                              0, // large error range, in degrees
-                                              0, // large error range timeout, in milliseconds
+                                              1, // small error range, in degrees
+                                              100, // small error range timeout, in milliseconds
+                                              2.5, // large error range, in degrees
+                                              400, // large error range timeout, in milliseconds
                                                 0 // maximum acceleration (slew)
 );
 

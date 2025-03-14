@@ -111,7 +111,7 @@ void Baker(){
     chassis.moveToPoint(-53.8, -60.2, 800, {}, false);
     desiredLiftValue = 170; 
     liftPIDRunning = true;
-    chassis.moveToPose(-7.5, -16.3, 45, 1500, {}, false);
+    chassis.moveToPose(-7.5, -16.3, 45, 1500, {},   false);
 
 }
     
@@ -169,8 +169,10 @@ void RAMSETE() {
 ASSET(alignWithLastRingFirstMogoSKILLS_txt); 
 
 void test(){
-    chassis.setPose(0,0,0);
-    chassis.turnToHeading(90, 800, {}, false);
-    
+    chassis.setPose(0,0,180);
+    allianceColor = 0; 
+    colorSortOn = true;
+    pros::delay(20000);
+
 }
 

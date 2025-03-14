@@ -7,6 +7,7 @@
 #include "liftArm.h"
 #include "colorSort.h"
 #include "init.h"
+#include "distanceReset.h"
 
 extern const float MAX_VEL;
 extern const float MAX_ACCEL;

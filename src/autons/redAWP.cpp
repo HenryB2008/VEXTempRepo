@@ -40,7 +40,7 @@ void redAWP(){
     desiredLiftValue = 285; 
     iterations = 0; 
     liftPIDRunning = true; 
-    pros::delay(900);
+    pros::delay(1050);
     chassis.moveToPoint(-31.2, 21.2, 900, {.forwards = false, .maxSpeed = 80});
     chassis.waitUntil(8); 
     desiredLiftValue = 126;
@@ -50,18 +50,34 @@ void redAWP(){
     pros::delay(100);
     mogo.toggle();  
     colorSortOn = true; 
-    chassis.turnToHeading(68, 900, {}, false);
+    chassis.turnToHeading(68, 1050, {}, false);
     chassis.follow(ringRushREDAWP_txt, 10, 3000, true, false);
-    chassis.follow(secondStackREDAWP_txt, 9, 2800, true);
-    chassis.turnToPoint(-45, 6, 800, {}, false); 
-
+    chassis.follow(secondStackREDAWP_txt, 9, 2800, true, false);
+  
+    chassis.turnToPoint(-53, -10.733, 800, {}, false); 
     mogo.toggle(); 
-    chassis.moveToPoint(-45, 6, 1250, {.maxSpeed = 85}, false);
-    allianceColor = 3;     
+    chassis.moveToPoint(-53, -10.733, 550, {.maxSpeed = 95, .minSpeed = 70, .earlyExitRange = 6});
+    chassis.moveToPose(-53.6, -11.9, -150, 1100, {.maxSpeed = 65}); 
+    chassis.waitUntilDone(); 
     
-    chassis.moveToPoint(-55, -9, 800, {.maxSpeed = 60}, false);
-    chassis.turnToPoint(-23, -20, 900, {.forwards = false}, false);
-    chassis.moveToPoint(-23, -20, 900, {.forwards = false, .maxSpeed = 88}, false);
+    
+    allianceColor = 3;     
+  
+    chassis.turnToPoint(-26.6, -27.3, 900, {.forwards = false}, false);
+  
+    chassis.moveToPoint(-24.6, -25.14, 1025, {.forwards = false, .maxSpeed = 88}, false);
+    mogo.toggle();  
+    allianceColor = 0; 
+    colorSortOn = true; 
+    chassis.turnToPoint(-25.1, -45.4, 800, {}, false);
+    chassis.moveToPoint(-25.1, -45.4, 800, {}, false);
+    chassis.follow(touchLadderREDAWP_txt, 13, 1200, false, false);
+
+    
+    
+    //chassis.turnToPoint(-23, -20, 900, {.forwards = false}, false);
+    //chassis.moveToPoint(-23, -20, 900, {.forwards = false, .maxSpeed = 88}, false);
+   /* 
     mogo.toggle(); 
     allianceColor = 0; 
     colorSortOn = true; 
@@ -73,9 +89,12 @@ void redAWP(){
     chassis.setPose(-24.774,-57.657,180);
     pros::delay(20);
     chassis.follow(touchLadderREDAWP_txt, 13, 1200, false, false);
+    */
+    
    // chassis.moveToPoint(-23, -44, 800, {}, false);
 
     //chassis.moveToPose(-13, -5, -154, 8000, {.forwards = false, .lead = 0.5, .minSpeed = 50}, false);
 
     //chassis.moveToPose(-8.1918, 38.019, 362.3, 6000, {.lead = 0.4, .maxSpeed = 60});
-}
+  
+} 

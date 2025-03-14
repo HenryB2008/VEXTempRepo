@@ -38,7 +38,7 @@ void blueAWP(){
     chassis.moveToPoint(57.7631397208, 5.75, 600, {}, false);
     chassis.lateralPID.kI = 0; 
     desiredLiftValue = 285; 
-    iterations = 1; 
+    iterations = 0; 
     liftPIDRunning = true; 
     pros::delay(900);
     chassis.moveToPoint(31.2, 21.2, 900, {.forwards = false, .maxSpeed = 80});
@@ -52,27 +52,28 @@ void blueAWP(){
     colorSortOn = true; 
     chassis.turnToHeading(292, 900, {}, false);
     chassis.follow(ringRushBLUEAWP_txt, 10, 3000, true, false);
-    chassis.follow(secondStackBLUEAWP_txt, 9, 2800, true);
-    chassis.turnToPoint(45, 6, 800, {}, false); 
-
-    mogo.toggle(); 
-    chassis.moveToPoint(45, 6, 1250, {.maxSpeed = 85}, false);
-    allianceColor = 4;     
+    chassis.follow(secondStackBLUEAWP_txt, 9, 2800, true, false);
+    chassis.turnToPoint(53, -10.733, 800, {}, false); 
     
-    chassis.moveToPoint(55, -9, 800, {.maxSpeed = 60}, false);
-    chassis.turnToPoint(23, -20, 900, {.forwards = false}, false);
-    chassis.moveToPoint(23, -20, 900, {.forwards = false, .maxSpeed = 88}, false);
     mogo.toggle(); 
+    chassis.moveToPoint(54, -12.6, 550, {.maxSpeed = 95, .minSpeed = 70, .earlyExitRange = 6});
+    chassis.moveToPose(58, -19.4, 150, 1300, {.maxSpeed = 53}); 
+    chassis.waitUntilDone(); 
+    allianceColor = 4; 
+
+
+    chassis.turnToPoint(21.8, -23.4, 900, {.forwards = false}, false);
+    chassis.moveToPoint(21.8, -23.4, 1025, {.forwards = false, .maxSpeed = 88});
+
+    chassis.waitUntilDone();
+    mogo.toggle();  
+
     allianceColor = 1; 
     colorSortOn = true; 
-    //-24, -21, -183
-    chassis.turnToHeading(183, 950, {}, false);
-    colorSortOn = false; 
-    intakeMotor1.move(-127);
-    chassis.moveToPoint(chassis.getPose().x + (25 * sin(chassis.getPose(true).theta)), chassis.getPose().y + (25 * cos(chassis.getPose(true).theta)), 800., {}, false); 
-    chassis.setPose(24.774,-57.657,180);
-    pros::delay(20);
-    chassis.follow(touchLadderBLUEAWP_txt, 1200, false, false);
+    chassis.turnToPoint(21.7, -45.4, 800, {}, false);
+    chassis.moveToPoint(21.7, -45.4, 800, {}, false);
+    chassis.follow(touchLadderBLUEAWP_txt, 13, 1200, false, false);
+    
    // chassis.moveToPoint(-23, -44, 800, {}, false);
 
     //chassis.moveToPose(-13, -5, -154, 8000, {.forwards = false, .lead = 0.5, .minSpeed = 50}, false);

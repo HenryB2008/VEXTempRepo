@@ -1,4 +1,4 @@
-/*
+
 #include "ports.h"
 pros::Distance mogoSensor(5);
 bool autoMogo; 
@@ -13,4 +13,5 @@ void autoMogo(void* param) {
         pros::delay(20); 
     }
 }
-*/
+
+

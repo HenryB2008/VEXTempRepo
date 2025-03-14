@@ -3,9 +3,14 @@
 #include "drivecode.h"
 #include "autons\test.h"
 #include "autons\redAWP.h"
+#include "autons\blueAWP.h"
+#include "autons\goalRushRed.h"
+#include "autons\goalRushBlue.h"
+#include "autons\redRingRush.h
 #include "autons\skills.h"
 #include "mcl.hpp"
 #include "lemlibSetup.h"
+#include "autoclamp.cpp"
 
 void initialize() {
 	init();
@@ -33,7 +38,7 @@ void opcontrol() {
 
 void autonomous(){
 	colorSortOn = false;
-	skills();
+	redRingRush();
 }	
 
 
