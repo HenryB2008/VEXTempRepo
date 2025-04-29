@@ -2,6 +2,19 @@
 
 bool autoClamp = true;
 
+
+
+void test(){
+    colorSortOn = false; 
+    
+    chassis.tank(-10,10);
+    pros::delay(1500);
+    allianceColor = 0; 
+ 
+    colorSortOn = true; 
+    chassis.tank(10,10);
+    pros::delay(10000);
+}
 void redCS() {
     //Grab ring rush rings and drive back
     chassis.setPose(-52.2,32.5,75);
@@ -99,10 +112,10 @@ void Baker(){
     allianceColor = 0;  
     colorSortOn = true;
     chassis.swingToHeading(135, lemlib::DriveSide::RIGHT, 800, {.earlyExitRange = 10});
-    std::vector<squiggles::ProfilePoint> scorePath = generator.generate({
-        squiggles::Pose(chassis.getPose().x, chassis.getPose().y, chassis.getPose().theta),
-        squiggles::Pose(-20.232  * 0.0254, -30.015 * 0.0254, 180 * (M_PI / 180))});
-    driveRamsete(scorePath, 0.7, 0.8, false, 1);
+    std::vector<squiggles::ProfilePoint> clampPath = generator.generate({
+        squiggles::Pose(-6.885 * 0.0254, 41.882 * 0.0254, chassis.getPose().theta * (M_PI / 180)),
+        squiggles::Pose(-24.158  * 0.0254, 30.015 * 0.0254, 0 * (M_PI / 180))});
+    driveRamsete(clampPath, 0.5, 0.6, false, 1); //less aggressive for clamp precision
     //score small ring stack ring and corner ring stack 
     chassis.moveToPoint(-22.391, -48.268, 1400, {}, false);
     chassis.turnToHeading(245, 950, {}, false);
@@ -168,11 +181,36 @@ void RAMSETE() {
 
 ASSET(alignWithLastRingFirstMogoSKILLS_txt); 
 
-void test(){
-    chassis.setPose(0,0,180);
-    allianceColor = 0; 
-    colorSortOn = true;
-    pros::delay(20000);
+void find_tracking_center(float turnVoltage, uint32_t time) {
+    chassis.setPose(0, 0, 0);
+    unsigned long n = 0;
+    float heading;
+  
+    std::cout << std::fixed << "\033[1mCopy this:\033[0m\n\\left[";
+    left_motors.move_voltage(turnVoltage);
+    right_motors.move_voltage(-turnVoltage);
+    std::ostringstream out;
+  
+    auto end_time = time + pros::millis();
+  
+    int i = 0;
+    
+    while (pros::millis() < end_time && i++ < 10000) {
+      std::cout << "\\left(" << chassis.getPose().x << "," <<chassis.getPose().y<< "\\right),";
+      /*if (i % 250 == 0) {
+        std::cout << "\\right]\n\\left[" ;
+      } */
+      if (i % 50 == 0) {
+        std::cout.flush();
+      }
+      pros::delay(75);
+    }  
+    
+    left_motors.brake();
+    right_motors.brake(); 
+    std::cout << "\b\\right]" << std::endl;
+  
+    std::cout << "Go to https://www.desmos.com/calculator/rxdoxxil1j to solve for offsets." << std::endl;
+  }
 
-}
 

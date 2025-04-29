@@ -29,9 +29,9 @@ lemlib::ControllerSettings angular_controller(5.3,  // proportional gain (kP) 12
                                                 0 // maximum acceleration (slew)
 );
 */
-void redAWP(){
-
-    allianceColor = 0;
+void    redAWP(){
+  /*
+      allianceColor = 0;
     colorSortOn = false;  
     chassis.setPose(-53,8.5,240);
     chassis.lateralPID.kI = 0.05;
@@ -43,7 +43,7 @@ void redAWP(){
     pros::delay(1050);
     chassis.moveToPoint(-31.2, 21.2, 900, {.forwards = false, .maxSpeed = 80});
     chassis.waitUntil(8); 
-    desiredLiftValue = 126;
+    desiredLiftValue = 140;
     iterations = 0; 
     liftPIDRunning = true; 
     chassis.waitUntilDone(); 
@@ -72,7 +72,7 @@ void redAWP(){
     chassis.turnToPoint(-25.1, -45.4, 800, {}, false);
     chassis.moveToPoint(-25.1, -45.4, 800, {}, false);
     chassis.follow(touchLadderREDAWP_txt, 13, 1200, false, false);
-
+    liftMotor.set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
     
     
     //chassis.turnToPoint(-23, -20, 900, {.forwards = false}, false);
@@ -96,5 +96,5 @@ void redAWP(){
     //chassis.moveToPose(-13, -5, -154, 8000, {.forwards = false, .lead = 0.5, .minSpeed = 50}, false);
 
     //chassis.moveToPose(-8.1918, 38.019, 362.3, 6000, {.lead = 0.4, .maxSpeed = 60});
-  
+
 } 

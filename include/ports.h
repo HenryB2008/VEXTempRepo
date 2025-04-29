@@ -38,6 +38,7 @@ extern pros::Motor intakeMotor1;
 
 extern pros::Distance frontDistance;
 extern pros::Distance rightDistance;
+extern pros::Distance intakeDistance; 
 extern pros::Optical colorSensor;
 extern pros::Rotation rotation_sensor;
 extern pros::Rotation vertical_encoder;
@@ -45,7 +46,8 @@ extern pros::Distance leftDistance;
 extern pros::Imu imu;
 extern pros::Rotation horizontal_encoder;
 extern pros::Motor intakeMotor1;
-extern pros::Motor liftMotor;
+extern pros::Motor lbMotor1;
+extern pros::Motor lbMotor2; 
 extern pros::adi::Pneumatics mogo;
 extern pros::adi::Pneumatics leftDoinker;
 extern pros::adi::Pneumatics rightDoinker;

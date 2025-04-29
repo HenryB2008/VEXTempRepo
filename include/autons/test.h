@@ -5,4 +5,5 @@
 
 extern void test(); 
 extern void RAMSETE();
+extern void find_tracking_center(float turnVoltage, uint32_t time); 
 #endif

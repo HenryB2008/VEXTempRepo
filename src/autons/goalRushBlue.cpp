@@ -1,6 +1,7 @@
 #include "goalRushBlue.h"
 
 void goalRushBlue() {
+    /*
     allianceColor = 1; 
     colorSortOn = false;
     chassis.setPose(50.138, -31.475, -105);
@@ -38,18 +39,14 @@ void goalRushBlue() {
     chassis.moveToPose(57, -55, -217, 3000, {.lead = 0.68}, false);
     chassis.tank(88, 88);
     pros::delay(800);
-    chassis.tank(0,0);
+    chassis.tank(0,0); 
 
     pros::delay(500); 
     
 
     chassis.moveToPoint(chassis.getPose().x - (12 * sin(chassis.getPose(true).theta)), chassis.getPose().y - (12 * cos(chassis.getPose(true).theta)), 800., {.forwards = false}, false);     
-    chassis.setPose(chassis.getPose().x, chassis.getPose().y, 0);
-    chassis.moveToPose(38, -92, -179, 3000, {.lead = 0.5, .minSpeed = 45, .earlyExitRange = 5}, false); 
-    chassis.tank(32, 32);
-    pros::delay(700);
-    chassis.tank(0,0);
+
   
-    
+    */
 }
 

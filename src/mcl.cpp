@@ -1,4 +1,3 @@
-
 // #include "mcl.h"
 
 // struct Particle {
@@ -46,6 +45,10 @@
 //         p.weight = 1.0f /  NUM_PARTICLES;
 //         particles.push_back(p);
 //     }
+// }
+
+// void gaussian_probability(mu, sigma, x){
+    
 // }
 
 
@@ -238,4 +241,3 @@
 //         pros::delay(20);  
 //     }
 // }
-

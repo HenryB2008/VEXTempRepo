@@ -2,11 +2,11 @@
 
 ASSET(alignWithLastRingFirstMogoSKILLS_txt); 
 ASSET(alignWithLastRingSecondMogoSKILLS_txt);
-
+/*
 void skills(){
-    /*
+
     intakeMotor1.set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
-    colorSortOn = false; 
+    //colorSortOn = false; 
     pros::delay(10);
     desiredLiftValue = 285; 
     iterations = 0; 
@@ -15,7 +15,7 @@ void skills(){
     chassis.setPose(-61.592,-7.135,311);
     pros::delay(400);
     //first mogo 
-    chassis.moveToPoint(-50.462, -16.81, 650, {.forwards = false, .maxSpeed = 60});
+    chassis.moveToPoint(-50.462, -16.81, 750, {.forwards = false, .maxSpeed = 60});
     chassis.waitUntil(13.7);    
     mogo.toggle(); 
     chassis.waitUntilDone(); 
@@ -47,18 +47,17 @@ void skills(){
 
     //score on wallstake
 
-    chassis.moveToPose(3, -47.35, 531.9, 850, {.lead = 0.2,.maxSpeed = 60,  .minSpeed = 20, }, false); 
+    chassis.moveToPoint(chassis.getPose().x + (12 * sin(chassis.getPose(true).theta)), chassis.getPose().y + (12 * cos(chassis.getPose(true).theta)), 900, {}, false);
     chassis.tank(20, 20);
-    pros::delay(1100);
+    pros::delay(1350);
     intakeMotor1.brake(); 
-    chassis.tank(0,0);
-    pros::delay(300);
+    pros::delay(200);
     desiredLiftValue = 263;
     iterations = 0; 
     liftPIDRunning = true; 
     chassis.tank(0,0);
-    pros::delay(600);
-    chassis.setPose(3.592, -51.67, chassis.getPose().theta);
+    pros::delay(450);
+    chassis.setPose(2.08, -51.67, chassis.getPose().theta);
 
     pros::delay(350);
     intakeMotor1.move(-127);
@@ -80,7 +79,7 @@ void skills(){
     //last ring 
     chassis.moveToPose(-42.3, -52.96, 525.4, 1100, {.lead = 0.03}, false);
     
-    chassis.turnToPoint(-53.2, -58.4, 850, {.forwards = false}, false);  
+    chassis.turnToPoint(-53.2, -58.4, 800, {.forwards = false}, false);  
     chassis.lateralPID.kI = 0.05;
     //put mogo back 
     chassis.moveToPoint(-53.2, -58.4, 1000, {.forwards = false});
@@ -91,18 +90,17 @@ void skills(){
     chassis.lateralPID.kI = 0; 
     chassis.turnToPoint(-58, 20, 1100, {.forwards = false}, false);    //angle 531
     //clamp second mogo 
-    
     chassis.moveToPoint(-54, 11, 800, {.forwards = false, .minSpeed = 80, .earlyExitRange = 7}); 
-    chassis.moveToPose(-55.1, 24, 174, 1800, {.forwards = false, .lead = 0.5, .maxSpeed = 80, .earlyExitRange =  0.75});
+    chassis.moveToPose(-57, 24, 171, 2800, {.forwards = false, .lead = 0.5, .maxSpeed = 80, .earlyExitRange =  0.75});
     
-   //chassis.moveToPose(-55.5, 24.8, 530, 2400, {.forwards = false, .lead = 0.4, .maxSpeed = 85, .earlyExitRange = 2.5});
+   //chassis.moveToPose(-55.5, 24.8, 530, 2600, {.forwards = false, .lead = 0.4, .maxSpeed = 78, .earlyExitRange = 2.5});
 
-   chassis.waitUntilDone();  
-
+   chassis.waitUntilDone();
     mogo.toggle();  
     //first ring second mogo 
     chassis.turnToPoint(-36, 27, 800, {}, false); //angle 429 
     chassis.moveToPoint(-36, 27, 850, {}, false);
+
    // chassis.lateralPID.kI = 0.075;
    //chassis.moveToPoint(chassis.getPose().x - (4 * sin(chassis.getPose(true).theta)), chassis.getPose().y - (4 * cos(chassis.getPose(true).theta)), 625, {.forwards = false}, false); 
     //chassis.lateralPID.kI = 0; 
@@ -112,8 +110,7 @@ void skills(){
     chassis.turnToHeading(407, 700, {}, false); //angle 413
     //chassis.angularPID.kI = 0;
     
-    chassis.moveToPose(12.8, 57, 414.8, 2100, {.lead = 0.75}, false);
-
+    chassis.moveToPose(8.56, 60.899, 414.8, 2100, {.lead = 0.67}, false);
     chassis.angularPID.kI = 0.025; 
     chassis.turnToHeading(423, 600, {}, false);
     
@@ -125,24 +122,26 @@ void skills(){
     liftPIDRunning = true;
     
     //chassis.turnToPoint(-12.95, 65.007, 925, {}, false);
-    chassis.turnToHeading(352, 925, {}, false);
+    chassis.turnToHeading(348.2, 925, {}, false);
 
     //2nd xwallstake stuf 
     desiredLiftValue = 102.5; 
     iterations = 0; 
     liftPIDRunning = true;
-    chassis.moveToPoint(-15, 66, 850, {.minSpeed = 20}, false);
+
+    //chassis.moveToPose(-15.49, 64.9, 348.2, 850, {.lead = 0.05, .maxSpeed = 60, .minSpeed = 20, }, false);
+    chassis.moveToPoint(-15, 66, 850, {.minSpeed = 25}, false);
     chassis.tank(20, 20);
-    pros::delay(1200);
-    chassis.tank(0,0);
+    
+    pros::delay(1100);
     intakeMotor1.brake(); 
-    pros::delay(300);
+    pros::delay(200);
     desiredLiftValue = 260;
     iterations = 0; 
     liftPIDRunning = true; 
     chassis.tank(0,0);
-    pros::delay(800);
-    chassis.setPose(-12.913, 67.8, chassis.getPose().theta);
+    pros::delay(350);
+    //chassis.setPose(-12.913, 67.8, chassis.getPose().theta);
     
     intakeMotor1.move(-127);
     chassis.moveToPoint(-14, 56.5, 800, {.forwards = false});
@@ -169,14 +168,27 @@ void skills(){
     chassis.waitUntil(7);
     mogo.toggle(); 
     chassis.waitUntilDone(); 
+
+
+    chassis.setPose(0,0,0);
+    chassis.moveToPose(28, 120, 27,  4500, {}, false);
+    chassis.turnToHeading(87, 800, {}, false);
+    chassis.moveToPoint(chassis.getPose().x - (40 * sin(chassis.getPose(true).theta)), chassis.getPose().y - (40 * cos(chassis.getPose(true).theta)), 3000, {.forwards = false});
+    chassis.setPose(0,0,0);
+
+    chassis.setPose(0,0,0);
+    chassis.moveToPose(-3, 45, -5, 2700, {}, false);
+    chassis.moveToPose(-18, 99, -16, 2800,  {}, false);
+    
+
+    /*
     //1st ring on lb 
     chassis.moveToPose(11.55, 34.564, 486, 2450, {.lead = 0.5});
+    /*
     desiredLiftValue = 102.5; 
     iterations = 0; 
     liftPIDRunning = true;
     chassis.waitUntilDone(); 
-
-    /*
     chassis.turnToPoint(40.375, 14.909, 1000, {.forwards = false}, false);
     chassis.moveToPoint(40.375, 14.909, 1150, {.forwards = false, .maxSpeed = 65});
     chassis.waitUntil(29.5);
@@ -207,8 +219,10 @@ void skills(){
     chassis.moveToPoint(19, -9, 900, {}, false);
 
     pros::delay(5000);
-    */
+    
+
 
 }   
+    */
     
 

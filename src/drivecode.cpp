@@ -19,7 +19,8 @@ void driver()
 
     while (true)
     {
-        controller.print(0,0, "Intake: %d", liftMotor.get_temperature());
+        lbMotor1.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
+        controller.print(0,0, "Intake: %d", lbMotor1.get_temperature());
 
         leftY = controller.get_analog(pros::E_CONTROLLER_ANALOG_LEFT_Y);
         rightY = controller.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_Y);
@@ -41,21 +42,23 @@ void driver()
             );
             */
             
+        } 
+
+
+/*
+        if(controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_DOWN)) {
+            descorePiston1.extend(); 
+            descorePiston2.extend();
+            pros::delay(150);
+            intakeMotor1.move(127); //spins intake backwards
+            pros::delay(150);
+            intakeMotor1.brake(); 
         } else {
-            
-            
-            chassis.tank(leftY * 0.5, rightY * 0.5);
-            
-           /*
-           chassis.arcade(leftY * 0.5, // throttle
-            rightX * 0.5, // steer
-            false, // enable drive curves
-            0.75 // slightly prioritize steering
-            
-        );
-        */
-        
+            descorePiston1.retract(); 
+            descorePiston2.retract();
+            intakeMotor1.brake(); 
         }
+            */
 
 
         if(controller.get_digital(pros::E_CONTROLLER_DIGITAL_R1)){
@@ -65,45 +68,46 @@ void driver()
         } else {
             intakeMotor1.move(0);
         }
+    
 
 
         //86, 320 
-        const int LIFT_MIN_ANGLE = 8600;
-        const int LIFT_MAX_ANGLE = 32000;
+        const int LIFT_MIN_ANGLE = 6900;
+        const int LIFT_MAX_ANGLE = 31400;
         
         // Get current lift angle
         
-        // L2 raises the lift, but only if it's below the max limit
+        
         if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_L2)) {
-            // Only move up if above the minimum limit
-            if (rotation_sensor.get_angle() > LIFT_MIN_ANGLE) {
-                liftMotor.move(127);
+            // When raising: Check that we're below the MAX limit
+            if (rotation_sensor.get_angle() < LIFT_MAX_ANGLE) {
+                lbMotor1.move(127);
+                lbMotor2.move(127);
             } else {
-                liftMotor.move(0); // Prevent movement if at the limit
+                lbMotor1.move(0);
+                lbMotor2.move(0);
             }
         } 
         else if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_L1)) {
-            // Only move down if below the maximum limit
-            if (rotation_sensor.get_angle()< LIFT_MAX_ANGLE) {
-                liftMotor.move(-127);
+            if (rotation_sensor.get_angle() > LIFT_MIN_ANGLE) {
+                lbMotor1.move(-127);
+                lbMotor2.move(-127);
             } else {
-                liftMotor.move(0); // Prevent movement if at the limit
+                lbMotor1.move(0);
+                lbMotor2.move(0);
             }
-        } 
-        // Move to preset position when RIGHT button is pressed
+        }
         else if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_RIGHT)) {
-            desiredLiftValue = 101; 
+            desiredLiftValue = 292; 
             liftPIDRunning = true; 
             iterations = 0; 
-        } else if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_X)){
-            desiredLiftValue = 234;
-            liftPIDRunning = true;
-            iterations = 0; 
-        }
+        } 
+
+
         else {
-            liftMotor.brake(); // Stop motor if no valid input
+            lbMotor1.brake();
+            lbMotor2.brake();
         }
-       
         
 /*
         if(controller.get_digital(pros::E_CONTROLLER_DIGITAL_Y)){

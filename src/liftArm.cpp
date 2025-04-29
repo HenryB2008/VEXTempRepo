@@ -1,9 +1,9 @@
 #include "liftArm.h"
 
 
-double liftkP = 4; 
+double liftkP = 2.2; 
 double liftkI = 0; 
-double liftkD = 2; 
+double liftkD = 0.5; 
 double antiWindUp = 8; 
 
 
@@ -27,7 +27,7 @@ void liftPIDTask(void* param) {
         if (liftPIDRunning) {
             iterations++; 
             int LiftMotorPosition = rotation_sensor.get_angle()/ 100;
-            liftError = LiftMotorPosition - desiredLiftValue;
+            liftError = desiredLiftValue - LiftMotorPosition;
             liftDerivative = liftError - liftPrevError;
             liftTotalError += liftError;
 
@@ -38,10 +38,12 @@ void liftPIDTask(void* param) {
             } else {
                 liftMotorPower = liftError * liftkP + liftDerivative * liftkD;
             }
-            liftMotor.move(liftMotorPower);
+            lbMotor1.move(liftMotorPower);
+            lbMotor2.move(liftMotorPower);
             // Stop 350
             if (abs(liftError) < 1 || iterations > 75) {
-                liftMotor.brake();
+                lbMotor1.brake();
+                lbMotor2.brake(); 
                 liftPIDRunning = false; 
             }
             

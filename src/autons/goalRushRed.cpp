@@ -1,6 +1,7 @@
 #include "goalRushRed.h"
 
 void goalRushRed() {
+    /*
     allianceColor = 0; 
     colorSortOn = false;
     chassis.setPose(-50.138, -31.475, 105);
@@ -30,21 +31,36 @@ void goalRushRed() {
     chassis.turnToHeading(320, 800, {}, false);
     chassis.moveToPoint(-13, -47, 1250, {.forwards = false}, false);
     mogo.toggle();
-    //-15, -47,
-    chassis.moveToPose(-57, -55, 217, 3000, {.lead = 0.68}, false);
+    chassis.turnToPoint(-57, -57, 900, {}, false);
+    chassis.moveToPoint(-57, -57, 1800, {}, false);
     chassis.tank(88, 88);
     pros::delay(800);
+    chassis.moveToPoint(chassis.getPose().x - (6 * sin(chassis.getPose(true).theta)), chassis.getPose().y - (6 * cos(chassis.getPose(true).theta)), 800., {.forwards = false}, false);  
+    chassis.setPose(0,0,0);
+    chassis.turnToHeading(-25, 800, {}, false);
+
+
+
+    //-15, -47,
+    /*
+    chassis.moveToPose(-57, -55, 217, 3000, {.lead = 0.68, .maxSpeed = 80}, false);
+    
     chassis.tank(0,0);
 
     pros::delay(500); 
     
 
-    chassis.moveToPoint(chassis.getPose().x - (12 * sin(chassis.getPose(true).theta)), chassis.getPose().y - (12 * cos(chassis.getPose(true).theta)), 800., {.forwards = false}, false);     
+    chassis.moveToPoint(chassis.getPose().x - (12 * sin(chassis.getPose(true).theta)), chassis.getPose().y - (12 * cos(chassis.getPose(true).theta)), 800., {.forwards = false}, false);    
+    chassis.setPose(0,0,0);
+    chassis.turnToHeading(-60, 950, {}, false);
+    */
+    /* 
     chassis.setPose(chassis.getPose().x, chassis.getPose().y, 0);
     chassis.moveToPose(-32, -92, 179, 3000, {.minSpeed = 38, .earlyExitRange = 5}, false);
-    chassis.tank(32, 32);
+    chassis.tank(24, 24);
     pros::delay(750);
     chassis.tank(0,0);
+    */
 
     /*
     pros::delay(700);
@@ -55,5 +71,6 @@ void goalRushRed() {
     pros::delay(300);
     chassis.turnToHeading(120, 1000, {}, false);
     */
+
 }
 

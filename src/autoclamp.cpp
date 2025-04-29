@@ -1,5 +1,6 @@
 
-#include "ports.h"
+/*
+#include "autoclamp.h"
 pros::Distance mogoSensor(5);
 bool autoMogo; 
 
@@ -14,4 +15,4 @@ void autoMogo(void* param) {
     }
 }
 
-
+*/

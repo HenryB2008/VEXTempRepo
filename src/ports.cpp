@@ -17,20 +17,22 @@ pros::Controller controller(pros::E_CONTROLLER_MASTER);
 
 
 pros::Distance frontDistance(1);
-pros::Distance rightDistance(3);
-pros::Optical colorSensor(12); 
-pros::Rotation rotation_sensor(13);
-pros::Rotation vertical_encoder(14);
+pros::Distance intakeDistance(5);
+pros::Optical colorSensor(2); 
+pros::Distance colorSortDistanceSensor(3);
+pros::Rotation rotation_sensor(18);
+pros::Rotation vertical_encoder(21);
 pros::Distance leftDistance(16);
-pros::Rotation horizontal_encoder(19);
-pros::Motor intakeMotor1(18); 
-pros::Motor liftMotor(-21);  
+pros::Rotation horizontal_encoder(14);
+pros::Motor intakeMotor1(15); 
+pros::Motor lbMotor1(19);
+pros::Motor lbMotor2(-20);  
 pros::adi::Pneumatics mogo('A', false);
 pros::adi::Pneumatics leftDoinker('B', false);
 pros::adi::Pneumatics rightDoinker('C', false);
 pros::adi::Pneumatics gRushClamp('E', false);
 pros::Controller controller(pros::E_CONTROLLER_MASTER); 
-pros::Imu imu(17);
+pros::Imu imu(16);
 
 
 

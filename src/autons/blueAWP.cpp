@@ -28,8 +28,11 @@ lemlib::ControllerSettings angular_controller(5.3,  // proportional gain (kP) 12
                                               0, // large error range timeout, in milliseconds
                                                 0 // maximum acceleration (slew)
 );
+
 */
+
 void blueAWP(){
+  /*
 
     allianceColor = 1;
     colorSortOn = false;  
@@ -43,7 +46,7 @@ void blueAWP(){
     pros::delay(900);
     chassis.moveToPoint(31.2, 21.2, 900, {.forwards = false, .maxSpeed = 80});
     chassis.waitUntil(8); 
-    desiredLiftValue = 126;
+    desiredLiftValue = 140;
     iterations = 0; 
     liftPIDRunning = true; 
     chassis.waitUntilDone(); 
@@ -73,10 +76,12 @@ void blueAWP(){
     chassis.turnToPoint(21.7, -45.4, 800, {}, false);
     chassis.moveToPoint(21.7, -45.4, 800, {}, false);
     chassis.follow(touchLadderBLUEAWP_txt, 13, 1200, false, false);
+    liftMotor.set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
     
    // chassis.moveToPoint(-23, -44, 800, {}, false);
 
     //chassis.moveToPose(-13, -5, -154, 8000, {.forwards = false, .lead = 0.5, .minSpeed = 50}, false);
 
     //chassis.moveToPose(-8.1918, 38.019, 362.3, 6000, {.lead = 0.4, .maxSpeed = 60});
+    */
 }

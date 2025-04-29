@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Clickable Field with Multi-Stop Gradient & Wider Code Panel</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: #0F172A; /* Dark navy background */
+      font-family: Arial, sans-serif;
+      color: #fff;
+    }
+    header {
+      padding: 16px;
+      background-color: #1c2d45;
+      text-align: center;
+    }
+    header h1 {
+      margin: 0;
+      font-weight: 400;
+      font-size: 1.8rem;
+      letter-spacing: 1px;
+      color: #fff;
+    }
+
+    .container {
+      display: flex;
+      max-width: 1400px; /* increased to allow a larger right panel */
+      margin: 20px auto;
+      background: rgba(17, 26, 40, 0.9);
+      border-radius: 6px;
+      overflow: hidden;
+      min-height: 700px;
+    }
+
+    /* Left panel: Coordinates, Add Point, etc. */
+    .left-panel {
+      width: 20%;
+      border-right: 1px solid rgba(255, 255, 255, 0.1);
+      padding: 20px;
+      box-sizing: border-box;
+    }
+    .left-panel h2 {
+      margin-bottom: 12px;
+      font-weight: 300;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+      padding-bottom: 5px;
+    }
+    .info-block {
+      margin-bottom: 20px;
+    }
+    .info-block label {
+      display: block;
+      margin-bottom: 6px;
+    }
+    .info-block input[type="text"] {
+      width: 100%;
+      padding: 6px;
+      margin-bottom: 6px;
+      border: 1px solid #444;
+      border-radius: 4px;
+      background-color: #1f2c3c;
+      color: #fff;
+    }
+    .btn {
+      display: inline-block;
+      margin-top: 8px;
+      padding: 8px 14px;
+      font-size: 14px;
+      border: none;
+      border-radius: 4px;
+      background-color: #2c4565;
+      color: #fff;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+      margin-right: 8px;
+    }
+    .btn:hover {
+      background-color: #3a567e;
+    }
+
+    /* Slider styling (Lead constant) */
+    .lead-slider {
+      width: 100%;
+      margin-top: 10px;
+    }
+
+    /* Center panel (canvas) */
+    .center-panel {
+      width: 45%; /* Adjusted to allow a bigger right panel */
+      border-right: 1px solid rgba(255, 255, 255, 0.1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      box-sizing: border-box;
+    }
+    canvas {
+      background-color: #fafafa;
+      border: 1px solid #555;
+      border-radius: 4px;
+      cursor: crosshair;
+    }
+
+    /* Right panel: 3-column code table with moveToPose, Backwards */
+    .right-panel {
+      width: 50%; /* Increased for more horizontal space */
+      padding: 20px;
+      box-sizing: border-box;
+    }
+    .code-box {
+      background-color: #1b2a3c;
+      border: 1px solid #2c3b4d;
+      border-radius: 4px;
+      padding: 15px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+      min-height: 500px; /* Increased for more vertical space */
+    }
+    .code-box h2 {
+      margin-top: 0;
+      font-weight: 300;
+      font-size: 1.2rem;
+      margin-bottom: 12px;
+      color: #cfd6e0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+      padding-bottom: 8px;
+    }
+    /* Table layout for code + moveToPose + Backwards */
+    .code-box table {
+      width: 100%;
+      border-collapse: collapse;
+      table-layout: fixed; /* ensures columns keep these widths */
+    }
+    .code-box th,
+    .code-box td {
+      border: 1px solid #2c3b4d;
+      padding: 8px;
+      text-align: center;
+      vertical-align: top;
+    }
+    .code-box th {
+      background-color: #263244;
+      color: #cfd6e0;
+      font-weight: 400;
+    }
+    /* Make the "Code" column narrower so the others have more space */
+    .code-col {
+      width: 60%;
+      text-align: left;
+    }
+    .move-col {
+      width: 20%;
+    }
+    .back-col {
+      width: 20%;
+    }
+    /* Keep the code in fewer lines if possible */
+    .code-box td code {
+      display: block;
+      white-space: pre-wrap;
+      word-wrap: break-word;
+      font-family: Consolas, Monaco, "Courier New", monospace;
+      color: #99ccff;
+    }
+    .code-box td input[type="checkbox"] {
+      transform: scale(1.3);
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>765A Code Generator</h1>
+  </header>
+
+  <div class="container">
+    <!-- Left Panel -->
+    <div class="left-panel">
+      <h2>Coordinates</h2>
+      <div class="info-block">
+        <label>X (inches): 
+          <input type="text" placeholder="X inches" />
+        </label>
+        <label>Y (inches): 
+          <input type="text" placeholder="Y inches" />
+        </label>
+        <label>Angle (degrees): 
+          <input type="text" placeholder="Angle" />
+        </label>
+      </div>
+
+      <div class="info-block">
+        <button class="btn">Add Point</button>
+        <button class="btn">Select Point Mode</button>
+      </div>
+
+      <!-- Slider for "Lead constant" -->
+      <div class="info-block">
+        <label for="leadSlider">Lead constant</label>
+        <input
+          type="range"
+          id="leadSlider"
+          name="leadSlider"
+          min="0"
+          max="1"
+          step="0.01"
+          value="0.3"
+          class="lead-slider"
+        />
+      </div>
+    </div>
+
+    <!-- Center Panel: the field (canvas) -->
+    <div class="center-panel">
+      <!-- We'll treat this as 144x144 from -72..+72 in both X and Y. -->
+      <canvas id="fieldCanvas" width="550" height="550"></canvas>
+    </div>
+
+    <!-- Right Panel: Table with code lines -->
+    <div class="right-panel">
+      <div class="code-box">
+        <h2>Generated code:</h2>
+        <table>
+          <thead>
+            <tr>
+              <th class="code-col">Code</th>
+              <th class="move-col">moveToPose</th>
+              <th class="back-col">Backwards</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="code-col">
+                <code>
+//2 chassis.moveToPose(-30.438, 12.185, 15, 5000, {.lead = 0.3, .earlyExitRange = 1.5}, false);
+
+//3 chassis.moveToPose(-19.251, 50.262, 0, 5000, {.lead = 0.01, .earlyExitRange = 1.5}, false);
+                </code>
+              </td>
+              <td class="move-col">
+                <input type="checkbox" />
+              </td>
+              <td class="back-col">
+                <input type="checkbox" />
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // ---------------------------------------
+    // FIELD & COORDINATE SETTINGS
+    // ---------------------------------------
+    // The field is 144" x 144", with coordinates from -72..+72 in both X and Y.
+    // The canvas is 550 x 550 px.
+    // We map each pixel to -72..+72:
+    //   x = -72 at canvasX=0, +72 at canvasX=550
+    //   y = +72 at canvasY=0, -72 at canvasY=550 (inverted)
+
+    const CANVAS_SIZE = 550;
+    const FIELD_MIN = -72;
+    const FIELD_MAX = 72;
+    const FIELD_RANGE = FIELD_MAX - FIELD_MIN; // 144
+
+    // We'll store points the user clicks in an array.
+    const points = [];
+
+    const canvas = document.getElementById('fieldCanvas');
+    const ctx = canvas.getContext('2d');
+
+    // Optional field background image
+    const fieldImage = new Image();
+    fieldImage.src = 'field.png';
+    fieldImage.onload = () => {
+      redraw();
+    };
+
+    // Handle clicks on the canvas
+    canvas.addEventListener('click', (e) => {
+      const rect = canvas.getBoundingClientRect();
+      const mouseX = e.clientX - rect.left;
+      const mouseY = e.clientY - rect.top;
+
+      // Convert canvas coords to game coords:
+      const gameX = FIELD_MIN + (mouseX / CANVAS_SIZE) * FIELD_RANGE;
+      const gameY = FIELD_MAX - (mouseY / CANVAS_SIZE) * FIELD_RANGE;
+
+      // We'll store angle=0 for demonstration
+      const newPoint = {
+        x: gameX.toFixed(2),
+        y: gameY.toFixed(2),
+        theta: 0
+      };
+      points.push(newPoint);
+
+      redraw();
+    });
+
+    // Redraw the field (image + lines + points)
+    function redraw() {
+      // Clear canvas
+      ctx.clearRect(0, 0, CANVAS_SIZE, CANVAS_SIZE);
+
+      // Draw the field image if loaded
+      if (fieldImage.complete) {
+        ctx.drawImage(fieldImage, 0, 0, CANVAS_SIZE, CANVAS_SIZE);
+      }
+
+      // Draw multi-stop gradient lines between consecutive points
+      // (red -> yellow -> green -> yellow -> red)
+      if (points.length > 1) {
+        for (let i = 0; i < points.length - 1; i++) {
+          const p1 = points[i];
+          const p2 = points[i + 1];
+          const c1 = gameToCanvas(p1.x, p1.y);
+          const c2 = gameToCanvas(p2.x, p2.y);
+
+          // Create a gradient from p1 to p2
+          const grad = ctx.createLinearGradient(c1.cx, c1.cy, c2.cx, c2.cy);
+          grad.addColorStop(0,     'red');
+          grad.addColorStop(0.25,  'yellow');
+          grad.addColorStop(0.5,   'green');
+          grad.addColorStop(0.75,  'yellow');
+          grad.addColorStop(1,     'red');
+
+          ctx.strokeStyle = grad;
+          ctx.lineWidth = 2;
+
+          ctx.beginPath();
+          ctx.moveTo(c1.cx, c1.cy);
+          ctx.lineTo(c2.cx, c2.cy);
+          ctx.stroke();
+        }
+      }
+
+      // Draw each point as a circle w/ label
+      for (let i = 0; i < points.length; i++) {
+        const p = points[i];
+        const { cx, cy } = gameToCanvas(p.x, p.y);
+
+        // Draw circle
+        ctx.fillStyle = 'red';
+        ctx.beginPath();
+        ctx.arc(cx, cy, 6, 0, 2*Math.PI);
+        ctx.fill();
+
+        // Label
+        ctx.fillStyle = 'white';
+        ctx.font = '12px Arial';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText(String(i + 1), cx, cy);
+      }
+    }
+
+    // Convert from game coords (−72..+72) to canvas coords (0..550)
+    // with top=+72 => canvasY=0
+    function gameToCanvas(gx, gy) {
+      // parseFloat in case gx,gy are strings from toFixed()
+      const xNum = parseFloat(gx);
+      const yNum = parseFloat(gy);
+
+      const cx = ((xNum - FIELD_MIN) / FIELD_RANGE) * CANVAS_SIZE;
+      const cy = ((FIELD_MAX - yNum) / FIELD_RANGE) * CANVAS_SIZE;
+      return { cx, cy };
+    }
+  </script>
+  <!--
+  JavaScript snippet demonstrating a clamped lead value between 0.1 and 0.8,
+  based on the angular error (≤180°).
+-->
+
+<script>
+    function normalizeAngleDiff(a, b) {
+      let diff = b - a;
+      while (diff <= -180) diff += 360;
+      while (diff > 180)   diff -= 360;
+      return diff;
+    }
+    
+
+    function computeClampedLogLead(startTheta, endTheta) {
+      let SCALAR = 0.05; // scalar, able to be changed by the slider
+      // Angular difference in degrees
+      const angularError = Math.abs(normalizeAngleDiff(startTheta, endTheta));
+      // Logarithmic formula
+      const rawLead = SCALAR * Math.log(1 + angularError);
+    
+      // Clamp to [0.1, 0.8]
+      const minLead = 0.01;
+      const maxLead = 0.8;
+      const clampedLead = Math.min(maxLead, Math.max(minLead, rawLead));
+    
+      return clampedLead;
+    }
+    
+    function generateMoveToPoseCode(points, index) {
+      if (!points || index < 0 || index >= points.length) {
+        return '// Invalid index or empty points array';
+      }
+    
+      const curr = points[index];
+      let prevTheta = 0;
+      if (index - 1 >= 0) {
+        prevTheta = points[index - 1].theta;
+      }
+    
+      // Compute lead
+      const leadVal = computeClampedLogLead(prevTheta, curr.theta).toFixed(3);
+    
+      // Build code 
+      const codeLine = 
+        `//${index + 1} chassis.moveToPose(${curr.x.toFixed(3)}, ${curr.y.toFixed(3)}, ${curr.theta.toFixed(1)}, 5000, ` +
+        `{.lead = ${leadVal}, .earlyExitRange = 1.5}, false);`;
+    
+      return codeLine;
+    }
+    
+
+    function computeHeadingToPoint(x1, y1, x2, y2) {
+            const dx = x2 - x1;
+            const dy = y2 - y1;
+            let angleDeg = Math.atan2(dy, dx) * (180 / Math.PI);
+            while (angleDeg <= -180) angleDeg += 360;
+            while (angleDeg > 180)   angleDeg -= 360;
+            return angleDeg;
+    }
+
+    function generateMoveToPointSequence(points, index) {
+        if (!points || index <= 0 || index >= points.length) {
+            return ['// Invalid index or insufficient points data'];
+        }
+
+        const lines = [];
+
+        const prev = points[index - 1];  
+        const currTheta = prev.theta;   
+        
+        const curr = points[index];      
+        const targetX = curr.x;
+        const targetY = curr.y;
+
+        const desiredHeading = computeHeadingToPoint(prev.x, prev.y, targetX, targetY);
+        const diff = normalizeAngleDiff(currTheta, desiredHeading);
+
+        // tolerance of 1.75 degrees 
+        const toleranceDeg = 5;
+        if (Math.abs(diff) > toleranceDeg) {
+            const halfStep = index + 0.5;
+            const turnLine = `//${halfStep} chassis.turnToPoint(${targetX.toFixed(3)}, ${targetY.toFixed(3)}, 5000, { .earlyExitRange = 1.5 }, false);`;
+            lines.push(turnLine);
+        }
+
+
+        const moveLine = `//${index} chassis.moveToPoint(${targetX.toFixed(3)}, ${targetY.toFixed(3)}, 5000, { .earlyExitRange = 1.5 }, false);`;
+        lines.push(moveLine);
+
+        return lines;
+}
+    </script>
+    
+</body>
+</html>
