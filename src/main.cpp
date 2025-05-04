@@ -8,11 +8,12 @@
 #include "ports.h"
 #include "autons\goalRushRed.h"
 #include "autons\goalRushBlue.h"
-#include "autons\redRingRush.h"
-#include "autons\blueRingRush.h" 
+#include "autons\redRingRushWP.h"
 #include "autons\skills.h"
+#include "autons\blueRingRushWP.h"
 #include "lemlibSetup.h"
 #include "autons\dopamineBlue.h"
+#include "autons\redRingRushWPLadder.h"
 #include "autoclamp.cpp"
 
 void initialize() {
@@ -36,14 +37,14 @@ void opcontrol() {
 	*/
 	colorSortOn = false; 
 	lbMotor1.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
+	lbMotor2.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
+
 	driver();
 
 }
 void autonomous(){
-	//dopamineRed();
-	allianceColor = 1; 
-	colorSortOn = true; 
-	pros::delay(50000);
+	colorSortOn = false; 
+	blueRingRushWP();
 }	
 
 

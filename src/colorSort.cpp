@@ -26,8 +26,8 @@ void colorSortTask(void* param) {
 
       else {
         if (intakeDistance.get() < 50) {
-          pros::delay(60);
-          intakeMotor1.brake(); 
+          pros::delay(40);
+          intakeMotor1.move(0); 
           pros::delay(250);
           intakeMotor1.move(-127);
           ringWaiting = false;

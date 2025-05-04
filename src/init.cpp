@@ -37,5 +37,5 @@ void init() {
         }
 
     });    
- 
+    autonomous(); 
 }

@@ -3,6 +3,6 @@
 
 #include "autonTemplate.h"
 
-extern void blueRingRush();
+extern void blueRingRushWP();
 
 #endif

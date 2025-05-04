@@ -3,6 +3,6 @@
 
 #include "autonTemplate.h"
 
-extern void redRingRush();
+extern void redRingRushWP();
 
 #endif
